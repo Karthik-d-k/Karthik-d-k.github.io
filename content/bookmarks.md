@@ -86,7 +86,8 @@ title = "Bookmarks"
 
 ----------------
 
-### 📕 Noteworthy Blogs 
+### 📕 Noteworthy Blogs
+- [fasterthanli.me](https://fasterthanli.me/)
 - [Embedded in Academia -- John Regehr](https://blog.regehr.org/)
 - [Null Program](https://nullprogram.com/index/)
 - [SoftwareCarpentry](https://software-carpentry.org/lessons/index.html)
