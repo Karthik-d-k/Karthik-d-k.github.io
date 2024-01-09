@@ -14,7 +14,7 @@ title = "Bookmarks"
 - [Rust Atomics and Locks by Mara Bos](https://marabos.nl/atomics/)
 - [Learning Rust With Entirely Too Many Linked Lists](https://rust-unofficial.github.io/too-many-lists/)
 - [PNGme: An Intermediate Rust Project](https://picklenerd.github.io/pngme_book/introduction.html)
-- [into\_rust();](http://intorust.com/)
+- [into_rust();](http://intorust.com/)
 
 ----------------
 
@@ -35,8 +35,8 @@ title = "Bookmarks"
 - [Made With ML](https://madewithml.com/)
 - [Advanced NLP with spaCy](https://course.spacy.io/en/)
 - [Distill --- Latest articles about ML](https://distill.pub/)
-- [tsai \| tsai](https://timeseriesai.github.io/tsai/)
-- [Machine Learning - Home \| Coursera](https://www.coursera.org/learn/machine-learning/home/welcome)
+- [tsai | tsai](https://timeseriesai.github.io/tsai/)
+- [Machine Learning | Coursera](https://www.coursera.org/learn/machine-learning/home/welcome)
 - [Neural networks and deep learning](http://neuralnetworksanddeeplearning.com/)
 - [Deep Learning Book](https://www.deeplearningbook.org/)
 - [Practical Data Science](http://www.datasciencecourse.org/)
@@ -44,7 +44,7 @@ title = "Bookmarks"
 - [Keras Code examples](https://keras.io/examples/)
 - [Python Data Science Handbook - jakevdp](https://jakevdp.github.io/PythonDataScienceHandbook/)
 - [Hugging Face Course](https://huggingface.co/course/chapter1)
-- [Tutorials \| fastai](https://docs.fast.ai/tutorial.html)
+- [Tutorials | fastai](https://docs.fast.ai/tutorial.html)
 - [labml.ai](https://labml.ai/)
 - [AI Summer](https://theaisummer.com/)
 - [Python to Numpy](https://www.labri.fr/perso/nrougier/from-python-to-numpy/)
@@ -65,7 +65,7 @@ title = "Bookmarks"
 - [Writing an OS in Rust](https://os.phil-opp.com/)
 - [The Unix Shell](https://swcarpentry.github.io/shell-novice/)
 - [Linux IP Stacks](https://www.satchell.net/ipstacks/)
-- [The Debian Administrator\'s Handbook](https://www.debian.org/doc/manuals/debian-handbook/index.en.html)
+- [The Debian Administrator's Handbook](https://www.debian.org/doc/manuals/debian-handbook/index.en.html)
 - [Linux Kernel Teaching](https://linux-kernel-labs.github.io/refs/heads/master/index.html)
 - [Linux Inside](https://0xax.gitbooks.io/linux-insides/content/)
 - [The Linux Kernel documentation](https://docs.kernel.org/)
@@ -79,9 +79,9 @@ title = "Bookmarks"
 - [Learn Git Branching](https://learngitbranching.js.org/)
 - [NASM Tutorial](https://cs.lmu.edu/%7Eray/notes/nasmtutorial/)
 - [Open Data Structures](http://opendatastructures.org/)
-- [Putting the \"You\" in CPU](https://cpu.land/)
+- [Putting the "You" in CPU](https://cpu.land/)
 - [Rosetta Code](https://www.rosettacode.org/wiki/Rosetta_Code)
-- [Writing ARM Assembly \| Azeria Labs](https://azeria-labs.com/writing-arm-assembly-part-1/)
+- [Writing ARM Assembly | Azeria Labs](https://azeria-labs.com/writing-arm-assembly-part-1/)
 - [Chess • Anon-Xk1H52qA vs Fairy-Stockfish](https://www.pychess.org/m16I5miV)
 
 ----------------
@@ -93,7 +93,7 @@ title = "Bookmarks"
 - [SoftwareCarpentry](https://software-carpentry.org/lessons/index.html)
 - [Walking Randomly](https://walkingrandomly.com/)
 - [Agner Fog](https://www.agner.org/)
-- [Ralf\'s Ramblings](https://www.ralfj.de/blog/)
+- [Ralf's Ramblings](https://www.ralfj.de/blog/)
 - [The ZipCPU by Gisselquist Technology](http://zipcpu.com/)
 - [Bartosz Ciechanowski](https://ciechanow.ski/)
 
@@ -102,7 +102,7 @@ title = "Bookmarks"
 ### 🗳 Misc
 - [ECU Torque Control - Ford Ecoboost](https://www.motorsport-developments.co.uk/Understanding_Ford_Ecoboost_Torque_Control.html)
 - [Manna - MarshallBrain.com](https://marshallbrain.com/manna)
-- [MDN \| Learn web development](https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web)
+- [MDN | Learn web development](https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web)
 - [Grind 75](https://www.techinterviewhandbook.org/grind75)
 - [ACM Digital Library](https://dl.acm.org/)
 - [Excalidraw](https://excalidraw.com/)
