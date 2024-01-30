@@ -28,7 +28,7 @@ anchors = "on"
 internal_level = "warn"
 
 [extra]
-author = "Speyll"
+author = "Karthik"
 display_author = true
 
 favicon = "favicon.ico"
