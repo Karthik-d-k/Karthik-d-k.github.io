@@ -77,4 +77,4 @@ L.close()
 
 - Full script is available on github [**insta_inspect.py**](https://github.com/Karthik-d-k/Karthik-d-k.github.io/blob/main/content/scripts/insta_inspect.py)
 
-- Thanks to my friend [**Apoorva**](https://www.linkedin.com/in/apoorva-bhat-6ab836171/) for reviewing the draft version of this blog.
+- Thanks to my friend [**Apoorva Bhat**](https://www.linkedin.com/in/apoorva-bhat-6ab836171/) for reviewing the draft version of this blog.
