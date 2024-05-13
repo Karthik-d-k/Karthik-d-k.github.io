@@ -36,7 +36,7 @@ def insta_inspect(user_id, password, inspect_user_id):
     print(f"Total other_not_following_u : [{len(other_not_following_u)}]")
 
     # Save results to a text file
-    list_to_txt("other_not_following_u.txt", other_not_following_u)
+    list_to_txt("others_not_following_u.txt", other_not_following_u)
     list_to_txt("u_not_following_others.txt", u_not_following_others)
     print("Results are saved in text files")
 
