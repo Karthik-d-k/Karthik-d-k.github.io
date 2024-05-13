@@ -5,23 +5,23 @@ title = "Instagram Followers Inspection"
 
 # Context
 
-I always had the urge to find out people who had unfollowed me from instagram abruptly. 
-But instagram dosen't give you any notifications or provide a nice way to know this info.
-As of my knowledge (13-05-2024) we have to check each and every person from our followers list in our followees list to figure this out.
-This is boring and tedious task to do.
+I've always had the urge to find out people who had unfollowed me from instagram abruptly. 
+However, instagram dosen't provide notifications or an easy way to know access this info.
+As of my knowledge on May 13, 2024, we still have to manually check each and every person from our followers list in our followees list to figure this out.
+It's boring and tedious task.
 
 
 # Problem
 
-As a fun exercise, i thought of writing a small python script to figure this out. This blog is about how i achieved it.
+As a fun exercise, I thought of writing a small python script to figure this out. This blog is about how I achieved it.
 
 
 # Solution
 
-There is a python library called [**Instaloader**](https://instaloader.github.io/index.html) which is a tool to download pictures (or videos) along with their captions and other metadata from Instagram.
-Im more interted in metadata part, we can directly extract the followers and followees list of the people you follow if you login into your user ID.
+There is a python library called [**Instaloader**](https://instaloader.github.io/index.html) which is a tool for downloading pictures (or videos) along with their captions and other metadata from Instagram.
+I'm more interested in metadata part. we can directly extract the followers and followees list of the people you follow if you login into your user ID.
 
-First we have to create an instaloader instance and then login using the our user ID and password
+First, we have to create an instaloader instance and then login using our user ID and password
 
 ```python
 import instaloader
@@ -43,8 +43,8 @@ followers = profile.get_followers()
 followees = profile.get_followees()
 ```
 
-Using list comprehension magic, we can just compare the user names from followers and followees list 
-to find out poeple who we don't follow back and people who dosen't follow us back !!
+Using list comprehension magic, we can simply compare the usernames from the followers and followees list 
+to find out poeple who we don't follow back and people who don't follow us back !!
 
 ```python
 followers_names = [o.username for o in followers]
@@ -65,14 +65,16 @@ def list_to_txt(fname, data):
         # Write the data to the file
         file.write(data_to_write)
 
-    # Save results to a text file
-    list_to_txt("others_not_following_u.txt", other_not_following_u)
-    list_to_txt("u_not_following_others.txt", u_not_following_others)
+# Save results to a text file
+list_to_txt("others_not_following_u.txt", other_not_following_u)
+list_to_txt("u_not_following_others.txt", u_not_following_others)
 
-    # Close the connection
-    L.close()
+# Close the connection
+L.close()
 ```
 
 # Conclusion
 
 - Full script is available on github [**insta_inspect.py**](https://github.com/Karthik-d-k/Karthik-d-k.github.io/blob/main/content/scripts/insta_inspect.py)
+
+- Thanks to my friend [**Apoorva**](https://www.linkedin.com/in/apoorva-bhat-6ab836171/) for reviewing the draft version of this blog.
