@@ -6,7 +6,7 @@ title = "Instagram Followers Inspection"
 ## Context
 
 I've always had the urge to find out people who had unfollowed me from instagram abruptly. 
-However, instagram dosen't provide notifications or an easy way to know access this info.
+However, instagram doesn't provide notifications or an easy way to access this info.
 As of my knowledge on May 13, 2024, we still have to manually check each and every person from our followers list in our followees list to figure this out.
 It's boring and tedious task.
 
@@ -19,7 +19,7 @@ As a fun exercise, I thought of writing a small python script to figure this out
 ## Solution
 
 There is a python library called [**Instaloader**](https://instaloader.github.io/index.html) which is a tool for downloading pictures (or videos) along with their captions and other metadata from Instagram.
-I'm more interested in metadata part. we can directly extract the followers and followees list of the people you follow if you login into your user ID.
+I'm more interested in metadata part. We can directly extract the followers and followees list of the people you follow if you login into your user ID.
 
 First, we have to create an instaloader instance and then login using our user ID and password
 
