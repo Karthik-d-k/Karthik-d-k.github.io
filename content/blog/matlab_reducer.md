@@ -130,7 +130,7 @@ end
 
 ## Conclusion
 
-- - Full script is available on github [**matlab_reducer.m**](https://github.com/Karthik-d-k/Karthik-d-k.github.io/blob/main/content/scripts/matlab_reducer.m)
+- Full script is available on github [**matlab_reducer.m**](https://github.com/Karthik-d-k/Karthik-d-k.github.io/blob/main/content/scripts/matlab_reducer.m)
 
 
 - Thanks to my friend [**Vijeth Angadi**](https://github.com/Vijeth400) for reviewing the draft version of this blog.
