@@ -1,6 +1,8 @@
 +++
 title = "Matlab/Simulink Model Reducer"
 date = 2024-05-16
+[taxonomies]
+  tags = ["matlab", "script"]
 +++
 
 

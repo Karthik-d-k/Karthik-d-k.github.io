@@ -1,6 +1,8 @@
 +++
 title = "Instagram Followers Inspection"
 date = 2024-05-13
+[taxonomies]
+  tags = ["python", "instagram", "script"]
 +++
 
 
