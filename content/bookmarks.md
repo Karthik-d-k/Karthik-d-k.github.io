@@ -13,6 +13,7 @@ title = "Bookmarks"
 - [Bartosz Ciechanowski](https://ciechanow.ski/)
 - [thephd.dev](https://thephd.dev/)
 - [Beej's Guides](https://beej.us/guide/)
+- [duramecho](http://duramecho.com/)
 
 ----------------
 
