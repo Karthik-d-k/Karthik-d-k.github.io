@@ -19,6 +19,7 @@ title = "Bookmarks"
 
 ### ✨ C
 - [Bit Twiddling Hacks](https://graphics.stanford.edu/~seander/bithacks.html)
+- [Stanford CS Education Library](http://cslibrary.stanford.edu/)
 
 ----------------
 
