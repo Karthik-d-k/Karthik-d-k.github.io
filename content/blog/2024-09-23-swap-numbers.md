@@ -187,3 +187,5 @@ Can you decode why ???
 - There is one most important takeaway from this post which i would like to highlight. If you want to modify values (**"value of interest"**) present in one function from another function, you should share pointers to those **"value of interest"**.
 
 - Full script is available on github [**swap_numbers.c**](https://github.com/Karthik-d-k/Karthik-d-k.github.io/blob/main/content/scripts/swap_numbers.c)
+
+- `Reference`: [cslibrary.stanford.edu/102](http://cslibrary.stanford.edu/102/)

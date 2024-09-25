@@ -165,7 +165,7 @@ include_content = true
 # Accepted values:
 # - "elasticlunr_javascript", "elasticlunr_json"
 # - "fuse_javascript", "fuse_json"
-index_format = "elasticlunr_javascript"
+index_format = "elasticlunr_json"
 
 # Optional translation object for the default language
 # Example:
