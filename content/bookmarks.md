@@ -14,6 +14,7 @@ title = "Bookmarks"
 - [thephd.dev](https://thephd.dev/)
 - [Beej's Guides](https://beej.us/guide/)
 - [duramecho](http://duramecho.com/)
+- [Dmitry.GR](http://dmitry.gr/?)
 
 ----------------
 
