@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>0x646b - c</title>
+    <subtitle>Personal Commentary</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://Karthik-d-k.github.io/tags/c/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-09-23T00:00:00+00:00</updated>
+    <id>https://Karthik-d-k.github.io/tags/c/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Swapping addresses instead of values</title>
+        <published>2024-09-23T00:00:00+00:00</published>
+        <updated>2024-09-23T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/blog/swap-numbers/"/>
+        <id>https://Karthik-d-k.github.io/blog/swap-numbers/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/blog/swap-numbers/">&lt;h2 id=&quot;motivation&quot;&gt;Motivation&lt;&#x2F;h2&gt;
+&lt;p&gt;I was thinking about famous &lt;code&gt;C interview question&lt;&#x2F;code&gt; wherein we will be asked to swap 2 variables. Generally, this could be solved using pointers with either using temporary variable or with xor method.&lt;&#x2F;p&gt;
+&lt;p&gt;But now i want to tackle the same problem in a different perspective.
+Instead of changing the variable’s values, what if we were asked to swap its addresses instead of values ?&lt;&#x2F;p&gt;
+&lt;p&gt;Solving this problem was not straight forward as i thought initially, it involves some fair bit of understanding pointers and pointer to pointer (int** for example) manipulations.&lt;&#x2F;p&gt;
+&lt;p&gt;In this blog, i will try to explain how i got to the solution or in other words, how i would solve it.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;exploration&quot;&gt;Exploration&lt;&#x2F;h2&gt;
+&lt;p&gt;First, lets see how we would solve the problem of swapping 2 variables using function &lt;code&gt;swap&lt;&#x2F;code&gt;. We would write a function as follows, which uses temporary variable as a placeholder to exchange numbers.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 1:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;stdio.h&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;swap&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;a&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;b&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; t;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    t = a;
+&lt;&#x2F;span&gt;&lt;span&gt;    a = b;
+&lt;&#x2F;span&gt;&lt;span&gt;    b = t;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;FUNC  : a = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, a, b);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; a = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;11&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; b = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;BEFORE: a = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, a, b);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;swap&lt;&#x2F;span&gt;&lt;span&gt;(a, b);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;AFTER : a = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, a, b);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 1 stdout:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;BEFORE: a = 11, b = 22
+&lt;&#x2F;span&gt;&lt;span&gt;FUNC  : a = 22, b = 11
+&lt;&#x2F;span&gt;&lt;span&gt;AFTER : a = 11, b = 22
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Surprisingly, we would see the variables are swapped but it is not reflected back to the caller in the main function.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;In &lt;strong&gt;C&lt;&#x2F;strong&gt;, each and every function has its own stack which will be created at the time of function call and destroyed after function call exits. Another most important part is, function parameters and each variables created inside the function is stored in its own stack.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;Hence, even though swap() is changing a and b, it is changing only inside its own stack (look @FUNC output above) and these local variables will be destroyed once function call exits. Hence @AFTER output is unchanged.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;In &lt;strong&gt;C&lt;&#x2F;strong&gt;, to change values present in one function from another function, we have a classic tool for that which is &lt;code&gt;pointers&lt;&#x2F;code&gt;. You would have to share the address of variables &lt;strong&gt;(“value of interest”)&lt;&#x2F;strong&gt; to the function, to access and change the values present inside.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 2:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;stdio.h&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;swap&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ap&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;bp&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; t;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    t = *ap;
+&lt;&#x2F;span&gt;&lt;span&gt;    *ap = *bp;
+&lt;&#x2F;span&gt;&lt;span&gt;    *bp = t;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;FUNC  : a = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, *ap, *bp);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; a = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;11&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; b = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;BEFORE: a = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, a, b);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;swap&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;a, &amp;amp;b);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;AFTER : a = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, a, b);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 2 stdout:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;BEFORE: a = 11, b = 22
+&lt;&#x2F;span&gt;&lt;span&gt;FUNC  : a = 22, b = 11
+&lt;&#x2F;span&gt;&lt;span&gt;AFTER : a = 22, b = 11
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;We are sharing a and b by sending its addresses (&lt;code&gt;&amp;amp;a, &amp;amp;b&lt;&#x2F;code&gt;) to swap func.
+Inside swap func, we are dereferencing a and b (&lt;code&gt;*ap, *bp&lt;&#x2F;code&gt;) to get inside its values and swapping them, this way we are modifying the memory of a and b stored inside main func stack. Output reflects the same above. Here value of interest is a and b and we sent its addresses for modification. This is the most important part of pointers. PLease remember this, this will come back when we try to swap 2 pointers instead of values.&lt;&#x2F;p&gt;
+&lt;p&gt;Now that we know how to swap 2 variables using pointers to the variables, let’s look at the problem of swapping pointers itself (i.e, addresses of variables).&lt;&#x2F;p&gt;
+&lt;p&gt;First we will try the naive way as we did in snippet 1.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 3:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;stdio.h&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;swap&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ap&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;bp&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;* t;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    t = ap;
+&lt;&#x2F;span&gt;&lt;span&gt;    ap = bp;
+&lt;&#x2F;span&gt;&lt;span&gt;    bp = t;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;FUNC  : a = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, ap, *ap, bp, *bp);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; a = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;11&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; b = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;* ap = &amp;amp;a;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;* bp = &amp;amp;b;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;BEFORE: a = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, ap, a, bp, b);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;swap&lt;&#x2F;span&gt;&lt;span&gt;(ap, bp);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;AFTER : a = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, ap, a, bp, b);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;legend --&amp;gt; [ADDRESS]: VALUE&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 3 stdout:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;BEFORE: a = [DBF232EC]: 11, b = [DBF232E8]: 22
+&lt;&#x2F;span&gt;&lt;span&gt;FUNC  : a = [DBF232E8]: 22, b = [DBF232EC]: 11
+&lt;&#x2F;span&gt;&lt;span&gt;AFTER : a = [DBF232EC]: 11, b = [DBF232E8]: 22
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;legend --&amp;gt; [ADDRESS]: VALUE
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;NOTE:&lt;&#x2F;strong&gt; Output addresses printed in the stdout changes with every fresh run of the program and concentrate only on the addresses for now.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;Same fate as &lt;strong&gt;Snippet 1 output&lt;&#x2F;strong&gt;, we were able to change the addresses but it only reflects inside swap func not in main func. The problem again is, we are changing the addresses local to swap function. To change the addresses present in main function, we have to send pointers to these addresses, because now our value of interest is (&lt;code&gt;&amp;amp;a, &amp;amp;b&lt;&#x2F;code&gt;).&lt;&#x2F;p&gt;
+&lt;p&gt;Let’s try sending the pointers to addresses of a and b –&amp;gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 4:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;stdio.h&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;swap&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;** &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;app&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;** &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;bpp&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;* t;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    t = *app;
+&lt;&#x2F;span&gt;&lt;span&gt;    *app = *bpp;
+&lt;&#x2F;span&gt;&lt;span&gt;    *bpp = t;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;FUNC  : a = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, *app, **app, *bpp, **bpp);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; a = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;11&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; b = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;* ap = &amp;amp;a;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;* bp = &amp;amp;b;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;BEFORE: a = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, ap, a, bp, b);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;swap&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;ap, &amp;amp;bp);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;AFTER : a = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, ap, a, bp, b);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;legend --&amp;gt; [ADDRESS]: VALUE&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 4 stdout:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;BEFORE: a = [DBF232EC]: 11, b = [DBF232E8]: 22
+&lt;&#x2F;span&gt;&lt;span&gt;FUNC  : a = [DBF232E8]: 22, b = [DBF232EC]: 11
+&lt;&#x2F;span&gt;&lt;span&gt;AFTER : a = [DBF232E8]: 11, b = [DBF232EC]: 22
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;legend --&amp;gt; [ADDRESS]: VALUE
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;We passed pointers to value of interest and dereferenced inside the calling function to change the values inside it directly so that it reflects back in the caller site.&lt;&#x2F;p&gt;
+&lt;p&gt;Astute reader may have noticed,&lt;br &#x2F;&gt;
+&lt;code&gt;we were able to swap the addresses but not the values of a and b&lt;&#x2F;code&gt;.&lt;br &#x2F;&gt;
+Can you decode why ???&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This question is left as an exercise for the reader and modify the snippet so that we were able to change both addresses and values of variables a and b.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;There is one most important takeaway from this post which i would like to highlight. If you want to modify values (&lt;strong&gt;“value of interest”&lt;&#x2F;strong&gt;) present in one function from another function, you should share pointers to those &lt;strong&gt;“value of interest”&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Full script is available on github &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;Karthik-d-k.github.io&#x2F;blob&#x2F;main&#x2F;content&#x2F;scripts&#x2F;swap_numbers.c&quot;&gt;&lt;strong&gt;swap_numbers.c&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;Reference&lt;&#x2F;code&gt;: &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;http:&#x2F;&#x2F;cslibrary.stanford.edu&#x2F;102&#x2F;&quot;&gt;cslibrary.stanford.edu&#x2F;102&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+</feed>
