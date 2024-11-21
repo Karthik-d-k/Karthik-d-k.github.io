@@ -15,6 +15,7 @@ title = "Bookmarks"
 - [Beej's Guides](https://beej.us/guide/)
 - [duramecho](http://duramecho.com/)
 - [Dmitry.GR](http://dmitry.gr/?)
+- [Eric S. Raymond's Home Page](http://www.catb.org/esr/)
 
 ----------------
 
