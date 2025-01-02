@@ -1,0 +1,26 @@
+<hr>
+
+<footer id="footer">
+
+    <div id="contact-icons">
+        {% if config.generate_feed %}
+        <a class="no-style" target="_blank" rel="noopener noreferrer" href="{{ get_url(path=" atom.xml", trailing_slash=false) }}" title="Subscribe via RSS for updates.">
+            <span class="iconify" data-icon="solar:atom-bold"></span>
+        </a>
+        {% endif %}
+        <a class="no-style" href="mailto:karthikdk1998@gmail.com" target="_blank" title="Email">
+            <span class="iconify" data-icon="mdi:email"></span>
+        </a>
+        <a class="no-style" href="https://github.com/Karthik-d-k" target="_blank" rel="noopener noreferrer" title="GitHub">
+            <span class="iconify" data-icon="mdi:github"></span>
+        </a>
+        <a class="no-style" href="https://x.com/Karthik_d_k" target="_blank" rel="noopener noreferrer" title="Twitter">
+            <span class="iconify" data-icon="mdi:twitter"></span>
+        </a>
+        <a class="no-style" href="https://www.linkedin.com/in/karthik-d-k-319853166" target="_blank" rel="noopener noreferrer" title="LinkedIn">
+            <span class="iconify" data-icon="mdi:linkedin"></span>
+        </a>
+    </div>
+    <!-- Add Iconify library -->
+    <script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
+</footer>

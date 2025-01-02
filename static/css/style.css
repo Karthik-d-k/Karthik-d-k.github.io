@@ -112,3 +112,32 @@ code {
     scrollbar-color: var(--accent) var(--bg-light);
     scrollbar-width: thin;
 }
+
+/* Beautify footer elements */
+#footer {
+    background-color: var(--accent) var(--bg-light);
+    /* Dark background */
+    padding: 20px 0;
+    text-align: center;
+}
+
+#contact-icons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+#contact-icons a {
+    color: var(--accent);
+    /* White icons */
+    font-size: 2em;
+    /* Adjust size as needed */
+    transition: transform 0.3s, color 0.3s;
+}
+
+#contact-icons a:hover {
+    color: var(--accent);
+    /* Highlight color on hover */
+    transform: scale(1.2);
+    /* Slight enlargement on hover */
+}
