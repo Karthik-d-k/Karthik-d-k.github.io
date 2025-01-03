@@ -16,6 +16,7 @@ title = "Bookmarks"
 - [duramecho](http://duramecho.com/)
 - [Dmitry.GR](http://dmitry.gr/?)
 - [Eric S. Raymond's Home Page](http://www.catb.org/esr/)
+- [Richard S. Sutton's Home Page](http://www.incompleteideas.net/)
 
 ----------------
 
