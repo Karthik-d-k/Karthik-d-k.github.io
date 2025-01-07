@@ -2,9 +2,11 @@
 title = "Projects"
 +++
 
+
 <hr>
 
-## Open Source Projects
+## Open Source
+<hr>
 
 #### robot-hat-rs
 
@@ -22,7 +24,9 @@ title = "Projects"
 
 <hr>
 
-## Fun Projects
+## Fun
+
+<hr>
 
 #### picars
 
@@ -49,14 +53,18 @@ title = "Projects"
 
 <hr>
 
-## Open Source Contributions
+## Contributions
+
+<hr>
 
 - Actively contributing on GitHub, notable contributions being done to fastai and FluxML Deep Learning libraries.
 - You can find all my pull-requests on [Github 🡵](https://github.com/pulls?q=is%3Apr+archived%3Afalse+is%3Aclosed+author%3AKarthik-d-k)
 
 <hr>
 
-## Graduation project
+## Graduation
+
+<hr>
 
 #### Closed loop control of Anesthesia Administration
 
