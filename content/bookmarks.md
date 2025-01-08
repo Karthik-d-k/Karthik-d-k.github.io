@@ -59,6 +59,7 @@ title = "Bookmarks"
 - [Linux Kernel Teaching](https://linux-kernel-labs.github.io/refs/heads/master/index.html)
 - [The Linux Kernel documentation](https://docs.kernel.org/)
 - [OSDev Wiki](https://wiki.osdev.org/Main_Page)
+- [bootlin Linux Training Docs](https://bootlin.com/docs/)
 
 ----------------
 
