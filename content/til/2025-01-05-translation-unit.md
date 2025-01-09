@@ -23,7 +23,7 @@ void print_exe() {
 }
 ```
 
-File: `mian.c`
+File: `main.c`
 
 ```c
 #include "print.exe"
@@ -49,7 +49,7 @@ print-main
 print-exe
 ```
 
-- In this example, we have one TU i.e, main.c which includes other source file *print.exe*, even though the extension is *.exe it still works as expected.
+- In this example, we have one TU i.e, **main.c** which includes other source file **print.exe**, even though the extension is *.exe it still works as expected.
 Output prints both the print statements from main.c and print.exe file.
 
 
