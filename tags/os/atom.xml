@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>0x646b - os</title>
+    <subtitle>Personal Commentary</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://Karthik-d-k.github.io/tags/os/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-01-06T00:00:00+00:00</updated>
+    <id>https://Karthik-d-k.github.io/tags/os/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Case-sensitive Settings on Windows</title>
+        <published>2025-01-06T00:00:00+00:00</published>
+        <updated>2025-01-06T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/til/case-sensitive-windows/"/>
+        <id>https://Karthik-d-k.github.io/til/case-sensitive-windows/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/til/case-sensitive-windows/">&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;I was trying to clone the &lt;strong&gt;Linux&lt;&#x2F;strong&gt; git stable repository on my Windows 10 machine using the following command:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; clone https:&#x2F;&#x2F;git.kernel.org&#x2F;pub&#x2F;scm&#x2F;linux&#x2F;kernel&#x2F;git&#x2F;stable&#x2F;linux.git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --depth&lt;&#x2F;span&gt;&lt;span&gt; 1
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Unfortunately, this failed with the following warning because the Linux tree contains files with the same name but with different case sensitivity:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;warning:&lt;&#x2F;span&gt;&lt;span&gt; the following paths have collided (e.g. case-sensitive paths
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;on&lt;&#x2F;span&gt;&lt;span&gt; a case-insensitive filesystem) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;and&lt;&#x2F;span&gt;&lt;span&gt; only one from the same
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;colliding&lt;&#x2F;span&gt;&lt;span&gt; group is in the working tree:
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;The Windows 10 file system by default is &lt;strong&gt;case-insensitive&lt;&#x2F;strong&gt;, meaning it treats both &lt;strong&gt;ip6t_hl.h&lt;&#x2F;strong&gt; and &lt;strong&gt;ip6t_HL.h&lt;&#x2F;strong&gt; as the same file. This is not true for Linux file systems, as they treat these as different files because the file system is case-sensitive.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;This problem can be solved in two ways:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;We can use &lt;strong&gt;WSL (Windows Subsystem for Linux)&lt;&#x2F;strong&gt; on our Windows machine.&lt;&#x2F;li&gt;
+&lt;li&gt;We can enable case sensitivity for a folder using the &lt;strong&gt;fsutil&lt;&#x2F;strong&gt; command:&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fsutil&lt;&#x2F;span&gt;&lt;span&gt; file setCaseSensitiveInfo &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&amp;lt;path-to-directory&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; enable
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;ul&gt;
+&lt;li&gt;You can verify if this worked using the following command:&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fsutil.exe&lt;&#x2F;span&gt;&lt;span&gt; file queryCaseSensitiveInfo &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&amp;lt;path-to-directory&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;references&quot;&gt;References&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;stackoverflow.com&#x2F;a&#x2F;64466310&quot;&gt;Stack Overflow: Case-sensitive path collisions&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+</feed>
