@@ -142,3 +142,13 @@ code {
     transform: scale(1.2);
     /* Slight enlargement on hover */
 }
+
+/* align text in paragraphs */
+main p {
+    text-align: justify;
+}
+
+main ul,
+main ol {
+    text-align: justify;
+}
