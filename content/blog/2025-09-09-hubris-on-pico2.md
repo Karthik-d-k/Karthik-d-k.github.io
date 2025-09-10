@@ -63,12 +63,14 @@ which includes an updated `probe-rs` version that supports our Pico 2W board.
 
 7. `hubake`
 
-- We have install hubake from my forked repo wherein i fixed some of windows specific issues. Follow below steps:
+- We have to install hubake from my forked repo wherein i fixed some of windows specific issues. Follow below steps:
 
     ```sh
     $ git clone https://github.com/Karthik-d-k/exhubris-riscv-hazard3
 
     $ cd exhubris-riscv-hazard3
+
+    $ git checkout windows
 
     $ cargo install --path .\tools\hubake\
     ```
