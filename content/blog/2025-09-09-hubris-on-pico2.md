@@ -1,13 +1,13 @@
 +++
-title = "Hubris OS on RP Pico 2(W) board"
+title = "Hubris OS on RP Pico 2(W) board (Cortex-M33 ARM core)"
 date = 2025-09-09
 [taxonomies]
-  tags = ["rp235x", "rust", "hubris", "os"]
+  tags = ["rp235x", "rust", "hubris", "os", "arm"]
 +++
 
 ## Motivation
 
-As explained in my [previous blog post](http://127.0.0.1:1111/blog/rp235x-blinky/), I have been experimenting with `Hubris` OS to port it to a `RISC-V` chip.
+As explained in my [rp235x-blinky blog post](https://karthik-d-k.github.io/blog/rp235x-blinky/), I have been experimenting with `Hubris` OS to port it to a `RISC-V` chip.
 I have access to a `Pico 2W` board for development and testing. This board is especially exciting because it comes with dual Cortex-M33 cores and dual RISC-V Hazard3 cores. 
 My approach was to start with the Cortex-M33 side first, since Hubris already has solid ARM support.
 
