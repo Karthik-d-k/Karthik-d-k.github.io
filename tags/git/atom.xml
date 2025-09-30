@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>0x646b - git</title>
+    <subtitle>Personal Commentary</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://Karthik-d-k.github.io/tags/git/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-09-17T00:00:00+00:00</updated>
+    <id>https://Karthik-d-k.github.io/tags/git/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Local commits to forked feature branch</title>
+        <published>2025-09-17T00:00:00+00:00</published>
+        <updated>2025-09-17T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/til/local-commits-to-forked-feature-branch/"/>
+        <id>https://Karthik-d-k.github.io/til/local-commits-to-forked-feature-branch/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/til/local-commits-to-forked-feature-branch/">&lt;h3 id=&quot;problem-statement&quot;&gt;Problem Statement&lt;&#x2F;h3&gt;
+&lt;p&gt;A local clone of a GitHub repository contains uncommitted modifications. The objective is to fork the original repository to a personal GitHub account,
+configure the fork as the primary remote, and ensure changes are pushed to a new feature branch rather than the &lt;code&gt;master&lt;&#x2F;code&gt; branch.
+This setup keeps master clean and aligned with the original repository while isolating custom work in a &lt;code&gt;dedicated branch&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;1-fork-the-repo-on-github&quot;&gt;1. Fork the repo on GitHub&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Go to the &lt;strong&gt;original repo’s page&lt;&#x2F;strong&gt; on GitHub.&lt;&#x2F;li&gt;
+&lt;li&gt;Click &lt;strong&gt;Fork&lt;&#x2F;strong&gt; (top-right).&lt;&#x2F;li&gt;
+&lt;li&gt;This creates a fork under your GitHub account.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;2-add-your-fork-as-a-remote&quot;&gt;2. Add your fork as a remote&lt;&#x2F;h3&gt;
+&lt;p&gt;In your local repo, add your fork as &lt;code&gt;origin&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; remote set-url origin git@github.com:&amp;lt;your-username&amp;gt;&#x2F;&amp;lt;forked-repo&amp;gt;.git
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Use HTTPS instead of SSH if that’s how you cloned.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h3 id=&quot;3-keep-the-original-repo-as-upstream&quot;&gt;3. Keep the original repo as &lt;code&gt;upstream&lt;&#x2F;code&gt;:&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; remote add upstream git@github.com:&amp;lt;original-owner&amp;gt;&#x2F;&amp;lt;original-repo&amp;gt;.git
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Verify remotes:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; remote&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -v
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;You should see:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;origin&lt;&#x2F;code&gt; → your fork&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;upstream&lt;&#x2F;code&gt; → original repo&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;4-commit-your-changes-if-not-already&quot;&gt;4. Commit your changes (if not already)&lt;&#x2F;h3&gt;
+&lt;p&gt;Check status:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; status
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;If you have uncommitted changes:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; add .
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; commit&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -m &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Your message&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;5-create-a-new-branch-for-your-changes&quot;&gt;5. Create a new branch for your changes&lt;&#x2F;h3&gt;
+&lt;p&gt;Instead of pushing to &lt;code&gt;master&lt;&#x2F;code&gt;, create a new branch:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; checkout&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -b&lt;&#x2F;span&gt;&lt;span&gt; my-feature-branch
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;6-push-new-branch-to-your-fork&quot;&gt;6. Push new branch to your fork&lt;&#x2F;h3&gt;
+&lt;p&gt;Push this branch to your fork (&lt;code&gt;origin&lt;&#x2F;code&gt;):&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; push origin my-feature-branch
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;7-keep-master-clean&quot;&gt;7. Keep master clean&lt;&#x2F;h3&gt;
+&lt;p&gt;Make sure your local &lt;code&gt;master&lt;&#x2F;code&gt; tracks the original repo:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; checkout master
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; fetch upstream
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; reset&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --hard&lt;&#x2F;span&gt;&lt;span&gt; upstream&#x2F;master
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; push origin master&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --force   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# keep fork’s master in sync
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;8-remove-the-original-repo-remote&quot;&gt;8. Remove the original repo remote&lt;&#x2F;h3&gt;
+&lt;p&gt;If you no longer want the &lt;strong&gt;original repo&lt;&#x2F;strong&gt; (&lt;code&gt;upstream&lt;&#x2F;code&gt;) connected to your local repo, you can simply remove it:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; remote remove upstream
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Check your remotes again:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; remote&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -v
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now you should only see your &lt;strong&gt;fork (&lt;code&gt;origin&lt;&#x2F;code&gt;)&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;references&quot;&gt;References&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;chatgpt.com&#x2F;&quot;&gt;ChatGPT&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+</feed>
