@@ -39,7 +39,7 @@ I'm using [just](https://github.com/casey/just) to simplify the build process. F
     ├───────────────────┼───────────────────────────────────────────────────────┤
     │ Config path       │ .\app\rp235x-hazard3\app.kdl                          │
     ├───────────────────┼───────────────────────────────────────────────────────┤
-    │ Workspace root    │ \\?\C:\Users\adt8kor\wws\riscv\exhubris-riscv-hazard3 │
+    │ Workspace root    │ \\?\C:\Users\<USER>\wws\riscv\exhubris-riscv-hazard3 │
     ├───────────────────┼───────────────────────────────────────────────────────┤
     │ Host platform     │ x86_64-pc-windows-msvc                                │
     ├───────────────────┼───────────────────────────────────────────────────────┤
@@ -96,7 +96,7 @@ I'm using [just](https://github.com/casey/just) to simplify the build process. F
 
     ╭─────────────────────────────────────────────────────────────────────────╮
     │ Build complete! Archive:                                                │
-    │ \\?\C:\Users\adt8kor\wws\riscv\exhubris-riscv-hazard3\hazard3-build.zip │
+    │ \\?\C:\Users\<USER>\wws\riscv\exhubris-riscv-hazard3\hazard3-build.zip │
     ╰─────────────────────────────────────────────────────────────────────────╯
 
     hubake pack-hex .\.work\hazard3\final\ output.hex

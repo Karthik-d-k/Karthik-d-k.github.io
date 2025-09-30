@@ -31,7 +31,7 @@ I will list everything that we need to work with both ARM and RISC-V cores.
 
 - For *OpenOCD*, we have to set the following environment variable:
 
-  **OPENOCD_SCRIPTS**: C:\Users\adt8kor\wws\tools\openocd\0.12.0+dev\scripts
+  **OPENOCD_SCRIPTS**: C:\Users\<USER>\wws\tools\openocd\0.12.0+dev\scripts
 
 3. `RISC-V TOOLCHAIN`
 
