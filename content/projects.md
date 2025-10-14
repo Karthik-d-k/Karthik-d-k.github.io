@@ -15,12 +15,28 @@ title = "Projects"
 - You can find the source code on [Github 🡵](https://github.com/Karthik-d-k/robot-hat-rs)
 
 
-
 #### ixv
 
 - Developed a CLI application in Rust for verifying intel hex file(s).
 - Published library on [crates.io 🡵](https://crates.io/crates/ixv) receiving thousands of downloads from the community.
 - You can find the source code on [Github 🡵](https://github.com/Karthik-d-k/ixv)
+
+
+#### hubris
+
+- [WIP] Porting the Hubris operating system to RISC-V core.
+- Added minimal kernel support for RISC-V core and ported build system to support it.
+- You can find the source code on [Github 🡵](https://github.com/Karthik-d-k/hubris-riscv-hazard3/tree/hazard3)
+
+
+#### exhubris
+
+- Ported the build system to support RISC-V architecture.
+- Built demo application on RP Pico 2W Board.
+- Demo works successfully on both ARM core **Cortex-M33** and RISC-V core **Hazard3**.
+- Demo applications can be found here:
+    1. [Cortex-M33 🡵](https://github.com/Karthik-d-k/exhubris-demo-rp235x)
+    2. [Hazard3 🡵](https://github.com/Karthik-d-k/exhubris-riscv-hazard3/tree/rp235x-hazard3)
 
 <hr>
 
