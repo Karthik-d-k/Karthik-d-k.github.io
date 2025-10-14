@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>0x646b - batch</title>
+    <subtitle>Personal Commentary</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://Karthik-d-k.github.io/tags/batch/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-07-02T00:00:00+00:00</updated>
+    <id>https://Karthik-d-k.github.io/tags/batch/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Batch script for Copying Binaries</title>
+        <published>2024-07-02T00:00:00+00:00</published>
+        <updated>2024-07-02T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/blog/copy-binaries/"/>
+        <id>https://Karthik-d-k.github.io/blog/copy-binaries/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/blog/copy-binaries/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;I got tired of manually copying the necessary files from the build project folder. Additionally, I had to copy the zipped project content to the destination folder every time I delivered a project. To streamline this process, I decided to automate the task using a Windows batch script as my development operating system is Windows.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;problem&quot;&gt;Problem&lt;&#x2F;h2&gt;
+&lt;p&gt;Write a windows batch script to automate zipping the content and also copying the files.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;solution&quot;&gt;Solution&lt;&#x2F;h2&gt;
+&lt;p&gt;I have &lt;code&gt;7-zip&lt;&#x2F;code&gt; installed in my machine so i use this tool to zip the contents and &lt;code&gt;xcopy&lt;&#x2F;code&gt;, an inbuilt tool in windows is used for copying the files.
+I will explain each part of the script below.&lt;&#x2F;p&gt;
+&lt;p&gt;First and foremost thing in batch scripts is to turn off outputting the commands run but for debugging purpose, we can comment-out&#x2F;delete this line&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bat&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bat &quot;&gt;&lt;code class=&quot;language-bat&quot; data-lang=&quot;bat&quot;&gt;&lt;span&gt;@&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;ECHO&lt;&#x2F;span&gt;&lt;span&gt; off
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Change directory to the folder where the script is placed (ideally PROJECT root) using &lt;code&gt;%~dp0&lt;&#x2F;code&gt;, %0 refers to the batch file.
+Set destination to new folder &lt;code&gt;_share&lt;&#x2F;code&gt; inside root directory or to any folder to your needs&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bat&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bat &quot;&gt;&lt;code class=&quot;language-bat&quot; data-lang=&quot;bat&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;CD &lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;~dp0
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;SET &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;dest&lt;&#x2F;span&gt;&lt;span&gt;=%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cd&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;\_share
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Next, extract the PROJECT folder name and zip its contents using &lt;code&gt;7-zip&lt;&#x2F;code&gt;.
+I don’t have clear understanding of how code line for extracting folder name works, this was made possible by googling and chatting with chatgpt for a day :)&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bat&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bat &quot;&gt;&lt;code class=&quot;language-bat&quot; data-lang=&quot;bat&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;FOR &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;%%&lt;&#x2F;span&gt;&lt;span&gt;F in (&amp;quot;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;CD&lt;&#x2F;span&gt;&lt;span&gt;%&amp;quot;) DO &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;SET &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PROJECT_name&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;%%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;~nxF&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;7z a ..\%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PROJECT_name&lt;&#x2F;span&gt;&lt;span&gt;%.zip %&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cd&lt;&#x2F;span&gt;&lt;span&gt;%\
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Set all the required files that you want to copy using &lt;code&gt;SET&lt;&#x2F;code&gt; and copy using &lt;code&gt;xcopy&lt;&#x2F;code&gt;.
+&lt;code&gt;&#x2F;y&lt;&#x2F;code&gt; option is used to accept to copy the files by default.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bat&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bat &quot;&gt;&lt;code class=&quot;language-bat&quot; data-lang=&quot;bat&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;SET &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;zip&lt;&#x2F;span&gt;&lt;span&gt;=%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;CD&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;\..\&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PROJECT_name&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;.zip
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;SET &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;hex&lt;&#x2F;span&gt;&lt;span&gt;=%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;CD&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;\bin\&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PROJECT_name&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;.hex
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;SET &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;config&lt;&#x2F;span&gt;&lt;span&gt;=%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;CD&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;\gen\&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PROJECT_name&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;.xml
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;:: etc ...
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;:: Copy files using xcopy
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;FOR &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;%%&lt;&#x2F;span&gt;&lt;span&gt;F in (%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;zip&lt;&#x2F;span&gt;&lt;span&gt;%, %&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;hex&lt;&#x2F;span&gt;&lt;span&gt;%, %&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;config&lt;&#x2F;span&gt;&lt;span&gt;%) DO &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;xcopy &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;%%&lt;&#x2F;span&gt;&lt;span&gt;F %&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;dest&lt;&#x2F;span&gt;&lt;span&gt;%\ &#x2F;y
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Use &lt;code&gt;pause&lt;&#x2F;code&gt; before exiting the program, so that you can see which files are copied in the standard output window&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bat&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bat &quot;&gt;&lt;code class=&quot;language-bat&quot; data-lang=&quot;bat&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;:: pause to see the stdout
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;pause
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;exit&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;b &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Full script is available on github &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;Karthik-d-k.github.io&#x2F;blob&#x2F;main&#x2F;content&#x2F;scripts&#x2F;copy_binaries.bat&quot;&gt;&lt;strong&gt;copy_binaries.bat&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+</feed>

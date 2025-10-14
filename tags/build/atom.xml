@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>0x646b - build</title>
+    <subtitle>Personal Commentary</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://Karthik-d-k.github.io/tags/build/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-01-08T00:00:00+00:00</updated>
+    <id>https://Karthik-d-k.github.io/tags/build/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Building Software from Source</title>
+        <published>2025-01-08T00:00:00+00:00</published>
+        <updated>2025-01-08T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/til/building-software-from-source/"/>
+        <id>https://Karthik-d-k.github.io/til/building-software-from-source/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/til/building-software-from-source/">&lt;p&gt;I would like to write down notes on how to build software from scratch based on &lt;strong&gt;Andrew Kelley’s&lt;&#x2F;strong&gt; explanation &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;youtu.be&#x2F;CwXixVcliP0?si=k16EXojdGuUsG1XM&quot;&gt;here 🡵&lt;&#x2F;a&gt;. This is a perfect video that I found to learn this stuff and I know I&#x2F;Someone else will refer to this often and find it useful.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;ways-to-obtain-software&quot;&gt;Ways to Obtain Software&lt;&#x2F;h2&gt;
+&lt;h4 id=&quot;downloading-upstream-binary-distributions&quot;&gt;Downloading Upstream Binary Distributions&lt;&#x2F;h4&gt;
+&lt;p&gt;Binaries will be available directly, which we can download and run without building software from scratch. These are built by the project maintainers for all major distributions.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Example:&lt;&#x2F;strong&gt; On GitHub, this will mostly be available under the &lt;strong&gt;Releases&lt;&#x2F;strong&gt; page of the repo.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;downloading-from-system-package-managers&quot;&gt;Downloading from System Package Managers&lt;&#x2F;h4&gt;
+&lt;p&gt;Binaries can be downloaded by particular system package managers. These will be built by package maintainers and not necessarily by the project maintainers.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Example:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;choco, scoop, winget&lt;&#x2F;strong&gt; for Windows&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;apt-get, apt&lt;&#x2F;strong&gt; for Linux Debian&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;brew&lt;&#x2F;strong&gt; for macOS&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h4 id=&quot;building-directly-from-source&quot;&gt;Building Directly from Source&lt;&#x2F;h4&gt;
+&lt;p&gt;Creating binaries from source is the best way to do it if we want to change the source code and behavior of some specifics and also if we want to configure differently than what upstream&#x2F;system packages do.&lt;&#x2F;p&gt;
+&lt;p&gt;Most of the core software is built in &lt;strong&gt;C&#x2F;C++&lt;&#x2F;strong&gt;. Typically, there will be 3 phases to install such software: &lt;code&gt;configure&lt;&#x2F;code&gt;, &lt;code&gt;build&lt;&#x2F;code&gt;, and &lt;code&gt;install&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Configure:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;During this phase, we can configure different kinds of things, including but not limited to enabling&#x2F;disabling features.&lt;&#x2F;li&gt;
+&lt;li&gt;The most important configuration is to choose a non-root folder as the prefix to install the software. This is important because we don’t want to mess up the system files. And we can install software without using &lt;em&gt;sudo&lt;&#x2F;em&gt;.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Build:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;This is the phase where the software is actually built.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;em&gt;make&lt;&#x2F;em&gt; is used to achieve this. But make has terrible defaults. So, we need to pass some flags to make it work as we want.
+&lt;ul&gt;
+&lt;li&gt;Example: Enable parallel build using the &lt;code&gt;-j &amp;lt;N&amp;gt;&lt;&#x2F;code&gt; flag. Make sure to pass in the number of cores to use, or else it will keep on forking new processes, and there is a high chance that the system will hang.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Install:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;make install&lt;&#x2F;strong&gt; is used to achieve this. This will install the software in the prefix location, which is &lt;code&gt;$prefix&#x2F;bin&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;We can avoid using &lt;strong&gt;sudo make install&lt;&#x2F;strong&gt; because we would have configured the software to install in a non-root folder.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;best-practices&quot;&gt;Best Practices&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Do not use the &lt;strong&gt;dev&lt;&#x2F;strong&gt; branch where stuff could break; instead, use the &lt;strong&gt;latest bugfix release&lt;&#x2F;strong&gt; tagged branch to build software from source.&lt;&#x2F;li&gt;
+&lt;li&gt;Do not use a different compiler toolchain; always try to stick to your system toolchain.&lt;&#x2F;li&gt;
+&lt;li&gt;Try installing software without actually using &lt;em&gt;docker&lt;&#x2F;em&gt; or a &lt;em&gt;virtual machine&lt;&#x2F;em&gt;, because it’s easier that way.&lt;&#x2F;li&gt;
+&lt;li&gt;Do not ssh into a different machine to copy files haphazardly.&lt;&#x2F;li&gt;
+&lt;li&gt;Do not use weird configure options to build the software.&lt;&#x2F;li&gt;
+&lt;li&gt;Do not edit the source haphazardly to make it work most of the time.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;references&quot;&gt;References&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;youtu.be&#x2F;CwXixVcliP0?si=k16EXojdGuUsG1XM&quot;&gt;How to Build Software From Source - Andrew Kelley&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+</feed>
