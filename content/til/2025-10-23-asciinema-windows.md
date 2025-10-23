@@ -2,7 +2,7 @@
 title = "Running asciinema from windows"
 date = 2025-10-23
 [taxonomies]
-  tags = ["wsl", "asciinema"]
+  tags = ["asciinema", "wsl", "windows"]
 +++
 
 As described in the [asciinema README](https://github.com/asciinema/asciinema), **asciinema** (aka asciinema CLI or asciinema recorder) is a command-line tool
