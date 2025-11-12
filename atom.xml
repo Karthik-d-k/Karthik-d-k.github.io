@@ -1,0 +1,1143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>0x646b</title>
+    <subtitle>Personal Commentary</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://Karthik-d-k.github.io/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-10-23T00:00:00+00:00</updated>
+    <id>https://Karthik-d-k.github.io/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Running asciinema from windows</title>
+        <published>2025-10-23T00:00:00+00:00</published>
+        <updated>2025-10-23T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/til/asciinema-windows/"/>
+        <id>https://Karthik-d-k.github.io/til/asciinema-windows/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/til/asciinema-windows/">&lt;p&gt;As described in the &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;asciinema&#x2F;asciinema&quot;&gt;asciinema README&lt;&#x2F;a&gt;, &lt;strong&gt;asciinema&lt;&#x2F;strong&gt; (aka asciinema CLI or asciinema recorder) is a command-line tool
+for recording and live streaming terminal sessions.&lt;&#x2F;p&gt;
+&lt;p&gt;Unlike typical &lt;em&gt;screen&lt;&#x2F;em&gt; recording software, which records visual output of a
+screen into heavyweight video files (&lt;code&gt;.mp4&lt;&#x2F;code&gt;, &lt;code&gt;.mov&lt;&#x2F;code&gt;), asciinema CLI runs
+&lt;em&gt;inside a terminal&lt;&#x2F;em&gt;, capturing terminal session output into lightweight
+recording files in the &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;docs.asciinema.org&#x2F;manual&#x2F;asciicast&#x2F;v3&#x2F;&quot;&gt;asciicast&lt;&#x2F;a&gt; format (&lt;code&gt;.cast&lt;&#x2F;code&gt;),
+or streaming it live to viewers in real-time.&lt;&#x2F;p&gt;
+&lt;p&gt;For now, it only supports GNU&#x2F;Linux, macOS and FreeBSD.
+Windows is currently not supported. See discussion &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;orgs&#x2F;asciinema&#x2F;discussions&#x2F;278&quot;&gt;#278&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;As I have &lt;code&gt;WSL&lt;&#x2F;code&gt; installed on my Windows machine, I can run asciinema from the WSL terminal.
+To make it run from PowerShell, I modified my PowerShell profile to add functions that call into the WSL asciinema binary.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;powershell&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-powershell &quot;&gt;&lt;code class=&quot;language-powershell&quot; data-lang=&quot;powershell&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Asciinema aliases using WSL
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;asciinema &lt;&#x2F;span&gt;&lt;span&gt;{ wsl ~&#x2F;.cargo&#x2F;bin&#x2F;asciinema @&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;args &lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;record &lt;&#x2F;span&gt;&lt;span&gt;{ wsl -d Ubuntu-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22.04&lt;&#x2F;span&gt;&lt;span&gt; ~&#x2F;.cargo&#x2F;bin&#x2F;asciinema rec @&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;args &lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;play   &lt;&#x2F;span&gt;&lt;span&gt;{ wsl -d Ubuntu-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22.04&lt;&#x2F;span&gt;&lt;span&gt; ~&#x2F;.cargo&#x2F;bin&#x2F;asciinema play @&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;args &lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;stream &lt;&#x2F;span&gt;&lt;span&gt;{ wsl -d Ubuntu-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22.04&lt;&#x2F;span&gt;&lt;span&gt; ~&#x2F;.cargo&#x2F;bin&#x2F;asciinema stream @&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;args &lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This is the simplest way that I found to record PowerShell terminal sessions using asciinema.
+I have no idea as of now if this is the best way to do it, but it works for me.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Local commits to forked feature branch</title>
+        <published>2025-09-17T00:00:00+00:00</published>
+        <updated>2025-09-17T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/til/local-commits-to-forked-feature-branch/"/>
+        <id>https://Karthik-d-k.github.io/til/local-commits-to-forked-feature-branch/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/til/local-commits-to-forked-feature-branch/">&lt;h3 id=&quot;problem-statement&quot;&gt;Problem Statement&lt;&#x2F;h3&gt;
+&lt;p&gt;A local clone of a GitHub repository contains uncommitted modifications. The objective is to fork the original repository to a personal GitHub account,
+configure the fork as the primary remote, and ensure changes are pushed to a new feature branch rather than the &lt;code&gt;master&lt;&#x2F;code&gt; branch.
+This setup keeps master clean and aligned with the original repository while isolating custom work in a &lt;code&gt;dedicated branch&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;1-fork-the-repo-on-github&quot;&gt;1. Fork the repo on GitHub&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Go to the &lt;strong&gt;original repo’s page&lt;&#x2F;strong&gt; on GitHub.&lt;&#x2F;li&gt;
+&lt;li&gt;Click &lt;strong&gt;Fork&lt;&#x2F;strong&gt; (top-right).&lt;&#x2F;li&gt;
+&lt;li&gt;This creates a fork under your GitHub account.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;2-add-your-fork-as-a-remote&quot;&gt;2. Add your fork as a remote&lt;&#x2F;h3&gt;
+&lt;p&gt;In your local repo, add your fork as &lt;code&gt;origin&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; remote set-url origin git@github.com:&amp;lt;your-username&amp;gt;&#x2F;&amp;lt;forked-repo&amp;gt;.git
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Use HTTPS instead of SSH if that’s how you cloned.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h3 id=&quot;3-keep-the-original-repo-as-upstream&quot;&gt;3. Keep the original repo as &lt;code&gt;upstream&lt;&#x2F;code&gt;:&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; remote add upstream git@github.com:&amp;lt;original-owner&amp;gt;&#x2F;&amp;lt;original-repo&amp;gt;.git
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Verify remotes:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; remote&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -v
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;You should see:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;origin&lt;&#x2F;code&gt; → your fork&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;upstream&lt;&#x2F;code&gt; → original repo&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;4-commit-your-changes-if-not-already&quot;&gt;4. Commit your changes (if not already)&lt;&#x2F;h3&gt;
+&lt;p&gt;Check status:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; status
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;If you have uncommitted changes:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; add .
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; commit&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -m &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Your message&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;5-create-a-new-branch-for-your-changes&quot;&gt;5. Create a new branch for your changes&lt;&#x2F;h3&gt;
+&lt;p&gt;Instead of pushing to &lt;code&gt;master&lt;&#x2F;code&gt;, create a new branch:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; checkout&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -b&lt;&#x2F;span&gt;&lt;span&gt; my-feature-branch
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;6-push-new-branch-to-your-fork&quot;&gt;6. Push new branch to your fork&lt;&#x2F;h3&gt;
+&lt;p&gt;Push this branch to your fork (&lt;code&gt;origin&lt;&#x2F;code&gt;):&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; push origin my-feature-branch
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;7-keep-master-clean&quot;&gt;7. Keep master clean&lt;&#x2F;h3&gt;
+&lt;p&gt;Make sure your local &lt;code&gt;master&lt;&#x2F;code&gt; tracks the original repo:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; checkout master
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; fetch upstream
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; reset&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --hard&lt;&#x2F;span&gt;&lt;span&gt; upstream&#x2F;master
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; push origin master&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --force   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# keep fork’s master in sync
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;8-remove-the-original-repo-remote&quot;&gt;8. Remove the original repo remote&lt;&#x2F;h3&gt;
+&lt;p&gt;If you no longer want the &lt;strong&gt;original repo&lt;&#x2F;strong&gt; (&lt;code&gt;upstream&lt;&#x2F;code&gt;) connected to your local repo, you can simply remove it:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; remote remove upstream
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Check your remotes again:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; remote&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -v
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now you should only see your &lt;strong&gt;fork (&lt;code&gt;origin&lt;&#x2F;code&gt;)&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;references&quot;&gt;References&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;chatgpt.com&#x2F;&quot;&gt;ChatGPT&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Blink an LED using rp235x-pac crate</title>
+        <published>2025-08-13T00:00:00+00:00</published>
+        <updated>2025-08-13T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/blog/rp235x-blinky/"/>
+        <id>https://Karthik-d-k.github.io/blog/rp235x-blinky/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/blog/rp235x-blinky/">&lt;h2 id=&quot;motivation&quot;&gt;Motivation&lt;&#x2F;h2&gt;
+&lt;p&gt;I have been experimenting with &lt;code&gt;Hubris&lt;&#x2F;code&gt; OS to port to &lt;code&gt;riscv&lt;&#x2F;code&gt; ISA. I currently have access to &lt;code&gt;Pico 2 w&lt;&#x2F;code&gt; Board for development and testing.
+Hubris is a real time operating system designed for embedded devices and it has a very unique trait wherein that hardware that it runs on should have &lt;strong&gt;Physical memory protection unit&lt;&#x2F;strong&gt;,
+not necessarily &lt;strong&gt;Memory management unit&lt;&#x2F;strong&gt; and each and every task the OS spawns must be allocated its own memory region and memory protected. This trait helps in isolating tasks and preventing them from interfering with each other’s memory. So theoretically speaking, we could compile different tasks seperately and link them together to form a complete system image.
+This direction has already been prototyped by &lt;code&gt;exhubris&lt;&#x2F;code&gt;. I have successfully implemented &lt;code&gt;idle&lt;&#x2F;code&gt; and &lt;code&gt;supervisor&lt;&#x2F;code&gt; tasks which are absolutely necessary for an Hubris built application. But for me to actually get a visual feedback that this final image works, I need to implement a &lt;code&gt;blinky&lt;&#x2F;code&gt; task that will toggle the LED on and off.
+For more information checkout my ongoing prototype in forked repo’s &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;hubris-riscv-hazard3&#x2F;tree&#x2F;riscv&quot;&gt;&lt;strong&gt;Hubris&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; and &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;exhubris-riscv-hazard3&#x2F;tree&#x2F;riscv&quot;&gt;&lt;strong&gt;exhubris&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;There’s actually a blocker as to use &lt;code&gt;HAL&lt;&#x2F;code&gt; (Hardware Abstraction Layer) in this context. Since Hubris requires strict memory protection and isolation between tasks, using a traditional HAL could lead to potential violations of these principles. For this reason, Hubris pre-built application demos actually use &lt;code&gt;PAC&lt;&#x2F;code&gt; (Peripheral Access Crate) to interact with hardware in a way that is compatible with its memory protection model. You can checkout this &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;rust-embedded&#x2F;cortex-m&#x2F;issues&#x2F;239&quot;&gt;&lt;strong&gt;issue&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; for additional context.&lt;&#x2F;p&gt;
+&lt;p&gt;I have researched online about using &lt;code&gt;rp235x-pac&lt;&#x2F;code&gt; crate to control the GPIO pins on the Pico 2 W board and toggle the LED. But i didn’t find any examples or documentation specifically addressing this use case. And more importantly i could not use inbuilt LED to blink as is connected to wifi chip present in pico 2 w board, this is not the case in pico 2 board.
+Hence, I’m toggling an external LED connected to one of the GPIO pins.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;problem-statement&quot;&gt;Problem Statement&lt;&#x2F;h2&gt;
+&lt;p&gt;To blink an LED connected to one of the GPIO pins on Pico 2 (w) board. We are not allowed to use HAL crate, so we need to use PAC directly to manipulate the GPIO registers.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;implementation-details&quot;&gt;Implementation Details&lt;&#x2F;h2&gt;
+&lt;p&gt;I tried to use RP2350 Datasheet and rp235x-pac to implement on my own and found out that it’s pretty hard. Hence i went down the path of reverse engineering the HAL crate and how it interacts with the PAC to control the GPIO pins. This implementation is basically my reverse-engineered version of the HAL crate, tailored to work within the constraints of Hubris OS.
+From this point onward you could forget everything about Hubris OS and only concentrate on how to use &lt;code&gt;rp235x-pac&lt;&#x2F;code&gt; crate to control the GPIO pins. Because the underlying principles of using PAC for direct hardware access remain the same regardless of the OS constraints.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;image-metadata&quot;&gt;Image Metadata&lt;&#x2F;h3&gt;
+&lt;p&gt;As per &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;datasheets.raspberrypi.org&#x2F;rp2350&#x2F;rp2350-datasheet.pdf&quot;&gt;&lt;strong&gt;RP2350 Datasheet&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; &lt;em&gt;Section:5.9.5. Minimum Viable Image Metadata&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;A minimum amount of metadata (i.e. a valid `IMAGE_DEF` block) must be embedded in
+&lt;&#x2F;span&gt;&lt;span&gt;any binary for the bootrom to recognise it as a valid program image, as opposed to,
+&lt;&#x2F;span&gt;&lt;span&gt;for example, blank flash contents or a disconnected flash device. This must appear
+&lt;&#x2F;span&gt;&lt;span&gt;within the first 4 kB of a flash image, or anywhere in a RAM or OTP image.
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;As per the datasheet, we know we have to create the following Image Metadata for riscv cores –&amp;gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;&#x2F; A Block as understood by the Boot ROM.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;&#x2F;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;&#x2F; This is an Image Definition Block
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;&#x2F; It contains within the special start and end markers
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;&#x2F;  the Boot ROM is looking for.
+&lt;&#x2F;span&gt;&lt;span&gt;#[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;derive&lt;&#x2F;span&gt;&lt;span&gt;(Debug)]
+&lt;&#x2F;span&gt;&lt;span&gt;#[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;repr&lt;&#x2F;span&gt;&lt;span&gt;(C)]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;pub struct &lt;&#x2F;span&gt;&lt;span&gt;ImageDefBlock {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;marker_start&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u32&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;item&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u32&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;length&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u32&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;offset&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u32&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;marker_end&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u32&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;&#x2F; Tell the Boot ROM about our application
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;&#x2F; Refer RP2350 Datasheet, Section: 5.9.5.2. Minimum RISC-V IMAGE_DEF
+&lt;&#x2F;span&gt;&lt;span&gt;#[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;link_section &lt;&#x2F;span&gt;&lt;span&gt;= &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;.start_block&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;]
+&lt;&#x2F;span&gt;&lt;span&gt;#[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;used&lt;&#x2F;span&gt;&lt;span&gt;]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;pub static &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;IMAGE_DEF&lt;&#x2F;span&gt;&lt;span&gt;: ImageDefBlock = ImageDefBlock {
+&lt;&#x2F;span&gt;&lt;span&gt;    marker_start: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0xffffded3&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    item: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x11010142&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    length: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x000001ff&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    offset: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x00000000&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    marker_end: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0xab123579&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;};
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;link_section = “.start_block”&lt;&#x2F;strong&gt; is used to place the &lt;code&gt;IMAGE_DEF&lt;&#x2F;code&gt; block in a specific section of the binary, ensuring it is located within the first 4 kB of a flash image.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h3 id=&quot;gpio-setup&quot;&gt;GPIO Setup&lt;&#x2F;h3&gt;
+&lt;p&gt;To setup GPIO on rp235x, we need access to 3 peripherals: &lt;strong&gt;SIO&lt;&#x2F;strong&gt;, &lt;strong&gt;IO_BANK0&lt;&#x2F;strong&gt;, and &lt;strong&gt;PADS_BANK0&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;SIO&lt;&#x2F;strong&gt;: Single-cycle I&#x2F;O for fast GPIO operations&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;IO_BANK0&lt;&#x2F;strong&gt;: GPIO function selection and control&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;PADS_BANK0&lt;&#x2F;strong&gt;: Electrical characteristics and pad isolation&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Get an instance of this peripherals by using the &lt;code&gt;rp235x-pac&lt;&#x2F;code&gt; crate.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;use &lt;&#x2F;span&gt;&lt;span&gt;rp235x_pac::{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;IO_BANK0&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;PADS_BANK0&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;SIO&lt;&#x2F;span&gt;&lt;span&gt;};
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; sio: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;SIO &lt;&#x2F;span&gt;&lt;span&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;unsafe &lt;&#x2F;span&gt;&lt;span&gt;{ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;SIO&lt;&#x2F;span&gt;&lt;span&gt;::steal() };
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; io_bank0 = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;unsafe &lt;&#x2F;span&gt;&lt;span&gt;{ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;IO_BANK0&lt;&#x2F;span&gt;&lt;span&gt;::steal() };
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; pads_bank0 = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;unsafe &lt;&#x2F;span&gt;&lt;span&gt;{ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;PADS_BANK0&lt;&#x2F;span&gt;&lt;span&gt;::steal() };
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now for example we could consider any GPIO pin to connect external LED for testing, i used &lt;strong&gt;GPIO22&lt;&#x2F;strong&gt;.
+we need to setup this pin as &lt;strong&gt;OUTPUT&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;const &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;LED_PIN&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;usize &lt;&#x2F;span&gt;&lt;span&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; mask = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u32 &lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&amp;lt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;LED_PIN &lt;&#x2F;span&gt;&lt;span&gt;as &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u32&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Set GPIO as output
+&lt;&#x2F;span&gt;&lt;span&gt;sio.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;gpio_oe_set&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;write&lt;&#x2F;span&gt;&lt;span&gt;(|&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;w&lt;&#x2F;span&gt;&lt;span&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;unsafe &lt;&#x2F;span&gt;&lt;span&gt;{ w.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;bits&lt;&#x2F;span&gt;&lt;span&gt;(mask) });
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And then we need to configure the &lt;strong&gt;PADS&lt;&#x2F;strong&gt; such that input enable on, output disable is off and remove pad isolation to attach a function to this GPIO.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Configure pad settings
+&lt;&#x2F;span&gt;&lt;span&gt;pads_bank0.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;gpio&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;LED_PIN&lt;&#x2F;span&gt;&lt;span&gt;).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;modify&lt;&#x2F;span&gt;&lt;span&gt;(|_, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;w&lt;&#x2F;span&gt;&lt;span&gt;| {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Set input enable on, output disable off
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; RP2350: input enable defaults to off, so this is important!
+&lt;&#x2F;span&gt;&lt;span&gt;    w.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;ie&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;set_bit&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    w.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;od&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;clear_bit&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; RP2350: remove pad isolation now a function is wired up
+&lt;&#x2F;span&gt;&lt;span&gt;    w.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;iso&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;clear_bit&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    w
+&lt;&#x2F;span&gt;&lt;span&gt;});
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And then we set the GPIO function to &lt;strong&gt;SIO&lt;&#x2F;strong&gt; (Single-cycle IO subsystem) using which we write to the GPIO.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;use &lt;&#x2F;span&gt;&lt;span&gt;rp235x_pac::io_bank0::gpio::gpio_ctrl::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;FUNCSEL_A&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Zero all fields apart from fsel; we want this IO to do what the peripheral tells it.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; This doesn&amp;#39;t affect e.g. pullup&#x2F;pulldown, as these are in pad controls.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;unsafe &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    io_bank0
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;gpio&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;LED_PIN&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;gpio_ctrl&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;write_with_zero&lt;&#x2F;span&gt;&lt;span&gt;(|&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;w&lt;&#x2F;span&gt;&lt;span&gt;| w.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;funcsel&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;variant&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;FUNCSEL_A&lt;&#x2F;span&gt;&lt;span&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;SIO&lt;&#x2F;span&gt;&lt;span&gt;))
+&lt;&#x2F;span&gt;&lt;span&gt;};
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Finally we could use the SIO to toggle the LED state.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; To Turn on LED
+&lt;&#x2F;span&gt;&lt;span&gt;sio.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;gpio_out_set&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;write&lt;&#x2F;span&gt;&lt;span&gt;(|&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;w&lt;&#x2F;span&gt;&lt;span&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;unsafe &lt;&#x2F;span&gt;&lt;span&gt;{ w.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;bits&lt;&#x2F;span&gt;&lt;span&gt;(mask) });
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; To Turn off LED
+&lt;&#x2F;span&gt;&lt;span&gt;sio.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;gpio_out_clr&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;write&lt;&#x2F;span&gt;&lt;span&gt;(|&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;w&lt;&#x2F;span&gt;&lt;span&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;unsafe &lt;&#x2F;span&gt;&lt;span&gt;{ w.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;bits&lt;&#x2F;span&gt;&lt;span&gt;(mask) });
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This is the minimum code that is required to control GPIO by using the PAC instead of depending on the HAL.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;running-on-pico-2-w-board&quot;&gt;Running on Pico 2(w) board&lt;&#x2F;h3&gt;
+&lt;p&gt;To run the code, you could checkout my &lt;code&gt;rp-hal&lt;&#x2F;code&gt; crate and run the &lt;code&gt;blinky&lt;&#x2F;code&gt; example as follows –&amp;gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; clone https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;rp-hal.git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -b&lt;&#x2F;span&gt;&lt;span&gt; riscv
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;cd&lt;&#x2F;span&gt;&lt;span&gt; rp-hal&#x2F;rp235x-hal-examples
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cargo&lt;&#x2F;span&gt;&lt;span&gt; rrr-blinky
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;cargo rrr-blinky&lt;&#x2F;strong&gt; will compile and flash the code successfully and run the code using &lt;code&gt;picotool&lt;&#x2F;code&gt;. Be sure to checkout the &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;rp-hal&#x2F;blob&#x2F;riscv&#x2F;README.md&quot;&gt;documentation&lt;&#x2F;a&gt; on how to set-up the required tools to flash and run.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Full script is available on github &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;rp-hal&#x2F;blob&#x2F;main&#x2F;rp235x-hal-examples&#x2F;src&#x2F;bin&#x2F;blinky.rs&quot;&gt;&lt;strong&gt;rp-hal-blinky&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;If you are looking for hubris task which is almost similar to the rp-hal example, you could checkout the same in &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;exhubris-riscv-hazard3&#x2F;blob&#x2F;riscv&#x2F;task&#x2F;blinky&#x2F;src&#x2F;main.rs&quot;&gt;&lt;strong&gt;exhubris-blinky&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;If you are interested in exploring the exact differences as to which PAC code compares to HAL code, you could look into the
+&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;rp-rs&#x2F;rp-hal&#x2F;commit&#x2F;96988070c380f720672f6243f35bbc272a57fd17&quot;&gt;&lt;strong&gt;github-commit&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;references&quot;&gt;References&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;datasheets.raspberrypi.org&#x2F;rp2350&#x2F;rp2350-datasheet.pdf&quot;&gt;RP2350 Datasheet&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;cliffle.com&#x2F;tags&#x2F;hubris&#x2F;&quot;&gt;Cliffle’s Hubris Blog posts&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;hubris.oxide.computer&#x2F;reference&#x2F;&quot;&gt;Hubris Reference&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;hubris-riscv-hazard3&#x2F;tree&#x2F;riscv&quot;&gt;Hubris-fork&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;exhubris-riscv-hazard3&#x2F;tree&#x2F;riscv&quot;&gt;exhubris-fork&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Building Software from Source</title>
+        <published>2025-01-08T00:00:00+00:00</published>
+        <updated>2025-01-08T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/til/building-software-from-source/"/>
+        <id>https://Karthik-d-k.github.io/til/building-software-from-source/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/til/building-software-from-source/">&lt;p&gt;I would like to write down notes on how to build software from scratch based on &lt;strong&gt;Andrew Kelley’s&lt;&#x2F;strong&gt; explanation &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;youtu.be&#x2F;CwXixVcliP0?si=k16EXojdGuUsG1XM&quot;&gt;here 🡵&lt;&#x2F;a&gt;. This is a perfect video that I found to learn this stuff and I know I&#x2F;Someone else will refer to this often and find it useful.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;ways-to-obtain-software&quot;&gt;Ways to Obtain Software&lt;&#x2F;h2&gt;
+&lt;h4 id=&quot;downloading-upstream-binary-distributions&quot;&gt;Downloading Upstream Binary Distributions&lt;&#x2F;h4&gt;
+&lt;p&gt;Binaries will be available directly, which we can download and run without building software from scratch. These are built by the project maintainers for all major distributions.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Example:&lt;&#x2F;strong&gt; On GitHub, this will mostly be available under the &lt;strong&gt;Releases&lt;&#x2F;strong&gt; page of the repo.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;downloading-from-system-package-managers&quot;&gt;Downloading from System Package Managers&lt;&#x2F;h4&gt;
+&lt;p&gt;Binaries can be downloaded by particular system package managers. These will be built by package maintainers and not necessarily by the project maintainers.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Example:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;choco, scoop, winget&lt;&#x2F;strong&gt; for Windows&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;apt-get, apt&lt;&#x2F;strong&gt; for Linux Debian&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;brew&lt;&#x2F;strong&gt; for macOS&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h4 id=&quot;building-directly-from-source&quot;&gt;Building Directly from Source&lt;&#x2F;h4&gt;
+&lt;p&gt;Creating binaries from source is the best way to do it if we want to change the source code and behavior of some specifics and also if we want to configure differently than what upstream&#x2F;system packages do.&lt;&#x2F;p&gt;
+&lt;p&gt;Most of the core software is built in &lt;strong&gt;C&#x2F;C++&lt;&#x2F;strong&gt;. Typically, there will be 3 phases to install such software: &lt;code&gt;configure&lt;&#x2F;code&gt;, &lt;code&gt;build&lt;&#x2F;code&gt;, and &lt;code&gt;install&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Configure:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;During this phase, we can configure different kinds of things, including but not limited to enabling&#x2F;disabling features.&lt;&#x2F;li&gt;
+&lt;li&gt;The most important configuration is to choose a non-root folder as the prefix to install the software. This is important because we don’t want to mess up the system files. And we can install software without using &lt;em&gt;sudo&lt;&#x2F;em&gt;.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Build:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;This is the phase where the software is actually built.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;em&gt;make&lt;&#x2F;em&gt; is used to achieve this. But make has terrible defaults. So, we need to pass some flags to make it work as we want.
+&lt;ul&gt;
+&lt;li&gt;Example: Enable parallel build using the &lt;code&gt;-j &amp;lt;N&amp;gt;&lt;&#x2F;code&gt; flag. Make sure to pass in the number of cores to use, or else it will keep on forking new processes, and there is a high chance that the system will hang.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Install:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;make install&lt;&#x2F;strong&gt; is used to achieve this. This will install the software in the prefix location, which is &lt;code&gt;$prefix&#x2F;bin&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;We can avoid using &lt;strong&gt;sudo make install&lt;&#x2F;strong&gt; because we would have configured the software to install in a non-root folder.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;best-practices&quot;&gt;Best Practices&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Do not use the &lt;strong&gt;dev&lt;&#x2F;strong&gt; branch where stuff could break; instead, use the &lt;strong&gt;latest bugfix release&lt;&#x2F;strong&gt; tagged branch to build software from source.&lt;&#x2F;li&gt;
+&lt;li&gt;Do not use a different compiler toolchain; always try to stick to your system toolchain.&lt;&#x2F;li&gt;
+&lt;li&gt;Try installing software without actually using &lt;em&gt;docker&lt;&#x2F;em&gt; or a &lt;em&gt;virtual machine&lt;&#x2F;em&gt;, because it’s easier that way.&lt;&#x2F;li&gt;
+&lt;li&gt;Do not ssh into a different machine to copy files haphazardly.&lt;&#x2F;li&gt;
+&lt;li&gt;Do not use weird configure options to build the software.&lt;&#x2F;li&gt;
+&lt;li&gt;Do not edit the source haphazardly to make it work most of the time.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;references&quot;&gt;References&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;youtu.be&#x2F;CwXixVcliP0?si=k16EXojdGuUsG1XM&quot;&gt;How to Build Software From Source - Andrew Kelley&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>x64 vs amd64</title>
+        <published>2025-01-07T00:00:00+00:00</published>
+        <updated>2025-01-07T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/til/x64-vs-amd64/"/>
+        <id>https://Karthik-d-k.github.io/til/x64-vs-amd64/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/til/x64-vs-amd64/">&lt;ul&gt;
+&lt;li&gt;On GitHub, when I download binaries for my WSL (Windows Subsystem for Linux), I found that people use x86_64 and amd64 interchangeably to refer to the same thing, which is a processor that implements the 64-bit version of the x86 (32-bit ISA).&lt;&#x2F;li&gt;
+&lt;li&gt;There are many 32-bit and 64-bit Instruction Set Architectures (ISA) available, which are implemented by processors.&lt;&#x2F;li&gt;
+&lt;li&gt;x86 is the 32-bit ISA, whereas x86_64 is the general name used by most people to refer to the 64-bit version of x86.&lt;&#x2F;li&gt;
+&lt;li&gt;However, AMD was the company that released the 64-bit version of x86, and they named it amd64.&lt;&#x2F;li&gt;
+&lt;li&gt;There are many historical reasons for using two different names, &lt;strong&gt;x86_64&lt;&#x2F;strong&gt; and &lt;strong&gt;amd64&lt;&#x2F;strong&gt;, to refer to the same 64-bit ISA of x86 (32-bit ISA), but the important thing to remember is that &lt;strong&gt;both refers to same thing&lt;&#x2F;strong&gt;.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;references&quot;&gt;References&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;askubuntu.com&#x2F;questions&#x2F;601553&#x2F;what-is-the-difference-between-x86-64-amd64-and-64-bit&quot;&gt;Stack Overflow: x86_64 vs amd64&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Case-sensitive Settings on Windows</title>
+        <published>2025-01-06T00:00:00+00:00</published>
+        <updated>2025-01-06T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/til/case-sensitive-windows/"/>
+        <id>https://Karthik-d-k.github.io/til/case-sensitive-windows/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/til/case-sensitive-windows/">&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;I was trying to clone the &lt;strong&gt;Linux&lt;&#x2F;strong&gt; git stable repository on my Windows 10 machine using the following command:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; clone https:&#x2F;&#x2F;git.kernel.org&#x2F;pub&#x2F;scm&#x2F;linux&#x2F;kernel&#x2F;git&#x2F;stable&#x2F;linux.git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --depth&lt;&#x2F;span&gt;&lt;span&gt; 1
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Unfortunately, this failed with the following warning because the Linux tree contains files with the same name but with different case sensitivity:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;warning:&lt;&#x2F;span&gt;&lt;span&gt; the following paths have collided (e.g. case-sensitive paths
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;on&lt;&#x2F;span&gt;&lt;span&gt; a case-insensitive filesystem) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;and&lt;&#x2F;span&gt;&lt;span&gt; only one from the same
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;colliding&lt;&#x2F;span&gt;&lt;span&gt; group is in the working tree:
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;The Windows 10 file system by default is &lt;strong&gt;case-insensitive&lt;&#x2F;strong&gt;, meaning it treats both &lt;strong&gt;ip6t_hl.h&lt;&#x2F;strong&gt; and &lt;strong&gt;ip6t_HL.h&lt;&#x2F;strong&gt; as the same file. This is not true for Linux file systems, as they treat these as different files because the file system is case-sensitive.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;This problem can be solved in two ways:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;We can use &lt;strong&gt;WSL (Windows Subsystem for Linux)&lt;&#x2F;strong&gt; on our Windows machine.&lt;&#x2F;li&gt;
+&lt;li&gt;We can enable case sensitivity for a folder using the &lt;strong&gt;fsutil&lt;&#x2F;strong&gt; command:&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fsutil&lt;&#x2F;span&gt;&lt;span&gt; file setCaseSensitiveInfo &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&amp;lt;path-to-directory&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; enable
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;ul&gt;
+&lt;li&gt;You can verify if this worked using the following command:&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fsutil.exe&lt;&#x2F;span&gt;&lt;span&gt; file queryCaseSensitiveInfo &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&amp;lt;path-to-directory&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;references&quot;&gt;References&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;stackoverflow.com&#x2F;a&#x2F;64466310&quot;&gt;Stack Overflow: Case-sensitive path collisions&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Translation Unit in C</title>
+        <published>2025-01-05T00:00:00+00:00</published>
+        <updated>2025-01-05T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/til/translation-unit/"/>
+        <id>https://Karthik-d-k.github.io/til/translation-unit/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/til/translation-unit/">&lt;ul&gt;
+&lt;li&gt;A &lt;strong&gt;Translation Unit (TU)&lt;&#x2F;strong&gt; is a source file that is given to the compiler to compile into an object file.&lt;&#x2F;li&gt;
+&lt;li&gt;Each TU can include any number of files using the &lt;strong&gt;#include&lt;&#x2F;strong&gt; directive. The included file can be any file with any extension (e.g., *.c, *.h, *.cpp) as long as it contains C source code that the compiler can understand.&lt;&#x2F;li&gt;
+&lt;li&gt;In the end, all object files generated for each TU will be linked by the linker to produce an executable.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;example&quot;&gt;Example&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 1:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;File: &lt;code&gt;print.exe&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;stdio.h&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;print_exe&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;print-exe&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;File: &lt;code&gt;main.c&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;print.exe&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;stdio.h&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;print-main&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;print_exe&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;Compile:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;gcc&lt;&#x2F;span&gt;&lt;span&gt; main.c&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -o&lt;&#x2F;span&gt;&lt;span&gt; main.exe
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;.&#x2F;main.exe
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 1 stdout:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;print-main
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;print-exe
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;ul&gt;
+&lt;li&gt;In this example, we have one TU i.e, &lt;strong&gt;main.c&lt;&#x2F;strong&gt; which includes other source file &lt;strong&gt;print.exe&lt;&#x2F;strong&gt;, even though the extension is *.exe it still works as expected.
+Output prints both the print statements from main.c and print.exe file.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h1 id=&quot;references&quot;&gt;References&lt;&#x2F;h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;youtu.be&#x2F;n4fI4eUTTKM?si=HJAd51EqqrldZkoO&quot;&gt;Handmade Hero Chat 013 - Translation Units, Function Pointers, Compilation, Linking, and Execution&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Lifetime and Visibility in C Programs</title>
+        <published>2024-11-25T00:00:00+00:00</published>
+        <updated>2024-11-25T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/blog/lifetime-visibility-in-c/"/>
+        <id>https://Karthik-d-k.github.io/blog/lifetime-visibility-in-c/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/blog/lifetime-visibility-in-c/">&lt;h2 id=&quot;motivation&quot;&gt;Motivation&lt;&#x2F;h2&gt;
+&lt;p&gt;I would like to explain how different &lt;strong&gt;keywords in C&lt;&#x2F;strong&gt; especially &lt;code&gt;static&lt;&#x2F;code&gt; and &lt;code&gt;extern&lt;&#x2F;code&gt; plays key role in defining the lifetime and visibility of objects. This has been ever confusing topic for me whenever i come across such keywords in real world code. This is my understanding and explanation as to when&#x2F;how to use such keywords and how to reason about the same.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;basic-exploration&quot;&gt;Basic Exploration&lt;&#x2F;h2&gt;
+&lt;p&gt;Firstly, i will define the terms “Lifetime” and “Visibility” as follows:&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Lifetime&lt;&#x2F;strong&gt;: Every object has &lt;strong&gt;start and end point&lt;&#x2F;strong&gt; beyond which we can’t&#x2F;shouldn’t access it. In other words it refers to &lt;em&gt;Storage duration&lt;&#x2F;em&gt; of an object.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Visibility&lt;&#x2F;strong&gt;: An object can&#x2F;should be accessed from &lt;strong&gt;inside block&lt;&#x2F;strong&gt; or &lt;strong&gt;inside file&lt;&#x2F;strong&gt; or from other &lt;strong&gt;translation units [.c source files]&lt;&#x2F;strong&gt; only according to its visibility. In other words it refers to &lt;em&gt;Linkage&lt;&#x2F;em&gt; of an object.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;I will thoroughly explain the concepts with each &lt;strong&gt;keywords&lt;&#x2F;strong&gt; along the lines of above definition.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;static&quot;&gt;static&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;u&gt;Lifetime&lt;&#x2F;u&gt;: Changes the lifetime to &lt;strong&gt;Static storage duration&lt;&#x2F;strong&gt; meaning it will be stored in memory till the end of the program.
+This applies even for the object’s which are in file scope (local) and&#x2F;or block scope (global).&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;u&gt;Visibility&lt;&#x2F;u&gt;: Set’s the objects to &lt;strong&gt;Internal linkage&lt;&#x2F;strong&gt;, i.e, object is accessible only within current translation unit.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Un-initialized static objects will be automatically initialized to 0.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;static local variables will be initialized only once and retains its value between function calls.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 1:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;stdio.h&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;func&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;static int&lt;&#x2F;span&gt;&lt;span&gt; count = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; static local variable
+&lt;&#x2F;span&gt;&lt;span&gt;    count++;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Count: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, count);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;func&lt;&#x2F;span&gt;&lt;span&gt;(); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Output: Count: 1
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;func&lt;&#x2F;span&gt;&lt;span&gt;(); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Output: Count: 2
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;func&lt;&#x2F;span&gt;&lt;span&gt;(); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Output: Count: 3
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 1 stdout:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;Count: 1
+&lt;&#x2F;span&gt;&lt;span&gt;Count: 2
+&lt;&#x2F;span&gt;&lt;span&gt;Count: 3
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;In this example, the count variable is declared as static inside the func function. It retains its value between function calls, demonstrating static storage duration and internal linkage.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h3 id=&quot;extern&quot;&gt;extern&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;u&gt;Lifetime&lt;&#x2F;u&gt;: Changes the lifetime to &lt;strong&gt;Static storage duration&lt;&#x2F;strong&gt; meaning it will be stored in memory till the end of the program.
+This applies even for the object’s which are in file scope (local) and&#x2F;or block scope (global).&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;u&gt;Visibility&lt;&#x2F;u&gt;: Set’s the objects to &lt;strong&gt;External linkage&lt;&#x2F;strong&gt;, i.e, object is accessible to other current translation units.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;By default all functions and global variables will be set to extern unless otherwise overwritten.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 2:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;File: &lt;code&gt;main.c&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;stdio.h&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;extern int&lt;&#x2F;span&gt;&lt;span&gt; globalVar; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Declaration of an external variable
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Global Variable: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, globalVar);
+&lt;&#x2F;span&gt;&lt;span&gt;    
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;File: &lt;code&gt;global.c&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; globalVar = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;42&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Definition of the external variable
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 2 stdout:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;Global Variable: 42
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;In this example, globalVar is declared as extern in main.c and defined in global.c. This demonstrates external linkage, allowing the variable to be accessed across different translation units.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;advanced-exploration&quot;&gt;Advanced Exploration&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;strong&gt;Scenario 1:&lt;&#x2F;strong&gt; &lt;em&gt;Let’s say we have to create user defined type and the object with this type has to be shared among different source files.&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;User defined type has to be defined inside an &lt;code&gt;h file&lt;&#x2F;code&gt; and the object should be defined with &lt;code&gt;extern&lt;&#x2F;code&gt; keyword.&lt;&#x2F;li&gt;
+&lt;li&gt;extern will make sure the object is accessible among all source files which includes this header file.&lt;&#x2F;li&gt;
+&lt;li&gt;type information will also be available in the same source file because of inclusion of this header file.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 3:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;File: &lt;code&gt;types.h&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#ifndef&lt;&#x2F;span&gt;&lt;span&gt; TYPES_H
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#define &lt;&#x2F;span&gt;&lt;span&gt;TYPES_H
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;typedef struct &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; id;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;char&lt;&#x2F;span&gt;&lt;span&gt; name[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;50&lt;&#x2F;span&gt;&lt;span&gt;];
+&lt;&#x2F;span&gt;&lt;span&gt;} User;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;extern&lt;&#x2F;span&gt;&lt;span&gt; User user; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Declaration of an external variable of user-defined type
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#endif &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; TYPES_H
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;File: &lt;code&gt;main.c&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;stdio.h&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;types.h&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;User ID: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, user.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;id&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;User Name: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%s&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, user.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;    
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;File: &lt;code&gt;user.c&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;types.h&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;User user = {&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;, &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;John Doe&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;}; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Definition of the external variable
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 3 stdout:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;User ID: 1
+&lt;&#x2F;span&gt;&lt;span&gt;User Name: John Doe
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;In this example, the User type is defined in a header file types.h, and the user variable is declared as extern. The variable is defined in user.c and accessed in main.c, demonstrating external linkage and sharing of user-defined types across different source files.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Scenario 2:&lt;&#x2F;strong&gt; &lt;em&gt;Let’s say we have to create a user-defined function that should be encapsulated and shouldn’t be shared with other source files.&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;If we define a function in a header (.h) file and include it in multiple source files, it can be used in all those source files because, by default, all functions have extern linkage unless explicitly changed.&lt;&#x2F;li&gt;
+&lt;li&gt;To limit the visibility of a function to the current source file, we use the &lt;code&gt;static&lt;&#x2F;code&gt; keyword. This ensures the function can only be used within that single file. It is important to define the function in a .c file, not in a .h file, so that when the .h file is included in multiple source files, the function remains inaccessible.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 4:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;File: &lt;code&gt;utils.c&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;utils.h&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;static void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;helperFunction&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Function implementation
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;publicFunction&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;helperFunction&lt;&#x2F;span&gt;&lt;span&gt;(); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Can call the static function within the same file
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;File: &lt;code&gt;utils.h&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#ifndef&lt;&#x2F;span&gt;&lt;span&gt; UTILS_H
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#define &lt;&#x2F;span&gt;&lt;span&gt;UTILS_H
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;publicFunction&lt;&#x2F;span&gt;&lt;span&gt;(); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Only declare the public function here
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#endif &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; UTILS_H
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;File: &lt;code&gt;main.c&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;utils.h&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;publicFunction&lt;&#x2F;span&gt;&lt;span&gt;(); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Can call the public function
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; helperFunction(); &#x2F;&#x2F; Error: helperFunction is not accessible here
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;In this example, &lt;em&gt;helperFunction&lt;&#x2F;em&gt; is defined as static in utils.c, limiting its visibility to that file. &lt;em&gt;publicFunction&lt;&#x2F;em&gt; can call &lt;em&gt;helperFunction&lt;&#x2F;em&gt; within utils.c, but &lt;em&gt;helperFunction&lt;&#x2F;em&gt; is not accessible in main.c, demonstrating the use of static to encapsulate functions within a single source file.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;&#x2F;h2&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Keyword&lt;&#x2F;th&gt;&lt;th&gt;Lifetime&lt;&#x2F;th&gt;&lt;th&gt;Visibility&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;static&lt;&#x2F;td&gt;&lt;td&gt;Stored till program ends&lt;&#x2F;td&gt;&lt;td&gt;Accessible only within current file&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;extern&lt;&#x2F;td&gt;&lt;td&gt;Stored till program ends&lt;&#x2F;td&gt;&lt;td&gt;Accessible across different files&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Swapping addresses instead of values</title>
+        <published>2024-09-23T00:00:00+00:00</published>
+        <updated>2024-09-23T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/blog/swap-numbers/"/>
+        <id>https://Karthik-d-k.github.io/blog/swap-numbers/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/blog/swap-numbers/">&lt;h2 id=&quot;motivation&quot;&gt;Motivation&lt;&#x2F;h2&gt;
+&lt;p&gt;I was thinking about famous &lt;code&gt;C interview question&lt;&#x2F;code&gt; wherein we will be asked to swap 2 variables. Generally, this could be solved using pointers with either using temporary variable or with xor method.&lt;&#x2F;p&gt;
+&lt;p&gt;But now i want to tackle the same problem in a different perspective.
+Instead of changing the variable’s values, what if we were asked to swap its addresses instead of values ?&lt;&#x2F;p&gt;
+&lt;p&gt;Solving this problem was not straight forward as i thought initially, it involves some fair bit of understanding pointers and pointer to pointer (int** for example) manipulations.&lt;&#x2F;p&gt;
+&lt;p&gt;In this blog, i will try to explain how i got to the solution or in other words, how i would solve it.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;exploration&quot;&gt;Exploration&lt;&#x2F;h2&gt;
+&lt;p&gt;First, lets see how we would solve the problem of swapping 2 variables using function &lt;code&gt;swap&lt;&#x2F;code&gt;. We would write a function as follows, which uses temporary variable as a placeholder to exchange numbers.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 1:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;stdio.h&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;swap&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;a&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;b&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; t;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    t = a;
+&lt;&#x2F;span&gt;&lt;span&gt;    a = b;
+&lt;&#x2F;span&gt;&lt;span&gt;    b = t;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;FUNC  : a = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, a, b);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; a = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;11&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; b = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;BEFORE: a = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, a, b);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;swap&lt;&#x2F;span&gt;&lt;span&gt;(a, b);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;AFTER : a = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, a, b);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 1 stdout:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;BEFORE: a = 11, b = 22
+&lt;&#x2F;span&gt;&lt;span&gt;FUNC  : a = 22, b = 11
+&lt;&#x2F;span&gt;&lt;span&gt;AFTER : a = 11, b = 22
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Surprisingly, we would see the variables are swapped but it is not reflected back to the caller in the main function.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;In &lt;strong&gt;C&lt;&#x2F;strong&gt;, each and every function has its own stack which will be created at the time of function call and destroyed after function call exits. Another most important part is, function parameters and each variables created inside the function is stored in its own stack.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;Hence, even though swap() is changing a and b, it is changing only inside its own stack (look @FUNC output above) and these local variables will be destroyed once function call exits. Hence @AFTER output is unchanged.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;In &lt;strong&gt;C&lt;&#x2F;strong&gt;, to change values present in one function from another function, we have a classic tool for that which is &lt;code&gt;pointers&lt;&#x2F;code&gt;. You would have to share the address of variables &lt;strong&gt;(“value of interest”)&lt;&#x2F;strong&gt; to the function, to access and change the values present inside.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 2:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;stdio.h&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;swap&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ap&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;bp&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; t;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    t = *ap;
+&lt;&#x2F;span&gt;&lt;span&gt;    *ap = *bp;
+&lt;&#x2F;span&gt;&lt;span&gt;    *bp = t;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;FUNC  : a = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, *ap, *bp);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; a = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;11&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; b = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;BEFORE: a = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, a, b);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;swap&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;a, &amp;amp;b);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;AFTER : a = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, a, b);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 2 stdout:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;BEFORE: a = 11, b = 22
+&lt;&#x2F;span&gt;&lt;span&gt;FUNC  : a = 22, b = 11
+&lt;&#x2F;span&gt;&lt;span&gt;AFTER : a = 22, b = 11
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;We are sharing a and b by sending its addresses (&lt;code&gt;&amp;amp;a, &amp;amp;b&lt;&#x2F;code&gt;) to swap func.
+Inside swap func, we are dereferencing a and b (&lt;code&gt;*ap, *bp&lt;&#x2F;code&gt;) to get inside its values and swapping them, this way we are modifying the memory of a and b stored inside main func stack. Output reflects the same above. Here value of interest is a and b and we sent its addresses for modification. This is the most important part of pointers. PLease remember this, this will come back when we try to swap 2 pointers instead of values.&lt;&#x2F;p&gt;
+&lt;p&gt;Now that we know how to swap 2 variables using pointers to the variables, let’s look at the problem of swapping pointers itself (i.e, addresses of variables).&lt;&#x2F;p&gt;
+&lt;p&gt;First we will try the naive way as we did in snippet 1.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 3:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;stdio.h&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;swap&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ap&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;bp&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;* t;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    t = ap;
+&lt;&#x2F;span&gt;&lt;span&gt;    ap = bp;
+&lt;&#x2F;span&gt;&lt;span&gt;    bp = t;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;FUNC  : a = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, ap, *ap, bp, *bp);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; a = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;11&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; b = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;* ap = &amp;amp;a;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;* bp = &amp;amp;b;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;BEFORE: a = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, ap, a, bp, b);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;swap&lt;&#x2F;span&gt;&lt;span&gt;(ap, bp);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;AFTER : a = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, ap, a, bp, b);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;legend --&amp;gt; [ADDRESS]: VALUE&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 3 stdout:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;BEFORE: a = [DBF232EC]: 11, b = [DBF232E8]: 22
+&lt;&#x2F;span&gt;&lt;span&gt;FUNC  : a = [DBF232E8]: 22, b = [DBF232EC]: 11
+&lt;&#x2F;span&gt;&lt;span&gt;AFTER : a = [DBF232EC]: 11, b = [DBF232E8]: 22
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;legend --&amp;gt; [ADDRESS]: VALUE
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;NOTE:&lt;&#x2F;strong&gt; Output addresses printed in the stdout changes with every fresh run of the program and concentrate only on the addresses for now.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;Same fate as &lt;strong&gt;Snippet 1 output&lt;&#x2F;strong&gt;, we were able to change the addresses but it only reflects inside swap func not in main func. The problem again is, we are changing the addresses local to swap function. To change the addresses present in main function, we have to send pointers to these addresses, because now our value of interest is (&lt;code&gt;&amp;amp;a, &amp;amp;b&lt;&#x2F;code&gt;).&lt;&#x2F;p&gt;
+&lt;p&gt;Let’s try sending the pointers to addresses of a and b –&amp;gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 4:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;stdio.h&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;swap&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;** &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;app&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;** &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;bpp&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;* t;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    t = *app;
+&lt;&#x2F;span&gt;&lt;span&gt;    *app = *bpp;
+&lt;&#x2F;span&gt;&lt;span&gt;    *bpp = t;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;FUNC  : a = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, *app, **app, *bpp, **bpp);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; a = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;11&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; b = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;* ap = &amp;amp;a;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;* bp = &amp;amp;b;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;BEFORE: a = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, ap, a, bp, b);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;swap&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;ap, &amp;amp;bp);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;AFTER : a = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, b = [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, ap, a, bp, b);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;legend --&amp;gt; [ADDRESS]: VALUE&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;Snippet 4 stdout:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;BEFORE: a = [DBF232EC]: 11, b = [DBF232E8]: 22
+&lt;&#x2F;span&gt;&lt;span&gt;FUNC  : a = [DBF232E8]: 22, b = [DBF232EC]: 11
+&lt;&#x2F;span&gt;&lt;span&gt;AFTER : a = [DBF232E8]: 11, b = [DBF232EC]: 22
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;legend --&amp;gt; [ADDRESS]: VALUE
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;We passed pointers to value of interest and dereferenced inside the calling function to change the values inside it directly so that it reflects back in the caller site.&lt;&#x2F;p&gt;
+&lt;p&gt;Astute reader may have noticed,&lt;br &#x2F;&gt;
+&lt;code&gt;we were able to swap the addresses but not the values of a and b&lt;&#x2F;code&gt;.&lt;br &#x2F;&gt;
+Can you decode why ???&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This question is left as an exercise for the reader and modify the snippet so that we were able to change both addresses and values of variables a and b.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;There is one most important takeaway from this post which i would like to highlight. If you want to modify values (&lt;strong&gt;“value of interest”&lt;&#x2F;strong&gt;) present in one function from another function, you should share pointers to those &lt;strong&gt;“value of interest”&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Full script is available on github &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;Karthik-d-k.github.io&#x2F;blob&#x2F;main&#x2F;content&#x2F;scripts&#x2F;swap_numbers.c&quot;&gt;&lt;strong&gt;swap_numbers.c&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;Reference&lt;&#x2F;code&gt;: &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;http:&#x2F;&#x2F;cslibrary.stanford.edu&#x2F;102&#x2F;&quot;&gt;cslibrary.stanford.edu&#x2F;102&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Batch script for Copying Binaries</title>
+        <published>2024-07-02T00:00:00+00:00</published>
+        <updated>2024-07-02T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/blog/copy-binaries/"/>
+        <id>https://Karthik-d-k.github.io/blog/copy-binaries/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/blog/copy-binaries/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;I got tired of manually copying the necessary files from the build project folder. Additionally, I had to copy the zipped project content to the destination folder every time I delivered a project. To streamline this process, I decided to automate the task using a Windows batch script as my development operating system is Windows.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;problem&quot;&gt;Problem&lt;&#x2F;h2&gt;
+&lt;p&gt;Write a windows batch script to automate zipping the content and also copying the files.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;solution&quot;&gt;Solution&lt;&#x2F;h2&gt;
+&lt;p&gt;I have &lt;code&gt;7-zip&lt;&#x2F;code&gt; installed in my machine so i use this tool to zip the contents and &lt;code&gt;xcopy&lt;&#x2F;code&gt;, an inbuilt tool in windows is used for copying the files.
+I will explain each part of the script below.&lt;&#x2F;p&gt;
+&lt;p&gt;First and foremost thing in batch scripts is to turn off outputting the commands run but for debugging purpose, we can comment-out&#x2F;delete this line&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bat&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bat &quot;&gt;&lt;code class=&quot;language-bat&quot; data-lang=&quot;bat&quot;&gt;&lt;span&gt;@&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;ECHO&lt;&#x2F;span&gt;&lt;span&gt; off
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Change directory to the folder where the script is placed (ideally PROJECT root) using &lt;code&gt;%~dp0&lt;&#x2F;code&gt;, %0 refers to the batch file.
+Set destination to new folder &lt;code&gt;_share&lt;&#x2F;code&gt; inside root directory or to any folder to your needs&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bat&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bat &quot;&gt;&lt;code class=&quot;language-bat&quot; data-lang=&quot;bat&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;CD &lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;~dp0
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;SET &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;dest&lt;&#x2F;span&gt;&lt;span&gt;=%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cd&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;\_share
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Next, extract the PROJECT folder name and zip its contents using &lt;code&gt;7-zip&lt;&#x2F;code&gt;.
+I don’t have clear understanding of how code line for extracting folder name works, this was made possible by googling and chatting with chatgpt for a day :)&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bat&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bat &quot;&gt;&lt;code class=&quot;language-bat&quot; data-lang=&quot;bat&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;FOR &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;%%&lt;&#x2F;span&gt;&lt;span&gt;F in (&amp;quot;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;CD&lt;&#x2F;span&gt;&lt;span&gt;%&amp;quot;) DO &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;SET &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PROJECT_name&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;%%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;~nxF&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;7z a ..\%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PROJECT_name&lt;&#x2F;span&gt;&lt;span&gt;%.zip %&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cd&lt;&#x2F;span&gt;&lt;span&gt;%\
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Set all the required files that you want to copy using &lt;code&gt;SET&lt;&#x2F;code&gt; and copy using &lt;code&gt;xcopy&lt;&#x2F;code&gt;.
+&lt;code&gt;&#x2F;y&lt;&#x2F;code&gt; option is used to accept to copy the files by default.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bat&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bat &quot;&gt;&lt;code class=&quot;language-bat&quot; data-lang=&quot;bat&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;SET &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;zip&lt;&#x2F;span&gt;&lt;span&gt;=%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;CD&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;\..\&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PROJECT_name&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;.zip
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;SET &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;hex&lt;&#x2F;span&gt;&lt;span&gt;=%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;CD&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;\bin\&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PROJECT_name&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;.hex
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;SET &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;config&lt;&#x2F;span&gt;&lt;span&gt;=%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;CD&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;\gen\&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PROJECT_name&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;.xml
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;:: etc ...
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;:: Copy files using xcopy
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;FOR &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;%%&lt;&#x2F;span&gt;&lt;span&gt;F in (%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;zip&lt;&#x2F;span&gt;&lt;span&gt;%, %&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;hex&lt;&#x2F;span&gt;&lt;span&gt;%, %&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;config&lt;&#x2F;span&gt;&lt;span&gt;%) DO &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;xcopy &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;%%&lt;&#x2F;span&gt;&lt;span&gt;F %&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;dest&lt;&#x2F;span&gt;&lt;span&gt;%\ &#x2F;y
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Use &lt;code&gt;pause&lt;&#x2F;code&gt; before exiting the program, so that you can see which files are copied in the standard output window&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bat&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bat &quot;&gt;&lt;code class=&quot;language-bat&quot; data-lang=&quot;bat&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;:: pause to see the stdout
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;pause
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;exit&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;b &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Full script is available on github &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;Karthik-d-k.github.io&#x2F;blob&#x2F;main&#x2F;content&#x2F;scripts&#x2F;copy_binaries.bat&quot;&gt;&lt;strong&gt;copy_binaries.bat&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Matlab&#x2F;Simulink Model Reducer</title>
+        <published>2024-05-16T00:00:00+00:00</published>
+        <updated>2024-05-16T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/blog/matlab-reducer/"/>
+        <id>https://Karthik-d-k.github.io/blog/matlab-reducer/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/blog/matlab-reducer/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;In automotive engine control unit (ECU) software, we use global constants called &lt;strong&gt;variant coding&lt;&#x2F;strong&gt; constants to enable or disable specific features. These constants are part of every functional unit within the entire ECU software. Most software development for ECUs is done using tools like &lt;strong&gt;ASCET&lt;&#x2F;strong&gt; and sometimes &lt;strong&gt;Matlab&#x2F;Simulink&lt;&#x2F;strong&gt;, depending on the team and the specific functional unit.&lt;&#x2F;p&gt;
+&lt;p&gt;Both ASCET and Matlab&#x2F;Simulink are model-based code generators. Instead of writing code manually, developers create flow diagrams by dragging and dropping basic and user-defined classes&#x2F;blocks. These diagrams represent the required functionality of an ECU sub-system, and the tools generate the corresponding C code.&lt;&#x2F;p&gt;
+&lt;p&gt;Each sub-system (functional unit) has its own set of variant coding constants, which enable or disable features based on the customer’s requirements. ASCET has a built-in tool called &lt;strong&gt;model_reducer&lt;&#x2F;strong&gt;. This tool uses a global CSV file (&lt;strong&gt;variant_coding.csv&lt;&#x2F;strong&gt;) containing all the variant coding constants for the entire ECU software. By referencing this CSV file, ASCET can generate a reduced version of the model to enable or disable specific feature blocks.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;problem&quot;&gt;Problem&lt;&#x2F;h2&gt;
+&lt;p&gt;In &lt;strong&gt;Matlab&#x2F;Simulink&lt;&#x2F;strong&gt;, we need to manually update each &lt;strong&gt;variant coding&lt;&#x2F;strong&gt; value within the &lt;strong&gt;Simulink data dictionary (sldd)&lt;&#x2F;strong&gt; file based on the global CSV file. This manual process is error-prone and time-consuming for developers. To address this, we can automate the task using a script.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;solution&quot;&gt;Solution&lt;&#x2F;h2&gt;
+&lt;p&gt;Our script should take two input files: the &lt;strong&gt;variant_coding.csv&lt;&#x2F;strong&gt; file and the &lt;strong&gt;model.sldd&lt;&#x2F;strong&gt; file. It should then output a modified &lt;strong&gt;model_modified.sldd&lt;&#x2F;strong&gt; file and an updated &lt;strong&gt;variant_coding_modified.csv&lt;&#x2F;strong&gt; file.&lt;&#x2F;p&gt;
+&lt;p&gt;Here’s a high-level overview of how to write this script in Matlab.
+This function takes the input CSV and sldd files and generates the required modified files.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;matlab&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-matlab &quot;&gt;&lt;code class=&quot;language-matlab&quot; data-lang=&quot;matlab&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;matlab_reducer&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;variant_coding_csv&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;model_sldd&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;    variant_coding_values = csv2dict(variant_coding_csv);
+&lt;&#x2F;span&gt;&lt;span&gt;    variant_coding_modified_values = modify_sldd(model_sldd, variant_coding_values);
+&lt;&#x2F;span&gt;&lt;span&gt;    write_csv(variant_coding_modified_values);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;In the following sections, I will explain the individual components needed to achieve this outcome.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;csv2dict&lt;&#x2F;strong&gt; will read the csv file and stores the values along with names in a dictionary.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;matlab&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-matlab &quot;&gt;&lt;code class=&quot;language-matlab&quot; data-lang=&quot;matlab&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;variant_coding_values &lt;&#x2F;span&gt;&lt;span&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;csv2dict&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;filename&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Read the CSV file
+&lt;&#x2F;span&gt;&lt;span&gt;    data = readtable(filename, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Format&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;%s%f&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Extract the first and second columns
+&lt;&#x2F;span&gt;&lt;span&gt;    keys = data.Var1;
+&lt;&#x2F;span&gt;&lt;span&gt;    values = data.Var2;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Create a dictionary
+&lt;&#x2F;span&gt;&lt;span&gt;    variant_coding_values = containers.Map(keys, values);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;modify_sldd&lt;&#x2F;strong&gt; function will modify the values present in the sldd file with values we read from csv file.
+We read the &lt;strong&gt;Design Data&lt;&#x2F;strong&gt; section from sldd file and then we export the values to a .mat file which is
+necessary to modify the values. we just search all the VCs in dictionary and grad the values and rewrite with updated values and save to a
+new .mat file. THis file is then used to update and save the modified sldd file.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;matlab&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-matlab &quot;&gt;&lt;code class=&quot;language-matlab&quot; data-lang=&quot;matlab&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;modified_vc_data &lt;&#x2F;span&gt;&lt;span&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;modify_sldd&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;model_sldd&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;variant_coding_values&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Read the sldd file
+&lt;&#x2F;span&gt;&lt;span&gt;    sldd_dict = Simulink.data.dictionary.open(model_sldd);
+&lt;&#x2F;span&gt;&lt;span&gt;    sldd_data = getSection(sldd_dict, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Design Data&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;);
+&lt;&#x2F;span&gt;&lt;span&gt;    
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Save sldd data into a .mat file
+&lt;&#x2F;span&gt;&lt;span&gt;    exportToFile(sldd_data, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;sldd_data.mat&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;);
+&lt;&#x2F;span&gt;&lt;span&gt;    
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Load VC&#x2F;Vars&#x2F;.. mat file
+&lt;&#x2F;span&gt;&lt;span&gt;    vc_data = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;load&lt;&#x2F;span&gt;&lt;span&gt;(&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;sldd_data.mat&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;);
+&lt;&#x2F;span&gt;&lt;span&gt;    vc_names = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fieldnames&lt;&#x2F;span&gt;&lt;span&gt;(vc_data);
+&lt;&#x2F;span&gt;&lt;span&gt;    vc_data_new = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;struct&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Create a cell array to store the output
+&lt;&#x2F;span&gt;&lt;span&gt;    modified_vc_data = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;cell&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;i&lt;&#x2F;span&gt;&lt;span&gt; = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;numel&lt;&#x2F;span&gt;&lt;span&gt;(vc_names)
+&lt;&#x2F;span&gt;&lt;span&gt;        vc_name = vc_names{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;i&lt;&#x2F;span&gt;&lt;span&gt;};
+&lt;&#x2F;span&gt;&lt;span&gt;        vc_value = vc_data.(vc_name);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Check if the field value is of the type &amp;#39;VC.Const&amp;#39;
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;isa(vc_value, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;VC.Const&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;)
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Check if the VC exists in variant_coding_values
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;isKey(variant_coding_values, vc_name)
+&lt;&#x2F;span&gt;&lt;span&gt;                old_value = vc_data.(vc_name).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;Value&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;                vc_value_from_csv = variant_coding_values(vc_name);
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Change VC value as per variant_coding_values file
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;if strcmp&lt;&#x2F;span&gt;&lt;span&gt;(vc_data.(vc_name).DataType, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;boolean&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;)
+&lt;&#x2F;span&gt;&lt;span&gt;                    vc_data.(vc_name).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;Value&lt;&#x2F;span&gt;&lt;span&gt; = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;logical&lt;&#x2F;span&gt;&lt;span&gt;(vc_value_from_csv);
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;else
+&lt;&#x2F;span&gt;&lt;span&gt;                    vc_data.(vc_name).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;Value&lt;&#x2F;span&gt;&lt;span&gt; = vc_value_from_csv;
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;span&gt;                vc_data_new.(vc_name) = vc_data.(vc_name);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;                new_value = vc_data.(vc_name).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;Value&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Add the data to the modified_vc_data cell array
+&lt;&#x2F;span&gt;&lt;span&gt;                modified_vc_data = [modified_vc_data; {vc_name, old_value, new_value}];
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;span&gt;    
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Modify sldd file w&#x2F; modified VC values
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;save&lt;&#x2F;span&gt;&lt;span&gt;(&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;vc_data_new.mat&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;-struct&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;vc_data_new&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;)
+&lt;&#x2F;span&gt;&lt;span&gt;    importFromFile(sldd_data, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;vc_data_new.mat&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;existingVarsAction&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;overwrite&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;);
+&lt;&#x2F;span&gt;&lt;span&gt;    sldd_dict.saveChanges();
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Close all connections to all open data dictionaries
+&lt;&#x2F;span&gt;&lt;span&gt;    Simulink.data.dictionary.closeAll();
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;write_csv&lt;&#x2F;strong&gt; function will just create a new csv with old and new values for all variant coding constants present in the model.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;matlab&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-matlab &quot;&gt;&lt;code class=&quot;language-matlab&quot; data-lang=&quot;matlab&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;write_csv&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;variant_coding_modified_values&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Create a new CSV file with the output data
+&lt;&#x2F;span&gt;&lt;span&gt;    output_filename = &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;variant_coding_modified.csv&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;;
+&lt;&#x2F;span&gt;&lt;span&gt;    fid = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fopen&lt;&#x2F;span&gt;&lt;span&gt;(output_filename, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;w&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fprintf&lt;&#x2F;span&gt;&lt;span&gt;(fid, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;variant coding Name,Old Value,New Value&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Write header
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Write data to the CSV file
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;i&lt;&#x2F;span&gt;&lt;span&gt; = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;size&lt;&#x2F;span&gt;&lt;span&gt;(variant_coding_modified_values, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fprintf&lt;&#x2F;span&gt;&lt;span&gt;(fid, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;%s&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;%d\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;, variant_coding_modified_values{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;i&lt;&#x2F;span&gt;&lt;span&gt;,:});
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;fclose&lt;&#x2F;span&gt;&lt;span&gt;(fid);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Full script is available on github &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;Karthik-d-k.github.io&#x2F;blob&#x2F;main&#x2F;content&#x2F;scripts&#x2F;matlab_reducer.m&quot;&gt;&lt;strong&gt;matlab_reducer.m&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Thanks to my friend &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Vijeth400&quot;&gt;&lt;strong&gt;Vijeth Angadi&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; for reviewing the draft version of this blog.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Instagram Followers Inspection</title>
+        <published>2024-05-13T00:00:00+00:00</published>
+        <updated>2024-05-13T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/blog/insta-inspect/"/>
+        <id>https://Karthik-d-k.github.io/blog/insta-inspect/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/blog/insta-inspect/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;I’ve always had the urge to find out people who had unfollowed me from instagram abruptly.
+However, instagram doesn’t provide notifications or an easy way to access this info.
+As of my knowledge on May 13, 2024, we still have to manually check each and every person from our followers list in our followees list to figure this out.
+It’s boring and tedious task.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;problem&quot;&gt;Problem&lt;&#x2F;h2&gt;
+&lt;p&gt;As a fun exercise, I thought of writing a small python script to figure this out. This blog is about how I achieved it.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;solution&quot;&gt;Solution&lt;&#x2F;h2&gt;
+&lt;p&gt;There is a python library called &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;instaloader.github.io&#x2F;index.html&quot;&gt;&lt;strong&gt;Instaloader&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; which is a tool for downloading pictures (or videos) along with their captions and other metadata from Instagram.
+I’m more interested in metadata part. We can directly extract the followers and followees list of the people you follow if you login into your user ID.&lt;&#x2F;p&gt;
+&lt;p&gt;First, we have to create an instaloader instance and then login using our user ID and password&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;instaloader
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;L = instaloader.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Instaloader&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;L.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;login&lt;&#x2F;span&gt;&lt;span&gt;(&amp;lt;user_id&amp;gt;, &amp;lt;password&amp;gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Then we can extract anyone’s profile from our followers list or we can create our own profile&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span&gt;profile = instaloader.Profile.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;from_username&lt;&#x2F;span&gt;&lt;span&gt;(L.context, &amp;lt;inspect_user_id&amp;gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;We can just extract the list of followers and followees using this profile instance&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span&gt;followers = profile.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;get_followers&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;followees = profile.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;get_followees&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Using list comprehension magic, we can simply compare the usernames from the followers and followees list
+to find out poeple who we don’t follow back and people who don’t follow us back !!&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span&gt;followers_names = [o.username &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;o &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span&gt;followers]
+&lt;&#x2F;span&gt;&lt;span&gt;followees_names = [o.username &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;o &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span&gt;followees]
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;u_not_following_others = [o &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;o &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span&gt;followers_names &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;o not in followees_names]
+&lt;&#x2F;span&gt;&lt;span&gt;other_not_following_u = [o &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;o &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span&gt;followees_names &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;o not in followers_names]
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Finally, we can just save these results in a text file using following simple code and close the connection&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;list_to_txt&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fname&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;data&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;    data = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;sorted&lt;&#x2F;span&gt;&lt;span&gt;(data)
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;with &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;open&lt;&#x2F;span&gt;&lt;span&gt;(fname, &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;w&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;as &lt;&#x2F;span&gt;&lt;span&gt;file:
+&lt;&#x2F;span&gt;&lt;span&gt;        data_to_write = &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;join&lt;&#x2F;span&gt;&lt;span&gt;(data)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Write the data to the file
+&lt;&#x2F;span&gt;&lt;span&gt;        file.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;write&lt;&#x2F;span&gt;&lt;span&gt;(data_to_write)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Save results to a text file
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;list_to_txt&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;others_not_following_u.txt&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, other_not_following_u)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;list_to_txt&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;u_not_following_others.txt&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, u_not_following_others)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Close the connection
+&lt;&#x2F;span&gt;&lt;span&gt;L.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;close&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Full script is available on github &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;Karthik-d-k.github.io&#x2F;blob&#x2F;main&#x2F;content&#x2F;scripts&#x2F;insta_inspect.py&quot;&gt;&lt;strong&gt;insta_inspect.py&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Thanks to my friend &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;apoorva-bhat-6ab836171&#x2F;&quot;&gt;&lt;strong&gt;Apoorva Bhat&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; for reviewing the draft version of this blog.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+</feed>

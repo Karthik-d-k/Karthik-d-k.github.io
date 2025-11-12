@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>0x646b - script</title>
+    <subtitle>Personal Commentary</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://Karthik-d-k.github.io/tags/script/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-07-02T00:00:00+00:00</updated>
+    <id>https://Karthik-d-k.github.io/tags/script/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Batch script for Copying Binaries</title>
+        <published>2024-07-02T00:00:00+00:00</published>
+        <updated>2024-07-02T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/blog/copy-binaries/"/>
+        <id>https://Karthik-d-k.github.io/blog/copy-binaries/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/blog/copy-binaries/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;I got tired of manually copying the necessary files from the build project folder. Additionally, I had to copy the zipped project content to the destination folder every time I delivered a project. To streamline this process, I decided to automate the task using a Windows batch script as my development operating system is Windows.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;problem&quot;&gt;Problem&lt;&#x2F;h2&gt;
+&lt;p&gt;Write a windows batch script to automate zipping the content and also copying the files.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;solution&quot;&gt;Solution&lt;&#x2F;h2&gt;
+&lt;p&gt;I have &lt;code&gt;7-zip&lt;&#x2F;code&gt; installed in my machine so i use this tool to zip the contents and &lt;code&gt;xcopy&lt;&#x2F;code&gt;, an inbuilt tool in windows is used for copying the files.
+I will explain each part of the script below.&lt;&#x2F;p&gt;
+&lt;p&gt;First and foremost thing in batch scripts is to turn off outputting the commands run but for debugging purpose, we can comment-out&#x2F;delete this line&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bat&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bat &quot;&gt;&lt;code class=&quot;language-bat&quot; data-lang=&quot;bat&quot;&gt;&lt;span&gt;@&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;ECHO&lt;&#x2F;span&gt;&lt;span&gt; off
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Change directory to the folder where the script is placed (ideally PROJECT root) using &lt;code&gt;%~dp0&lt;&#x2F;code&gt;, %0 refers to the batch file.
+Set destination to new folder &lt;code&gt;_share&lt;&#x2F;code&gt; inside root directory or to any folder to your needs&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bat&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bat &quot;&gt;&lt;code class=&quot;language-bat&quot; data-lang=&quot;bat&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;CD &lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;~dp0
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;SET &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;dest&lt;&#x2F;span&gt;&lt;span&gt;=%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cd&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;\_share
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Next, extract the PROJECT folder name and zip its contents using &lt;code&gt;7-zip&lt;&#x2F;code&gt;.
+I don’t have clear understanding of how code line for extracting folder name works, this was made possible by googling and chatting with chatgpt for a day :)&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bat&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bat &quot;&gt;&lt;code class=&quot;language-bat&quot; data-lang=&quot;bat&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;FOR &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;%%&lt;&#x2F;span&gt;&lt;span&gt;F in (&amp;quot;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;CD&lt;&#x2F;span&gt;&lt;span&gt;%&amp;quot;) DO &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;SET &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PROJECT_name&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;%%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;~nxF&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;7z a ..\%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PROJECT_name&lt;&#x2F;span&gt;&lt;span&gt;%.zip %&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cd&lt;&#x2F;span&gt;&lt;span&gt;%\
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Set all the required files that you want to copy using &lt;code&gt;SET&lt;&#x2F;code&gt; and copy using &lt;code&gt;xcopy&lt;&#x2F;code&gt;.
+&lt;code&gt;&#x2F;y&lt;&#x2F;code&gt; option is used to accept to copy the files by default.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bat&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bat &quot;&gt;&lt;code class=&quot;language-bat&quot; data-lang=&quot;bat&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;SET &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;zip&lt;&#x2F;span&gt;&lt;span&gt;=%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;CD&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;\..\&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PROJECT_name&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;.zip
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;SET &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;hex&lt;&#x2F;span&gt;&lt;span&gt;=%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;CD&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;\bin\&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PROJECT_name&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;.hex
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;SET &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;config&lt;&#x2F;span&gt;&lt;span&gt;=%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;CD&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;\gen\&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PROJECT_name&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;.xml
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;:: etc ...
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;:: Copy files using xcopy
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;FOR &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;%%&lt;&#x2F;span&gt;&lt;span&gt;F in (%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;zip&lt;&#x2F;span&gt;&lt;span&gt;%, %&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;hex&lt;&#x2F;span&gt;&lt;span&gt;%, %&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;config&lt;&#x2F;span&gt;&lt;span&gt;%) DO &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;xcopy &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;%%&lt;&#x2F;span&gt;&lt;span&gt;F %&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;dest&lt;&#x2F;span&gt;&lt;span&gt;%\ &#x2F;y
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Use &lt;code&gt;pause&lt;&#x2F;code&gt; before exiting the program, so that you can see which files are copied in the standard output window&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bat&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bat &quot;&gt;&lt;code class=&quot;language-bat&quot; data-lang=&quot;bat&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;:: pause to see the stdout
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;pause
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;exit&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;b &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Full script is available on github &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;Karthik-d-k.github.io&#x2F;blob&#x2F;main&#x2F;content&#x2F;scripts&#x2F;copy_binaries.bat&quot;&gt;&lt;strong&gt;copy_binaries.bat&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Matlab&#x2F;Simulink Model Reducer</title>
+        <published>2024-05-16T00:00:00+00:00</published>
+        <updated>2024-05-16T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/blog/matlab-reducer/"/>
+        <id>https://Karthik-d-k.github.io/blog/matlab-reducer/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/blog/matlab-reducer/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;In automotive engine control unit (ECU) software, we use global constants called &lt;strong&gt;variant coding&lt;&#x2F;strong&gt; constants to enable or disable specific features. These constants are part of every functional unit within the entire ECU software. Most software development for ECUs is done using tools like &lt;strong&gt;ASCET&lt;&#x2F;strong&gt; and sometimes &lt;strong&gt;Matlab&#x2F;Simulink&lt;&#x2F;strong&gt;, depending on the team and the specific functional unit.&lt;&#x2F;p&gt;
+&lt;p&gt;Both ASCET and Matlab&#x2F;Simulink are model-based code generators. Instead of writing code manually, developers create flow diagrams by dragging and dropping basic and user-defined classes&#x2F;blocks. These diagrams represent the required functionality of an ECU sub-system, and the tools generate the corresponding C code.&lt;&#x2F;p&gt;
+&lt;p&gt;Each sub-system (functional unit) has its own set of variant coding constants, which enable or disable features based on the customer’s requirements. ASCET has a built-in tool called &lt;strong&gt;model_reducer&lt;&#x2F;strong&gt;. This tool uses a global CSV file (&lt;strong&gt;variant_coding.csv&lt;&#x2F;strong&gt;) containing all the variant coding constants for the entire ECU software. By referencing this CSV file, ASCET can generate a reduced version of the model to enable or disable specific feature blocks.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;problem&quot;&gt;Problem&lt;&#x2F;h2&gt;
+&lt;p&gt;In &lt;strong&gt;Matlab&#x2F;Simulink&lt;&#x2F;strong&gt;, we need to manually update each &lt;strong&gt;variant coding&lt;&#x2F;strong&gt; value within the &lt;strong&gt;Simulink data dictionary (sldd)&lt;&#x2F;strong&gt; file based on the global CSV file. This manual process is error-prone and time-consuming for developers. To address this, we can automate the task using a script.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;solution&quot;&gt;Solution&lt;&#x2F;h2&gt;
+&lt;p&gt;Our script should take two input files: the &lt;strong&gt;variant_coding.csv&lt;&#x2F;strong&gt; file and the &lt;strong&gt;model.sldd&lt;&#x2F;strong&gt; file. It should then output a modified &lt;strong&gt;model_modified.sldd&lt;&#x2F;strong&gt; file and an updated &lt;strong&gt;variant_coding_modified.csv&lt;&#x2F;strong&gt; file.&lt;&#x2F;p&gt;
+&lt;p&gt;Here’s a high-level overview of how to write this script in Matlab.
+This function takes the input CSV and sldd files and generates the required modified files.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;matlab&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-matlab &quot;&gt;&lt;code class=&quot;language-matlab&quot; data-lang=&quot;matlab&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;matlab_reducer&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;variant_coding_csv&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;model_sldd&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;    variant_coding_values = csv2dict(variant_coding_csv);
+&lt;&#x2F;span&gt;&lt;span&gt;    variant_coding_modified_values = modify_sldd(model_sldd, variant_coding_values);
+&lt;&#x2F;span&gt;&lt;span&gt;    write_csv(variant_coding_modified_values);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;In the following sections, I will explain the individual components needed to achieve this outcome.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;csv2dict&lt;&#x2F;strong&gt; will read the csv file and stores the values along with names in a dictionary.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;matlab&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-matlab &quot;&gt;&lt;code class=&quot;language-matlab&quot; data-lang=&quot;matlab&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;variant_coding_values &lt;&#x2F;span&gt;&lt;span&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;csv2dict&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;filename&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Read the CSV file
+&lt;&#x2F;span&gt;&lt;span&gt;    data = readtable(filename, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Format&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;%s%f&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Extract the first and second columns
+&lt;&#x2F;span&gt;&lt;span&gt;    keys = data.Var1;
+&lt;&#x2F;span&gt;&lt;span&gt;    values = data.Var2;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Create a dictionary
+&lt;&#x2F;span&gt;&lt;span&gt;    variant_coding_values = containers.Map(keys, values);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;modify_sldd&lt;&#x2F;strong&gt; function will modify the values present in the sldd file with values we read from csv file.
+We read the &lt;strong&gt;Design Data&lt;&#x2F;strong&gt; section from sldd file and then we export the values to a .mat file which is
+necessary to modify the values. we just search all the VCs in dictionary and grad the values and rewrite with updated values and save to a
+new .mat file. THis file is then used to update and save the modified sldd file.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;matlab&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-matlab &quot;&gt;&lt;code class=&quot;language-matlab&quot; data-lang=&quot;matlab&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;modified_vc_data &lt;&#x2F;span&gt;&lt;span&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;modify_sldd&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;model_sldd&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;variant_coding_values&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Read the sldd file
+&lt;&#x2F;span&gt;&lt;span&gt;    sldd_dict = Simulink.data.dictionary.open(model_sldd);
+&lt;&#x2F;span&gt;&lt;span&gt;    sldd_data = getSection(sldd_dict, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Design Data&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;);
+&lt;&#x2F;span&gt;&lt;span&gt;    
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Save sldd data into a .mat file
+&lt;&#x2F;span&gt;&lt;span&gt;    exportToFile(sldd_data, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;sldd_data.mat&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;);
+&lt;&#x2F;span&gt;&lt;span&gt;    
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Load VC&#x2F;Vars&#x2F;.. mat file
+&lt;&#x2F;span&gt;&lt;span&gt;    vc_data = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;load&lt;&#x2F;span&gt;&lt;span&gt;(&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;sldd_data.mat&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;);
+&lt;&#x2F;span&gt;&lt;span&gt;    vc_names = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fieldnames&lt;&#x2F;span&gt;&lt;span&gt;(vc_data);
+&lt;&#x2F;span&gt;&lt;span&gt;    vc_data_new = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;struct&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Create a cell array to store the output
+&lt;&#x2F;span&gt;&lt;span&gt;    modified_vc_data = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;cell&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;i&lt;&#x2F;span&gt;&lt;span&gt; = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;numel&lt;&#x2F;span&gt;&lt;span&gt;(vc_names)
+&lt;&#x2F;span&gt;&lt;span&gt;        vc_name = vc_names{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;i&lt;&#x2F;span&gt;&lt;span&gt;};
+&lt;&#x2F;span&gt;&lt;span&gt;        vc_value = vc_data.(vc_name);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Check if the field value is of the type &amp;#39;VC.Const&amp;#39;
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;isa(vc_value, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;VC.Const&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;)
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Check if the VC exists in variant_coding_values
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;isKey(variant_coding_values, vc_name)
+&lt;&#x2F;span&gt;&lt;span&gt;                old_value = vc_data.(vc_name).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;Value&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;                vc_value_from_csv = variant_coding_values(vc_name);
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Change VC value as per variant_coding_values file
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;if strcmp&lt;&#x2F;span&gt;&lt;span&gt;(vc_data.(vc_name).DataType, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;boolean&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;)
+&lt;&#x2F;span&gt;&lt;span&gt;                    vc_data.(vc_name).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;Value&lt;&#x2F;span&gt;&lt;span&gt; = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;logical&lt;&#x2F;span&gt;&lt;span&gt;(vc_value_from_csv);
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;else
+&lt;&#x2F;span&gt;&lt;span&gt;                    vc_data.(vc_name).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;Value&lt;&#x2F;span&gt;&lt;span&gt; = vc_value_from_csv;
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;span&gt;                vc_data_new.(vc_name) = vc_data.(vc_name);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;                new_value = vc_data.(vc_name).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;Value&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Add the data to the modified_vc_data cell array
+&lt;&#x2F;span&gt;&lt;span&gt;                modified_vc_data = [modified_vc_data; {vc_name, old_value, new_value}];
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;span&gt;    
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Modify sldd file w&#x2F; modified VC values
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;save&lt;&#x2F;span&gt;&lt;span&gt;(&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;vc_data_new.mat&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;-struct&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;vc_data_new&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;)
+&lt;&#x2F;span&gt;&lt;span&gt;    importFromFile(sldd_data, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;vc_data_new.mat&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;existingVarsAction&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;overwrite&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;);
+&lt;&#x2F;span&gt;&lt;span&gt;    sldd_dict.saveChanges();
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Close all connections to all open data dictionaries
+&lt;&#x2F;span&gt;&lt;span&gt;    Simulink.data.dictionary.closeAll();
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;write_csv&lt;&#x2F;strong&gt; function will just create a new csv with old and new values for all variant coding constants present in the model.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;matlab&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-matlab &quot;&gt;&lt;code class=&quot;language-matlab&quot; data-lang=&quot;matlab&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;write_csv&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;variant_coding_modified_values&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Create a new CSV file with the output data
+&lt;&#x2F;span&gt;&lt;span&gt;    output_filename = &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;variant_coding_modified.csv&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;;
+&lt;&#x2F;span&gt;&lt;span&gt;    fid = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fopen&lt;&#x2F;span&gt;&lt;span&gt;(output_filename, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;w&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fprintf&lt;&#x2F;span&gt;&lt;span&gt;(fid, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;variant coding Name,Old Value,New Value&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Write header
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;% Write data to the CSV file
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;i&lt;&#x2F;span&gt;&lt;span&gt; = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;size&lt;&#x2F;span&gt;&lt;span&gt;(variant_coding_modified_values, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fprintf&lt;&#x2F;span&gt;&lt;span&gt;(fid, &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;%s&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;%d\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;, variant_coding_modified_values{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;i&lt;&#x2F;span&gt;&lt;span&gt;,:});
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;fclose&lt;&#x2F;span&gt;&lt;span&gt;(fid);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Full script is available on github &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;Karthik-d-k.github.io&#x2F;blob&#x2F;main&#x2F;content&#x2F;scripts&#x2F;matlab_reducer.m&quot;&gt;&lt;strong&gt;matlab_reducer.m&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Thanks to my friend &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Vijeth400&quot;&gt;&lt;strong&gt;Vijeth Angadi&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; for reviewing the draft version of this blog.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Instagram Followers Inspection</title>
+        <published>2024-05-13T00:00:00+00:00</published>
+        <updated>2024-05-13T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/blog/insta-inspect/"/>
+        <id>https://Karthik-d-k.github.io/blog/insta-inspect/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/blog/insta-inspect/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;I’ve always had the urge to find out people who had unfollowed me from instagram abruptly.
+However, instagram doesn’t provide notifications or an easy way to access this info.
+As of my knowledge on May 13, 2024, we still have to manually check each and every person from our followers list in our followees list to figure this out.
+It’s boring and tedious task.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;problem&quot;&gt;Problem&lt;&#x2F;h2&gt;
+&lt;p&gt;As a fun exercise, I thought of writing a small python script to figure this out. This blog is about how I achieved it.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;solution&quot;&gt;Solution&lt;&#x2F;h2&gt;
+&lt;p&gt;There is a python library called &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;instaloader.github.io&#x2F;index.html&quot;&gt;&lt;strong&gt;Instaloader&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; which is a tool for downloading pictures (or videos) along with their captions and other metadata from Instagram.
+I’m more interested in metadata part. We can directly extract the followers and followees list of the people you follow if you login into your user ID.&lt;&#x2F;p&gt;
+&lt;p&gt;First, we have to create an instaloader instance and then login using our user ID and password&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;instaloader
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;L = instaloader.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Instaloader&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;L.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;login&lt;&#x2F;span&gt;&lt;span&gt;(&amp;lt;user_id&amp;gt;, &amp;lt;password&amp;gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Then we can extract anyone’s profile from our followers list or we can create our own profile&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span&gt;profile = instaloader.Profile.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;from_username&lt;&#x2F;span&gt;&lt;span&gt;(L.context, &amp;lt;inspect_user_id&amp;gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;We can just extract the list of followers and followees using this profile instance&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span&gt;followers = profile.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;get_followers&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;followees = profile.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;get_followees&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Using list comprehension magic, we can simply compare the usernames from the followers and followees list
+to find out poeple who we don’t follow back and people who don’t follow us back !!&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span&gt;followers_names = [o.username &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;o &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span&gt;followers]
+&lt;&#x2F;span&gt;&lt;span&gt;followees_names = [o.username &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;o &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span&gt;followees]
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;u_not_following_others = [o &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;o &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span&gt;followers_names &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;o not in followees_names]
+&lt;&#x2F;span&gt;&lt;span&gt;other_not_following_u = [o &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;o &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span&gt;followees_names &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;o not in followers_names]
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Finally, we can just save these results in a text file using following simple code and close the connection&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;list_to_txt&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fname&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;data&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;    data = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;sorted&lt;&#x2F;span&gt;&lt;span&gt;(data)
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;with &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;open&lt;&#x2F;span&gt;&lt;span&gt;(fname, &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;w&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;as &lt;&#x2F;span&gt;&lt;span&gt;file:
+&lt;&#x2F;span&gt;&lt;span&gt;        data_to_write = &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;join&lt;&#x2F;span&gt;&lt;span&gt;(data)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Write the data to the file
+&lt;&#x2F;span&gt;&lt;span&gt;        file.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;write&lt;&#x2F;span&gt;&lt;span&gt;(data_to_write)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Save results to a text file
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;list_to_txt&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;others_not_following_u.txt&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, other_not_following_u)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;list_to_txt&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;u_not_following_others.txt&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, u_not_following_others)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Close the connection
+&lt;&#x2F;span&gt;&lt;span&gt;L.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;close&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Full script is available on github &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;Karthik-d-k.github.io&#x2F;blob&#x2F;main&#x2F;content&#x2F;scripts&#x2F;insta_inspect.py&quot;&gt;&lt;strong&gt;insta_inspect.py&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Thanks to my friend &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;apoorva-bhat-6ab836171&#x2F;&quot;&gt;&lt;strong&gt;Apoorva Bhat&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; for reviewing the draft version of this blog.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+</feed>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>0x646b - windows</title>
+    <subtitle>Personal Commentary</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://Karthik-d-k.github.io/tags/windows/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-10-23T00:00:00+00:00</updated>
+    <id>https://Karthik-d-k.github.io/tags/windows/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Running asciinema from windows</title>
+        <published>2025-10-23T00:00:00+00:00</published>
+        <updated>2025-10-23T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/til/asciinema-windows/"/>
+        <id>https://Karthik-d-k.github.io/til/asciinema-windows/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/til/asciinema-windows/">&lt;p&gt;As described in the &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;asciinema&#x2F;asciinema&quot;&gt;asciinema README&lt;&#x2F;a&gt;, &lt;strong&gt;asciinema&lt;&#x2F;strong&gt; (aka asciinema CLI or asciinema recorder) is a command-line tool
+for recording and live streaming terminal sessions.&lt;&#x2F;p&gt;
+&lt;p&gt;Unlike typical &lt;em&gt;screen&lt;&#x2F;em&gt; recording software, which records visual output of a
+screen into heavyweight video files (&lt;code&gt;.mp4&lt;&#x2F;code&gt;, &lt;code&gt;.mov&lt;&#x2F;code&gt;), asciinema CLI runs
+&lt;em&gt;inside a terminal&lt;&#x2F;em&gt;, capturing terminal session output into lightweight
+recording files in the &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;docs.asciinema.org&#x2F;manual&#x2F;asciicast&#x2F;v3&#x2F;&quot;&gt;asciicast&lt;&#x2F;a&gt; format (&lt;code&gt;.cast&lt;&#x2F;code&gt;),
+or streaming it live to viewers in real-time.&lt;&#x2F;p&gt;
+&lt;p&gt;For now, it only supports GNU&#x2F;Linux, macOS and FreeBSD.
+Windows is currently not supported. See discussion &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;orgs&#x2F;asciinema&#x2F;discussions&#x2F;278&quot;&gt;#278&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;As I have &lt;code&gt;WSL&lt;&#x2F;code&gt; installed on my Windows machine, I can run asciinema from the WSL terminal.
+To make it run from PowerShell, I modified my PowerShell profile to add functions that call into the WSL asciinema binary.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;powershell&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-powershell &quot;&gt;&lt;code class=&quot;language-powershell&quot; data-lang=&quot;powershell&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Asciinema aliases using WSL
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;asciinema &lt;&#x2F;span&gt;&lt;span&gt;{ wsl ~&#x2F;.cargo&#x2F;bin&#x2F;asciinema @&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;args &lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;record &lt;&#x2F;span&gt;&lt;span&gt;{ wsl -d Ubuntu-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22.04&lt;&#x2F;span&gt;&lt;span&gt; ~&#x2F;.cargo&#x2F;bin&#x2F;asciinema rec @&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;args &lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;play   &lt;&#x2F;span&gt;&lt;span&gt;{ wsl -d Ubuntu-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22.04&lt;&#x2F;span&gt;&lt;span&gt; ~&#x2F;.cargo&#x2F;bin&#x2F;asciinema play @&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;args &lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;stream &lt;&#x2F;span&gt;&lt;span&gt;{ wsl -d Ubuntu-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22.04&lt;&#x2F;span&gt;&lt;span&gt; ~&#x2F;.cargo&#x2F;bin&#x2F;asciinema stream @&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;args &lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This is the simplest way that I found to record PowerShell terminal sessions using asciinema.
+I have no idea as of now if this is the best way to do it, but it works for me.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Case-sensitive Settings on Windows</title>
+        <published>2025-01-06T00:00:00+00:00</published>
+        <updated>2025-01-06T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/til/case-sensitive-windows/"/>
+        <id>https://Karthik-d-k.github.io/til/case-sensitive-windows/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/til/case-sensitive-windows/">&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;I was trying to clone the &lt;strong&gt;Linux&lt;&#x2F;strong&gt; git stable repository on my Windows 10 machine using the following command:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; clone https:&#x2F;&#x2F;git.kernel.org&#x2F;pub&#x2F;scm&#x2F;linux&#x2F;kernel&#x2F;git&#x2F;stable&#x2F;linux.git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --depth&lt;&#x2F;span&gt;&lt;span&gt; 1
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Unfortunately, this failed with the following warning because the Linux tree contains files with the same name but with different case sensitivity:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;warning:&lt;&#x2F;span&gt;&lt;span&gt; the following paths have collided (e.g. case-sensitive paths
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;on&lt;&#x2F;span&gt;&lt;span&gt; a case-insensitive filesystem) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;and&lt;&#x2F;span&gt;&lt;span&gt; only one from the same
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;colliding&lt;&#x2F;span&gt;&lt;span&gt; group is in the working tree:
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;The Windows 10 file system by default is &lt;strong&gt;case-insensitive&lt;&#x2F;strong&gt;, meaning it treats both &lt;strong&gt;ip6t_hl.h&lt;&#x2F;strong&gt; and &lt;strong&gt;ip6t_HL.h&lt;&#x2F;strong&gt; as the same file. This is not true for Linux file systems, as they treat these as different files because the file system is case-sensitive.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;This problem can be solved in two ways:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;We can use &lt;strong&gt;WSL (Windows Subsystem for Linux)&lt;&#x2F;strong&gt; on our Windows machine.&lt;&#x2F;li&gt;
+&lt;li&gt;We can enable case sensitivity for a folder using the &lt;strong&gt;fsutil&lt;&#x2F;strong&gt; command:&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fsutil&lt;&#x2F;span&gt;&lt;span&gt; file setCaseSensitiveInfo &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&amp;lt;path-to-directory&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; enable
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;ul&gt;
+&lt;li&gt;You can verify if this worked using the following command:&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fsutil.exe&lt;&#x2F;span&gt;&lt;span&gt; file queryCaseSensitiveInfo &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&amp;lt;path-to-directory&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;references&quot;&gt;References&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;stackoverflow.com&#x2F;a&#x2F;64466310&quot;&gt;Stack Overflow: Case-sensitive path collisions&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+</feed>
