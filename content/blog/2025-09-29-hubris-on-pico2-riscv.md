@@ -1,7 +1,6 @@
 +++
 title = "Hubris OS on RP Pico 2(W) board (Hazard3 RISC-V core)"
 date = 2025-09-29
-draft = true
 [taxonomies]
   tags = ["rp235x", "rust", "hubris", "os", "riscv"]
 +++

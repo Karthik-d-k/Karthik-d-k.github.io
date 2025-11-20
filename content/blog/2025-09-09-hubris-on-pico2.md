@@ -1,7 +1,6 @@
 +++
 title = "Hubris OS on RP Pico 2(W) board (Cortex-M33 ARM core)"
 date = 2025-09-09
-draft = true
 [taxonomies]
   tags = ["rp235x", "rust", "hubris", "os", "arm"]
 +++
