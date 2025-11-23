@@ -18,6 +18,7 @@ title = "Bookmarks"
 - [Eric S. Raymond's Home Page](http://www.catb.org/esr/)
 - [Richard S. Sutton's Home Page](http://www.incompleteideas.net/)
 - [tomverbeure.github.io](https://tomverbeure.github.io/)
+- [Uros Popovic](https://popovicu.com/)
 
 ----------------
 
