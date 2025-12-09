@@ -1,0 +1,963 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>0x646b - hubris</title>
+    <subtitle>Personal Commentary</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://Karthik-d-k.github.io/tags/hubris/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-09-29T00:00:00+00:00</updated>
+    <id>https://Karthik-d-k.github.io/tags/hubris/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Hubris OS on RP Pico 2(W) board (Hazard3 RISC-V core)</title>
+        <published>2025-09-29T00:00:00+00:00</published>
+        <updated>2025-09-29T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/blog/hubris-on-pico2-riscv/"/>
+        <id>https://Karthik-d-k.github.io/blog/hubris-on-pico2-riscv/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/blog/hubris-on-pico2-riscv/">&lt;h2 id=&quot;overview&quot;&gt;Overview&lt;&#x2F;h2&gt;
+&lt;p&gt;If you haven’t checked it out already, go through my &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;karthik-d-k.github.io&#x2F;blog&#x2F;hubris-on-pico2&#x2F;&quot;&gt;hubris-on-pico2 blog post&lt;&#x2F;a&gt; where I explained how to get the Hubris OS running on the RP Pico 2W board’s Cortex-M33 core. I have also explained the technical details of the tools that I used for development.
+In this blog post, I will explain how I got the same Hubris OS running on the RP Pico 2W board’s Hazard3 RISC-V core.&lt;&#x2F;p&gt;
+&lt;p&gt;If you want to follow along, please refer to the &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;exhubris-riscv-hazard3&#x2F;tree&#x2F;72518ad1fe574e27057a5933d1363e59f32f77f5&quot;&gt;exhubris-riscv-hazard3&lt;&#x2F;a&gt; repo for the working code.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;risc-v-kernel&quot;&gt;RISC-V kernel&lt;&#x2F;h3&gt;
+&lt;p&gt;Building tasks is the same as what I have done on the ARM core, but for the kernel, I have used my RISC-V port present in the &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;oxidecomputer&#x2F;hubris&#x2F;commit&#x2F;a55363a57a29d97b94b587c7c2deb4021f50377d&quot;&gt;hubris-riscv-hazard3&lt;&#x2F;a&gt; repo.&lt;&#x2F;p&gt;
+&lt;p&gt;For technical details about the RISC-V port, please refer to &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;oxidecomputer&#x2F;hubris&#x2F;discussions&#x2F;365&quot;&gt;this discussion&lt;&#x2F;a&gt;. I have made changes based on &lt;code&gt;jperkin&#x27;s&lt;&#x2F;code&gt; implementation and updated&#x2F;changed code to support the latest Hubris version. I have added some logs on top of it and did a few Pico 2 board specific changes.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;building-and-flashing&quot;&gt;Building and Flashing&lt;&#x2F;h2&gt;
+&lt;p&gt;Now, I will talk about how we could compile and build the firmware and flash it onto the Pico 2W board.
+I’m using &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;casey&#x2F;just&quot;&gt;just&lt;&#x2F;a&gt; to simplify the build process. Follow the repo for installing the tool.&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Building and flashing the application&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;In the first terminal:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; just build reboot flash
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Output:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;hubake&lt;&#x2F;span&gt;&lt;span&gt; build .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\a&lt;&#x2F;span&gt;&lt;span&gt;pp&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\r&lt;&#x2F;span&gt;&lt;span&gt;p235x-hazard3&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\a&lt;&#x2F;span&gt;&lt;span&gt;pp.kdl
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;╭───────────────────┬───────────────────────────────────────────────────────╮
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;│&lt;&#x2F;span&gt;&lt;span&gt; App name          │ hazard3                                               │
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;├───────────────────┼───────────────────────────────────────────────────────┤
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;│&lt;&#x2F;span&gt;&lt;span&gt; Config path       │ .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\a&lt;&#x2F;span&gt;&lt;span&gt;pp&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\r&lt;&#x2F;span&gt;&lt;span&gt;p235x-hazard3&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\a&lt;&#x2F;span&gt;&lt;span&gt;pp.kdl                          │
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;├───────────────────┼───────────────────────────────────────────────────────┤
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;│&lt;&#x2F;span&gt;&lt;span&gt; Workspace root    │ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\\&lt;&#x2F;span&gt;&lt;span&gt;?&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\C&lt;&#x2F;span&gt;&lt;span&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\U&lt;&#x2F;span&gt;&lt;span&gt;sers&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;USER&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\w&lt;&#x2F;span&gt;&lt;span&gt;ws&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\r&lt;&#x2F;span&gt;&lt;span&gt;iscv&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\e&lt;&#x2F;span&gt;&lt;span&gt;xhubris-riscv-hazard3 │
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;├───────────────────┼───────────────────────────────────────────────────────┤
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;│&lt;&#x2F;span&gt;&lt;span&gt; Host platform     │ x86_64-pc-windows-msvc                                │
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;├───────────────────┼───────────────────────────────────────────────────────┤
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;│&lt;&#x2F;span&gt;&lt;span&gt; Default toolchain │ 1.88.0                                                │
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;╰───────────────────┴───────────────────────────────────────────────────────╯
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;╭───────────────────────────╮
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;│&lt;&#x2F;span&gt;&lt;span&gt; building component: super │
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;╰───────────────────────────╯
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Finished &lt;&#x2F;span&gt;&lt;span&gt;`&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;release&lt;&#x2F;span&gt;&lt;span&gt;` profile &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;optimized + debuginfo&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;]&lt;&#x2F;span&gt;&lt;span&gt; target(s) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;in&lt;&#x2F;span&gt;&lt;span&gt; 0.60s
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;╭────────────────────────────╮
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;│&lt;&#x2F;span&gt;&lt;span&gt; building component: blinky │
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;╰────────────────────────────╯
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Finished &lt;&#x2F;span&gt;&lt;span&gt;`&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;release&lt;&#x2F;span&gt;&lt;span&gt;` profile &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;optimized + debuginfo&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;]&lt;&#x2F;span&gt;&lt;span&gt; target(s) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;in&lt;&#x2F;span&gt;&lt;span&gt; 0.51s
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;╭──────────────────────────╮
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;│&lt;&#x2F;span&gt;&lt;span&gt; building component: idle │
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;╰──────────────────────────╯
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Finished &lt;&#x2F;span&gt;&lt;span&gt;`&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;release&lt;&#x2F;span&gt;&lt;span&gt;` profile &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;optimized + debuginfo&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;]&lt;&#x2F;span&gt;&lt;span&gt; target(s) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;in&lt;&#x2F;span&gt;&lt;span&gt; 0.52s
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;╭─────────────────────────────────────────────╮
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;│&lt;&#x2F;span&gt;&lt;span&gt; Task build complete, prelinking for size... │
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;╰─────────────────────────────────────────────╯
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;warning:&lt;&#x2F;span&gt;&lt;span&gt; adjusted region ram base up to 0x20000800 from 0x20000000
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;╭────────────────────────────╮
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;│&lt;&#x2F;span&gt;&lt;span&gt; building component: kernel │
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;╰────────────────────────────╯
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Finished &lt;&#x2F;span&gt;&lt;span&gt;`&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;release&lt;&#x2F;span&gt;&lt;span&gt;` profile &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;optimized + debuginfo&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;]&lt;&#x2F;span&gt;&lt;span&gt; target(s) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;in&lt;&#x2F;span&gt;&lt;span&gt; 0.62s
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Allocations&lt;&#x2F;span&gt;&lt;span&gt; (2.3811ms)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;MEMORY&lt;&#x2F;span&gt;&lt;span&gt;   OWNER         START         END       SIZE     WASTE
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;vectors&lt;&#x2F;span&gt;&lt;span&gt;  kernel   0x10000000  0x10000063  100 bytes   0 bytes
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;vectors&lt;&#x2F;span&gt;&lt;span&gt;  (total)                          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;100&lt;&#x2F;span&gt;&lt;span&gt; bytes   0 bytes
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;flash&lt;&#x2F;span&gt;&lt;span&gt;    idle     0x10000180  0x100001df   96 bytes  12 bytes
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;flash    -pad-&lt;&#x2F;span&gt;&lt;span&gt;    0x100001e0  0x100001ff   32 bytes  32 bytes
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;flash&lt;&#x2F;span&gt;&lt;span&gt;    super    0x10000200  0x100002ff  256 bytes   0 bytes
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;flash&lt;&#x2F;span&gt;&lt;span&gt;    blinky   0x10000300  0x1000037f  128 bytes  12 bytes
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;flash&lt;&#x2F;span&gt;&lt;span&gt;    kernel   0x10000380  0x10009d80   38.5 KiB   0 bytes
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;flash&lt;&#x2F;span&gt;&lt;span&gt;    (total)                           &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;39.0&lt;&#x2F;span&gt;&lt;span&gt; KiB  56 bytes
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ram&lt;&#x2F;span&gt;&lt;span&gt;      kernel   0x20000000  0x200007ff   2.00 KiB   0 bytes
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ram&lt;&#x2F;span&gt;&lt;span&gt;      super    0x20000800  0x2000097f  384 bytes   0 bytes
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ram&lt;&#x2F;span&gt;&lt;span&gt;      idle     0x20000980  0x20000a7f  256 bytes   0 bytes
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ram&lt;&#x2F;span&gt;&lt;span&gt;      blinky   0x20000a80  0x20000b7f  256 bytes   0 bytes
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ram&lt;&#x2F;span&gt;&lt;span&gt;      kernel   0x20000b80  0x20000b80     1 byte   0 bytes
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ram&lt;&#x2F;span&gt;&lt;span&gt;      kernel   0x20000ba0  0x20000e7f  736 bytes   0 bytes
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ram&lt;&#x2F;span&gt;&lt;span&gt;      (total)                           &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;3.59&lt;&#x2F;span&gt;&lt;span&gt; KiB   0 bytes
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;╭─────────────────────────────────────────────────────────────────────────╮
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;│&lt;&#x2F;span&gt;&lt;span&gt; Build complete! Archive:                                                │
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;│ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\\&lt;&#x2F;span&gt;&lt;span&gt;?&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\C&lt;&#x2F;span&gt;&lt;span&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\U&lt;&#x2F;span&gt;&lt;span&gt;sers&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;USER&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\w&lt;&#x2F;span&gt;&lt;span&gt;ws&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\r&lt;&#x2F;span&gt;&lt;span&gt;iscv&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\e&lt;&#x2F;span&gt;&lt;span&gt;xhubris-riscv-hazard3&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\h&lt;&#x2F;span&gt;&lt;span&gt;azard3-build.zip │
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;╰─────────────────────────────────────────────────────────────────────────╯
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;hubake&lt;&#x2F;span&gt;&lt;span&gt; pack-hex .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\.&lt;&#x2F;span&gt;&lt;span&gt;work&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\h&lt;&#x2F;span&gt;&lt;span&gt;azard3&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\f&lt;&#x2F;span&gt;&lt;span&gt;inal&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\ &lt;&#x2F;span&gt;&lt;span&gt;output.hex
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;START&lt;&#x2F;span&gt;&lt;span&gt;    END (ex)  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;OWNER
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;0x10000000&lt;&#x2F;span&gt;&lt;span&gt;  0x10000064  kernel
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;0x10000064&lt;&#x2F;span&gt;&lt;span&gt;  0x10000180  - unused -
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;0x10000180&lt;&#x2F;span&gt;&lt;span&gt;  0x100001e0  idle
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;0x100001e0&lt;&#x2F;span&gt;&lt;span&gt;  0x10000200  - unused -
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;0x10000200&lt;&#x2F;span&gt;&lt;span&gt;  0x10000300  super
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;0x10000300&lt;&#x2F;span&gt;&lt;span&gt;  0x10000380  blinky
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;0x10000380&lt;&#x2F;span&gt;&lt;span&gt;  0x10009d80  kernel
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;0x10009d80&lt;&#x2F;span&gt;&lt;span&gt;  0x20000000  - unused -
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;0x20000000&lt;&#x2F;span&gt;&lt;span&gt;  0x20000800  kernel
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;0x20000800&lt;&#x2F;span&gt;&lt;span&gt;  0x20000980  super
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;0x20000980&lt;&#x2F;span&gt;&lt;span&gt;  0x20000a80  idle
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;0x20000a80&lt;&#x2F;span&gt;&lt;span&gt;  0x20000b80  blinky
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;0x20000b80&lt;&#x2F;span&gt;&lt;span&gt;  0x20000b81  kernel
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;0x20000b81&lt;&#x2F;span&gt;&lt;span&gt;  0x20000ba0  - unused -
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;0x20000ba0&lt;&#x2F;span&gt;&lt;span&gt;  0x20000e80  kernel
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;picotool&lt;&#x2F;span&gt;&lt;span&gt; reboot&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -u -c&lt;&#x2F;span&gt;&lt;span&gt; riscv
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;openocd -f&lt;&#x2F;span&gt;&lt;span&gt; .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\a&lt;&#x2F;span&gt;&lt;span&gt;pp&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\r&lt;&#x2F;span&gt;&lt;span&gt;p235x-hazard3&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\o&lt;&#x2F;span&gt;&lt;span&gt;penocd.cfg&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -c &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;program output.hex verify reset&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Open&lt;&#x2F;span&gt;&lt;span&gt; On-Chip Debugger 0.12.0+dev (2025-08-08-14:31)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Licensed&lt;&#x2F;span&gt;&lt;span&gt; under GNU GPL v2
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;For&lt;&#x2F;span&gt;&lt;span&gt; bug reports, read
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;http:&#x2F;&#x2F;openocd.org&#x2F;doc&#x2F;doxygen&#x2F;bugs.html
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ocd_process_reset_inner
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;**&lt;&#x2F;span&gt;&lt;span&gt; Programming Started **
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;**&lt;&#x2F;span&gt;&lt;span&gt; Programming Finished **
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;**&lt;&#x2F;span&gt;&lt;span&gt; Verify Started **
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;**&lt;&#x2F;span&gt;&lt;span&gt; Verified OK **
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;**&lt;&#x2F;span&gt;&lt;span&gt; Resetting Target **
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This will build the kernel and application using &lt;code&gt;hubake&lt;&#x2F;code&gt; and flash using &lt;code&gt;openocd&lt;&#x2F;code&gt; and wait for GDB to connect and run the app.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Running using GDB&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;In the second terminal:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; just entry-point gdb
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Output:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;KERNEL&lt;&#x2F;span&gt;&lt;span&gt; Entry Point: 0x10000400
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;IDLE&lt;&#x2F;span&gt;&lt;span&gt;   Entry Point: 0x10000180
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;SUPER&lt;&#x2F;span&gt;&lt;span&gt;  Entry Point: 0x10000300
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;BLINKY&lt;&#x2F;span&gt;&lt;span&gt; Entry Point: 0x10000280
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;riscv32-unknown-elf-gdb.exe -q -x&lt;&#x2F;span&gt;&lt;span&gt; app&#x2F;rp235x-hazard3&#x2F;gdbconfig.cfg
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;warning:&lt;&#x2F;span&gt;&lt;span&gt; multi-threaded target stopped without sending a thread-id, using first non-exited thread
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;0x00007640&lt;&#x2F;span&gt;&lt;span&gt; in ?? ()
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;add&lt;&#x2F;span&gt;&lt;span&gt; symbol table from file &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;.work&#x2F;hazard3&#x2F;final&#x2F;idle&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;add&lt;&#x2F;span&gt;&lt;span&gt; symbol table from file &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;.work&#x2F;hazard3&#x2F;final&#x2F;super&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;add&lt;&#x2F;span&gt;&lt;span&gt; symbol table from file &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;.work&#x2F;hazard3&#x2F;final&#x2F;blinky&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;semihosting&lt;&#x2F;span&gt;&lt;span&gt; is enabled
+&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;gdb&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This will load the kernel and application ELF files and wait for us to start the kernel.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Running the kernel&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;In GDB, you can start the kernel by setting the &lt;code&gt;PC&lt;&#x2F;code&gt; register to the kernel’s entry point and running &lt;code&gt;continue&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;2nd terminal:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;gdb&lt;&#x2F;span&gt;&lt;span&gt;) set $&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;pc&lt;&#x2F;span&gt;&lt;span&gt;=0x10000380
+&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;gdb&lt;&#x2F;span&gt;&lt;span&gt;) continue
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Continuing.
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;1st terminal:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rp2350.rv0&lt;&#x2F;span&gt;&lt;span&gt; halted due to debug-request.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rp2350.rv1&lt;&#x2F;span&gt;&lt;span&gt; halted due to debug-request.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;###### starting: kernel ######
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; ----- apply_memory_protection() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for&lt;&#x2F;span&gt;&lt;span&gt; TASK &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;]&lt;&#x2F;span&gt;&lt;span&gt; -----
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 0: Preparing pmpaddr=0x00000003, pmpcfg=0x18
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 0 programmed -&amp;gt; base=0x00000000, size=32
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 1: Preparing pmpaddr=0x0400009f, pmpcfg=0x1d
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 1 programmed -&amp;gt; base=0x10000200, size=256
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 2: Preparing pmpaddr=0x08000207, pmpcfg=0x1e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 2 programmed -&amp;gt; base=0x20000800, size=64
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 3: Preparing pmpaddr=0x08000217, pmpcfg=0x1e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 3 programmed -&amp;gt; base=0x20000840, size=64
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 4: Preparing pmpaddr=0x08000227, pmpcfg=0x1e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 4 programmed -&amp;gt; base=0x20000880, size=64
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 5: Preparing pmpaddr=0x08000237, pmpcfg=0x1e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 5 programmed -&amp;gt; base=0x200008c0, size=64
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 6: Preparing pmpaddr=0x08000247, pmpcfg=0x1e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 6 programmed -&amp;gt; base=0x20000900, size=64
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 7: Preparing pmpaddr=0x08000257, pmpcfg=0x1e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 7 programmed -&amp;gt; base=0x20000940, size=64
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; ----- apply_memory_protection() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;DONE&lt;&#x2F;span&gt;&lt;span&gt; -----
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; ++++++ PMP Register Status ++++++
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; pmpcfg0: 0x1e1e1d18, pmpcfg1: 0x1e1e1e1e, pmpcfg2: 0x001f1f1f
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; pmpaddr0: 0x00000000, pmpaddr1: 0x0400009c
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; pmpaddr2: 0x08000204, pmpaddr3: 0x08000214
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; pmpaddr4: 0x08000224, pmpaddr5: 0x08000234
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; pmpaddr6: 0x08000244, pmpaddr7: 0x08000254
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; pmpaddr8: 0x01ffffff, pmpaddr9: 0x13ffffff, pmpaddr10: 0x35ffffff
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; ++++++ End PMP Register Status ++++++
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;###### starting: hubris with task id: 0 and priority: 0 ######
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Starting first task
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]: &lt;&#x2F;span&gt;&lt;span&gt;****** trap_handler() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;MCAUSE: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;0x00000008&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;] &lt;&#x2F;span&gt;&lt;span&gt;******
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Trap::Exception(UserEnvCall) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;from&lt;&#x2F;span&gt;&lt;span&gt; TASK &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]&lt;&#x2F;span&gt;&lt;span&gt; ====== SYSCALL-1-ENTERED:for task 0 ======
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]&lt;&#x2F;span&gt;&lt;span&gt; NextTask::Other selected for syscall 1
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; ----- apply_memory_protection() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for&lt;&#x2F;span&gt;&lt;span&gt; TASK &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;]&lt;&#x2F;span&gt;&lt;span&gt; -----
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 0: Preparing pmpaddr=0x00000003, pmpcfg=0x18
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 0 programmed -&amp;gt; base=0x00000000, size=32
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 1: Preparing pmpaddr=0x040000cf, pmpcfg=0x1d
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 1 programmed -&amp;gt; base=0x10000300, size=128
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 2: Preparing pmpaddr=0x080002a7, pmpcfg=0x1e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 2 programmed -&amp;gt; base=0x20000a80, size=64
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 3: Preparing pmpaddr=0x080002b7, pmpcfg=0x1e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 3 programmed -&amp;gt; base=0x20000ac0, size=64
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 4: Preparing pmpaddr=0x080002c7, pmpcfg=0x1e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 4 programmed -&amp;gt; base=0x20000b00, size=64
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 5: Preparing pmpaddr=0x080002d3, pmpcfg=0x1e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 5 programmed -&amp;gt; base=0x20000b40, size=32
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 6: Preparing pmpaddr=0x080002db, pmpcfg=0x1e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 6 programmed -&amp;gt; base=0x20000b60, size=32
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 7: Preparing pmpaddr=0x3400003f, pmpcfg=0x1e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Region 7 programmed -&amp;gt; base=0xd0000000, size=512
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; ----- apply_memory_protection() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;DONE&lt;&#x2F;span&gt;&lt;span&gt; -----
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; ++++++ PMP Register Status ++++++
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; pmpcfg0: 0x1e1e1d18, pmpcfg1: 0x1e1e1e1e, pmpcfg2: 0x001f1f1f
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; pmpaddr0: 0x00000000, pmpaddr1: 0x040000cc
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; pmpaddr2: 0x080002a4, pmpaddr3: 0x080002b4
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; pmpaddr4: 0x080002c4, pmpaddr5: 0x080002d0
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; pmpaddr6: 0x080002d8, pmpaddr7: 0x3400003c
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; pmpaddr8: 0x01ffffff, pmpaddr9: 0x13ffffff, pmpaddr10: 0x35ffffff
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; ++++++ End PMP Register Status ++++++
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]&lt;&#x2F;span&gt;&lt;span&gt; ====== SYSCALL-1-EXITED:for task 0 ======
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]: &lt;&#x2F;span&gt;&lt;span&gt;****** trap_handler() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;DONE &lt;&#x2F;span&gt;&lt;span&gt;******
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;As you can see, the kernel launches successfully and schedules the 1st task &lt;code&gt;supervisor&lt;&#x2F;code&gt; which in turn schedules the next priority task &lt;code&gt;blinky&lt;&#x2F;code&gt;, which blinks an external LED.
+Refer to the &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;oxidecomputer&#x2F;hubris&#x2F;commit&#x2F;a55363a57a29d97b94b587c7c2deb4021f50377d&quot;&gt;hubris-riscv-hazard3&lt;&#x2F;a&gt; repo for complete details about the logs.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h2 id=&quot;output&quot;&gt;Output&lt;&#x2F;h2&gt;
+&lt;div style=&quot;display: flex; justify-content: center;&quot;&gt;
+  &lt;video autoplay muted loop playsinline&gt;
+    &lt;source src=&quot;&#x2F;Hubris-on-Pico2W.mp4&quot; type=&quot;video&#x2F;mp4&quot;&gt;
+  &lt;&#x2F;video&gt;
+&lt;&#x2F;div&gt;
+&lt;h2 id=&quot;issues&quot;&gt;Issues&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;syscall-issue&quot;&gt;SysCall issue&lt;&#x2F;h3&gt;
+&lt;p&gt;In the &lt;code&gt;supervisor&lt;&#x2F;code&gt; task, I’m actually calling the &lt;strong&gt;sys_recv_notification&lt;&#x2F;strong&gt; syscall.
+This syscall takes a &lt;em&gt;notification mask&lt;&#x2F;em&gt; as an input and listens &lt;em&gt;only&lt;&#x2F;em&gt; for notifications, leaving messages queued.
+We use value &lt;code&gt;1&lt;&#x2F;code&gt; as our notification mask; this is a fixed detail of the kernel-supervisor interface: the kernel pokes &lt;em&gt;bit 0&lt;&#x2F;em&gt; on fault.&lt;&#x2F;p&gt;
+&lt;p&gt;I forgot to implement this syscall initially for RISC-V and I faced the below issue:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;OpenOCD output:&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Info&lt;&#x2F;span&gt;&lt;span&gt; : &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;rp2350.rv0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;]&lt;&#x2F;span&gt;&lt;span&gt; Hart unexpectedly reset!
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Just after flashing the kernel and trying to run it, OpenOCD reported a hart reset. There wasn’t any additional info as to what could be the reason for this because the kernel hadn’t even started to run to get the logs. After many trial and errors and studying the ARM userlib source code, I got to know I’m depending on this syscall. After implementing the syscall, the issue was resolved.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h3 id=&quot;pico-hardware-issue&quot;&gt;Pico hardware issue&lt;&#x2F;h3&gt;
+&lt;p&gt;This issue caused me sleepless nights and it took me around 2 weeks to work around this issue 😢.&lt;&#x2F;p&gt;
+&lt;p&gt;After the kernel launches successfully and starts the supervisor task, this task then schedules the next priority task which is &lt;em&gt;blinky&lt;&#x2F;em&gt; in this case. During the execution of this task, I was facing the &lt;strong&gt;LoadFault Exception&lt;&#x2F;strong&gt; whenever the task tried to access &lt;strong&gt;PADS_BANK0 registers&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;See below:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;###### starting: kernel ######
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; ----- apply_memory_protection() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for&lt;&#x2F;span&gt;&lt;span&gt; TASK &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;]&lt;&#x2F;span&gt;&lt;span&gt; -----
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;###### starting: hubris with task id: 0 and priority: 0 ######
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Starting first task
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]: &lt;&#x2F;span&gt;&lt;span&gt;****** trap_handler() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;MCAUSE: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;0x00000008&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;] &lt;&#x2F;span&gt;&lt;span&gt;******
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Trap::Exception(UserEnvCall) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;from&lt;&#x2F;span&gt;&lt;span&gt; TASK &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]&lt;&#x2F;span&gt;&lt;span&gt; ====== SYSCALL-1-ENTERED:for task 0 ======
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]&lt;&#x2F;span&gt;&lt;span&gt; NextTask::Other selected for syscall 1
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; ----- apply_memory_protection() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for&lt;&#x2F;span&gt;&lt;span&gt; TASK &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;]&lt;&#x2F;span&gt;&lt;span&gt; -----
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]&lt;&#x2F;span&gt;&lt;span&gt; ====== SYSCALL-1-EXITED:for task 0 ======
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]: &lt;&#x2F;span&gt;&lt;span&gt;****** trap_handler() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;DONE &lt;&#x2F;span&gt;&lt;span&gt;******
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]: &lt;&#x2F;span&gt;&lt;span&gt;****** trap_handler() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;MCAUSE: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;0x00000005&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;] &lt;&#x2F;span&gt;&lt;span&gt;******
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Trap::Exception(LoadFault)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; ----- apply_memory_protection() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for&lt;&#x2F;span&gt;&lt;span&gt; TASK &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;]&lt;&#x2F;span&gt;&lt;span&gt; -----
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]:&lt;&#x2F;span&gt;&lt;span&gt; Handled fault MemoryAccess which had program_counter: 0x1000035e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;[KERN]: &lt;&#x2F;span&gt;&lt;span&gt;****** trap_handler() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;DONE &lt;&#x2F;span&gt;&lt;span&gt;******
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;As you can see above, we hit &lt;strong&gt;UserEnvCall Exception&lt;&#x2F;strong&gt; which is a result of the supervisor task calling a syscall from userspace, and then when we switch to our next task blinky, we hit &lt;strong&gt;LoadFault Exception&lt;&#x2F;strong&gt; (MCAUSE: [0x00000005]), with PC pointing to 0x1000035e.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;I checked the disassembly and it was indeed a load instruction accessing the &lt;strong&gt;PADS_BANK0&lt;&#x2F;strong&gt; memory region.&lt;&#x2F;p&gt;
+&lt;p&gt;Creating disassembly:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; just dump
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Blinky task disassembly:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;asm&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-asm &quot;&gt;&lt;code class=&quot;language-asm&quot; data-lang=&quot;asm&quot;&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;10000350 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;&amp;lt;main&amp;gt;:
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;10000350&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;:	d0000537          	lui	a0&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0xd0000
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;10000354&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;:	004005b7          	lui	a1&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x400
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;10000358&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;:	dd0c               	sw	a1&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;56&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;(a0)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;1000035a:	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;40038537          	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;lui	a0&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x40038
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;1000035e:	4d6c                lw	a1&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;92&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;(a0)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;10000360&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;:	e3f5f593          	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;and	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;a1&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;a1&lt;&#x2F;span&gt;&lt;span&gt;,-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;449
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;10000364&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;:	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;04058593          	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;add	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;a1&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;a1&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;64 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;# &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;400040
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;10000368&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;:	cd6c               	sw	a1&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;92&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;(a0)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;1000036a:	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;40028537          	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;lui	a0&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x40028
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;1000036e:	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;4595                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;li	a1&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;5
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;10000370&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;:	0ab52a23          	sw	a1&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;180&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;(a0) # 400280b4
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;10000374&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;:	a001                j	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;10000374 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;&amp;lt;main&lt;&#x2F;span&gt;&lt;span&gt;+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x24&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Referring to the above assembly code, we are trying to access GPIO22 of the PADS_BANK0 register.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;pre data-lang=&quot;asm&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-asm &quot;&gt;&lt;code class=&quot;language-asm&quot; data-lang=&quot;asm&quot;&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;&amp;gt; a0 &amp;lt;= PADS_BANK0_BASE = 0x4003_8000
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;`1000035a:	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;40038537          	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;lui	a0&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x40038&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;`
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;&amp;gt; a1 &amp;lt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;92&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;(a0) = 5C(a0) = PADS_BANK0&lt;&#x2F;span&gt;&lt;span&gt;-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;&amp;gt;GPIO22
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;`1000035e:	4d6c                lw	a1&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;92&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;(a0)`
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;After knowing what the issue was, I tried the following solutions:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;I first suspected this could be due to wrong PMP implementation, but after reviewing the PMP configuration, it seemed to be correct. I even changed the PMP implementation to match the &lt;code&gt;tock-os&lt;&#x2F;code&gt; implementation to make sure this was not the issue.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;I also checked the memory region permissions and ensured that the PADS_BANK0 region was correctly marked as accessible for the blinky task.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;peripheral &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;sio&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; {
+&lt;&#x2F;span&gt;&lt;span&gt;    base 0xd000_0000
+&lt;&#x2F;span&gt;&lt;span&gt;    size 0x200        &#x2F;&#x2F; Rounded from 0x1E8 (488 bytes)
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;peripheral &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;io_bank0&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; {
+&lt;&#x2F;span&gt;&lt;span&gt;    base 0x4002_8000
+&lt;&#x2F;span&gt;&lt;span&gt;    size 0x400       &#x2F;&#x2F; Rounded from 0x320 (800 bytes) 
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;peripheral &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;pads_bank0&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; {
+&lt;&#x2F;span&gt;&lt;span&gt;    base 0x4003_8000
+&lt;&#x2F;span&gt;&lt;span&gt;    size 0x100       &#x2F;&#x2F; Rounded from 0xCC (204 bytes) 
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;peripheral &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;peripherals&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; {
+&lt;&#x2F;span&gt;&lt;span&gt;    base 0x4000_0000
+&lt;&#x2F;span&gt;&lt;span&gt;    size 0x2000_0000    &#x2F;&#x2F; Hardwired PMP Region (PMPADDR9)
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;&#x2F;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt; blinky task. Blinks an external led
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;task&lt;&#x2F;span&gt;&lt;span&gt; blinky {
+&lt;&#x2F;span&gt;&lt;span&gt;    workspace-crate blinky
+&lt;&#x2F;span&gt;&lt;span&gt;    stack-size 256
+&lt;&#x2F;span&gt;&lt;span&gt;    priority 1
+&lt;&#x2F;span&gt;&lt;span&gt;    uses-peripheral sio
+&lt;&#x2F;span&gt;&lt;span&gt;    uses-peripheral io_bank0
+&lt;&#x2F;span&gt;&lt;span&gt;    uses-peripheral pads_bank0
+&lt;&#x2F;span&gt;&lt;span&gt;    uses-peripheral peripherals
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;I even tried to give full peripheral permissions to the blinky task as follows:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;peripheral &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;peripherals&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; {
+&lt;&#x2F;span&gt;&lt;span&gt;    base 0x4000_0000
+&lt;&#x2F;span&gt;&lt;span&gt;    size 0x2000_0000    &#x2F;&#x2F; Hardwired PMP Region (PMPADDR9)
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;&#x2F;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt; blinky task. Blinks an external led
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;task&lt;&#x2F;span&gt;&lt;span&gt; blinky {
+&lt;&#x2F;span&gt;&lt;span&gt;    workspace-crate blinky
+&lt;&#x2F;span&gt;&lt;span&gt;    stack-size 256
+&lt;&#x2F;span&gt;&lt;span&gt;    priority 1
+&lt;&#x2F;span&gt;&lt;span&gt;    uses-peripheral peripherals
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;I even tried not setting any explicit peripheral permissions for the blinky task, relying on the default permissions instead. Default permissions are set by Hardwired PMP Regions as follows:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;ROM: 0x00000000 through 0x0fffffff&lt;&#x2F;li&gt;
+&lt;li&gt;Peripherals: 0x40000000 through 0x5fffffff&lt;&#x2F;li&gt;
+&lt;li&gt;SIO: 0xd0000000 through 0xdfffffff&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;All the above 4 solutions didn’t solve the issue, but in reality every one of these should have solved the problem.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;After many trial and errors, I gave up for a few days and started fresh and looked into the datasheet pretty closely. Then I found the important errata which is relevant to me.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;RP2350 Datasheet:&lt;&#x2F;strong&gt;
+&lt;img src=&quot;&#x2F;RP2350-E3.png&quot; alt=&quot;RP2350-E3&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;According to the above errata, the issue seems to be only on QFN-60 package which is our Pico 2(W) boards. And also only PADS_BANK0 is affected, not Bank1.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;As per the workaround, we have to implement a syscall to set the PADS register in kernel mode and then other things in user mode as earlier.&lt;&#x2F;p&gt;
+&lt;ol start=&quot;5&quot;&gt;
+&lt;li&gt;I was not confident and comfortable enough to implement the syscall and check if this solves the issue. So I decided to set the registers before starting the Hubris kernel itself, which runs in &lt;strong&gt;M-mode&lt;&#x2F;strong&gt;, and once Hubris starts and schedules tasks, it automatically switches to &lt;strong&gt;U-mode&lt;&#x2F;strong&gt; wherein I toggle the GPIO which doesn’t involve touching the PADS registers.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This solved the issue and the blinky application works fine on RISC-V too 🥳.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;references&quot;&gt;References&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;datasheets.raspberrypi.org&#x2F;rp2350&#x2F;rp2350-datasheet.pdf&quot;&gt;RP2350 Datasheet&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;cliffle.com&#x2F;tags&#x2F;hubris&#x2F;&quot;&gt;Cliffle’s Hubris Blog posts&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;hubris.oxide.computer&#x2F;reference&#x2F;&quot;&gt;Hubris Reference&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;exhubris-demo-rp235x&quot;&gt;exhubris-demo-rp235x&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;hubris-riscv-hazard3&#x2F;tree&#x2F;hazard3&quot;&gt;Hubris-fork&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;exhubris-riscv-hazard3&#x2F;tree&#x2F;rp235x-hazard3&quot;&gt;exhubris-fork&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Hubris OS on RP Pico 2(W) board (Cortex-M33 ARM core)</title>
+        <published>2025-09-09T00:00:00+00:00</published>
+        <updated>2025-09-09T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/blog/hubris-on-pico2/"/>
+        <id>https://Karthik-d-k.github.io/blog/hubris-on-pico2/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/blog/hubris-on-pico2/">&lt;h2 id=&quot;motivation&quot;&gt;Motivation&lt;&#x2F;h2&gt;
+&lt;p&gt;As explained in my &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;karthik-d-k.github.io&#x2F;blog&#x2F;rp235x-blinky&#x2F;&quot;&gt;rp235x-blinky blog post&lt;&#x2F;a&gt;, I have been experimenting with &lt;code&gt;Hubris&lt;&#x2F;code&gt; OS to port it to a &lt;code&gt;RISC-V&lt;&#x2F;code&gt; chip.
+I have access to a &lt;code&gt;Pico 2W&lt;&#x2F;code&gt; board for development and testing. This board is especially exciting because it comes with dual Cortex-M33 cores and dual RISC-V Hazard3 cores.
+My approach was to start with the Cortex-M33 side first, since Hubris already has solid ARM support.&lt;&#x2F;p&gt;
+&lt;p&gt;In this blog, I will explain how I got Hubris running on the ARM core &lt;strong&gt;Cortex-M33&lt;&#x2F;strong&gt; of the Pico 2W board. I will also share my experience and challenges faced during the process.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;technical-details&quot;&gt;Technical Details&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;setting-up-tools&quot;&gt;Setting up tools&lt;&#x2F;h3&gt;
+&lt;p&gt;Before I begin to explain how I got Hubris working on the Pico 2W board, I will explain the tools that I used for development. This part is where I spent most of my time
+installing the correct tools to work with Hubris. My development machine is &lt;strong&gt;Windows&lt;&#x2F;strong&gt;, so the details below are specific to Windows OS, but should be easier for Linux as well.
+I will list everything that we need to work with both ARM and RISC-V cores.&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;rustup&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;ul&gt;
+&lt;li&gt;As we will be working with the &lt;strong&gt;Rust&lt;&#x2F;strong&gt; language, we need to install the &lt;strong&gt;rustup&lt;&#x2F;strong&gt; toolchain manager. You can follow the instructions from &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;www.rust-lang.org&#x2F;tools&#x2F;install&quot;&gt;here&lt;&#x2F;a&gt;.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;ol start=&quot;2&quot;&gt;
+&lt;li&gt;&lt;code&gt;Picotool and OpenOCD&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Both of them can be installed from &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;raspberrypi&#x2F;pico-sdk-tools&#x2F;releases&quot;&gt;pico-sdk-tools&#x2F;releases&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;For &lt;em&gt;OpenOCD&lt;&#x2F;em&gt;, we have to set the following environment variable:&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;OPENOCD_SCRIPTS&lt;&#x2F;strong&gt;: C:\Users&amp;lt;USER&amp;gt;\wws\tools\openocd\0.12.0+dev\scripts&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;ol start=&quot;3&quot;&gt;
+&lt;li&gt;&lt;code&gt;RISC-V TOOLCHAIN&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Install &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;raspberrypi&#x2F;pico-sdk-tools&#x2F;releases&#x2F;download&#x2F;v2.0.0-5&#x2F;riscv-toolchain-14-x64-win.zip&quot;&gt;pico-sdk-tools&#x2F;V14&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;This is the version used by Pico SDK in VS Code as of this writing.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Do not install &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;raspberrypi&#x2F;pico-sdk-tools&#x2F;releases&#x2F;download&#x2F;v2.1.1-3&#x2F;riscv-toolchain-15-x64-win.zip&quot;&gt;pico-sdk-tools&#x2F;V15&lt;&#x2F;a&gt;, as this didn’t work for me.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Error&lt;&#x2F;strong&gt;: Python initialization failed: failed to get the Python codec of the filesystem encoding&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;ol start=&quot;4&quot;&gt;
+&lt;li&gt;&lt;code&gt;ARM TOOLCHAIN&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Install &lt;strong&gt;arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi.zip&lt;&#x2F;strong&gt; and add it to the &lt;strong&gt;PATH&lt;&#x2F;strong&gt; environment variable&lt;&#x2F;li&gt;
+&lt;li&gt;Windows (mingw-w64-x86_64) hosted cross toolchains&lt;&#x2F;li&gt;
+&lt;li&gt;AArch32 bare-metal target (arm-none-eabi)&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;developer.arm.com&#x2F;downloads&#x2F;-&#x2F;arm-gnu-toolchain-downloads&quot;&gt;official ARM binaries&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;ol start=&quot;5&quot;&gt;
+&lt;li&gt;&lt;code&gt;probe-rs&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Follow the installation instructions from the official &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;probe.rs&#x2F;docs&#x2F;getting-started&#x2F;installation&#x2F;&quot;&gt;probe-rs&lt;&#x2F;a&gt; installation page.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;ol start=&quot;6&quot;&gt;
+&lt;li&gt;&lt;code&gt;humility&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;ul&gt;
+&lt;li&gt;You’ll need to install the version from &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;thenewwazoo&#x2F;humility&#x2F;tree&#x2F;bmatt&#x2F;update-probe-rs&quot;&gt;humility&#x2F;tree&#x2F;bmatt&#x2F;update-probe-rs&lt;&#x2F;a&gt;,
+which includes an updated &lt;code&gt;probe-rs&lt;&#x2F;code&gt; version that supports our Pico 2W board.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;For all the above tools that I have mentioned, you could technically install the latest and greatest tool versions, probably without any issues.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;ol start=&quot;7&quot;&gt;
+&lt;li&gt;&lt;code&gt;hubake&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;We have to install hubake from my forked repo wherein i fixed some of windows specific issues. Follow below steps:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; git clone https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;exhubris-riscv-hazard3
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; cd exhubris-riscv-hazard3
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; git checkout windows
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; cargo install&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --path&lt;&#x2F;span&gt;&lt;span&gt; .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\t&lt;&#x2F;span&gt;&lt;span&gt;ools&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\h&lt;&#x2F;span&gt;&lt;span&gt;ubake\
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;hubris-vs-exhubris&quot;&gt;Hubris vs ExHubris&lt;&#x2F;h3&gt;
+&lt;p&gt;Now, coming to the actual Hubris kernel, we have 2 repositories to choose from to work on and experiment with. Below is a short comparison between both.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Feature&lt;&#x2F;th&gt;&lt;th&gt;Hubris&lt;&#x2F;th&gt;&lt;th&gt;ExHubris&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Origin&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;Developed by Oxide Computer Company&lt;&#x2F;td&gt;&lt;td&gt;Community fork&#x2F;adaptation of&lt;br&gt; Hubris by Cliff Biffle&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Philosophy&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;Designed for deeply-embedded systems&lt;br&gt;with Oxide as the primary goal&lt;&#x2F;td&gt;&lt;td&gt;Making Hubris accessible to&lt;br&gt; external applications outside the main Hubris repo&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Target&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;32-bit microcontrollers&lt;&#x2F;td&gt;&lt;td&gt;Architecture-neutral design&lt;br&gt;(32-bit focus, 64-bit aspirational)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Language&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;Rust with nightly toolchain&lt;br&gt;requirement&lt;&#x2F;td&gt;&lt;td&gt;Rust with stable toolchain&lt;br&gt;requirement&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Current Status&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;Mature for ARM Cortex-M,&lt;br&gt;experimental RISC-V support&lt;&#x2F;td&gt;&lt;td&gt;“Hacked-up sprint code”&lt;br&gt; experimental and in flux&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;blockquote&gt;
+&lt;p&gt;I chose &lt;strong&gt;ExHubris&lt;&#x2F;strong&gt; because it’s simple, has less lines of code to study, is easy to understand with the new build system, and there are blog posts by Cliff Biffle that
+explain the design decisions and architecture in complete detail.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h3 id=&quot;exhubris&quot;&gt;ExHubris&lt;&#x2F;h3&gt;
+&lt;p&gt;If you want more info about the design decisions, you could refer to the &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;cbiffle&#x2F;exhubris&quot;&gt;ExHubris README&lt;&#x2F;a&gt; file along
+with the &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;cliffle.com&#x2F;tags&#x2F;hubris&#x2F;&quot;&gt;Hubris blogs&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;app-kdl&quot;&gt;app.kdl&lt;&#x2F;h3&gt;
+&lt;p&gt;I have followed the &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;cbiffle&#x2F;exhubris-demo&#x2F;&quot;&gt;exhubris-demo&lt;&#x2F;a&gt; repository to set up the demo.&lt;&#x2F;p&gt;
+&lt;p&gt;You can find my repository here: &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;exhubris-demo-rp235x&quot;&gt;exhubris-demo-rp235x&lt;&#x2F;a&gt; to follow along.&lt;&#x2F;p&gt;
+&lt;p&gt;The first thing we have to do is write the &lt;strong&gt;app.kdl&lt;&#x2F;strong&gt; file explaining where to get all our tasks and kernel to form our application.
+The most important thing here is that we will need a kernel for sure, along with at least 2 tasks: supervisor and idle tasks.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Supervisor task&lt;&#x2F;strong&gt;: This is needed for managing the overall system and ensuring that all tasks are running smoothly by restarting faulted tasks. This task depends on the application we are targeting.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Idle task&lt;&#x2F;strong&gt;: This is needed for handling the case when no other tasks are ready to run, so that we can just infinitely loop and
+be in low power processor mode until any of the other tasks are ready to run.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;I’m pulling in the above tasks and the kernel from my &lt;strong&gt;ExHubris&lt;&#x2F;strong&gt; repo as follows:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;&#x2F;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt; Instructions for building the kernel.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;kernel &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    git-crate {
+&lt;&#x2F;span&gt;&lt;span&gt;        repo &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;exhubris-riscv-hazard3&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;        package kernel-generic-cortex-m33
+&lt;&#x2F;span&gt;&lt;span&gt;        rev &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;54b87438a6c1658a13355add40248c21c9c19990&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;    no-default-features
+&lt;&#x2F;span&gt;&lt;span&gt;    &#x2F;&#x2F; The kernel itself should provide this information eventually, but for now
+&lt;&#x2F;span&gt;&lt;span&gt;    &#x2F;&#x2F; we have to state it:
+&lt;&#x2F;span&gt;&lt;span&gt;    stack-size 1024
+&lt;&#x2F;span&gt;&lt;span&gt;    uses-peripheral resets
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;&#x2F;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt; Supervisor task. Every nontrivial application needs one. The exhubris
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;&#x2F;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt; minisuper implementation is good for most simple systems.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;task&lt;&#x2F;span&gt;&lt;span&gt; super {
+&lt;&#x2F;span&gt;&lt;span&gt;    git-crate {
+&lt;&#x2F;span&gt;&lt;span&gt;        repo &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;exhubris-riscv-hazard3&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;        package minisuper
+&lt;&#x2F;span&gt;&lt;span&gt;        rev &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;54b87438a6c1658a13355add40248c21c9c19990&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;    priority 0
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &#x2F;&#x2F; Eventually, tasks should be able to indicate their stack requirement
+&lt;&#x2F;span&gt;&lt;span&gt;    &#x2F;&#x2F; somehow, but for now we have to state it:
+&lt;&#x2F;span&gt;&lt;span&gt;    stack-size 192
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;&#x2F;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt; Idle task. Every application needs one, few applications want to write their
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;&#x2F;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt; own. We pull in a standard one from git:
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;task&lt;&#x2F;span&gt;&lt;span&gt; idle {
+&lt;&#x2F;span&gt;&lt;span&gt;    git-crate {
+&lt;&#x2F;span&gt;&lt;span&gt;        repo &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;exhubris-riscv-hazard3&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;        package idle
+&lt;&#x2F;span&gt;&lt;span&gt;        rev &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;54b87438a6c1658a13355add40248c21c9c19990&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;    stack-size 128
+&lt;&#x2F;span&gt;&lt;span&gt;    priority 2
+&lt;&#x2F;span&gt;&lt;span&gt;    &#x2F;&#x2F; This makes Humility work a _lot_ better.
+&lt;&#x2F;span&gt;&lt;span&gt;    features insomniac
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Here, I’m actually pointing to my forked repo because I have made some changes to make the build&#x2F;tool system work on Windows OS.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;You can find the details about the same in my PR submitted to the ExHubris repo: &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;cbiffle&#x2F;exhubris&#x2F;pull&#x2F;6&quot;&gt;[windows] fix build tool issues #6&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Now coming to my new &lt;strong&gt;blinky&lt;&#x2F;strong&gt; task which I have written specifically to blink an external LED connected to GPIO22
+instead of blinking the onboard LED, which is hard to toggle specifically on the Pico 2W board because it is connected to the wireless chip instead of normal GPIO pins.
+This is not the case for the Pico 2 board which doesn’t have a wireless chip in it.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Blinky task definition&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;&#x2F;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt; blinky task. Blinks an external led
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;task&lt;&#x2F;span&gt;&lt;span&gt; blinky {
+&lt;&#x2F;span&gt;&lt;span&gt;    workspace-crate blinky
+&lt;&#x2F;span&gt;&lt;span&gt;    stack-size 128
+&lt;&#x2F;span&gt;&lt;span&gt;    priority 1
+&lt;&#x2F;span&gt;&lt;span&gt;    uses-peripheral sio
+&lt;&#x2F;span&gt;&lt;span&gt;    uses-peripheral io_bank0
+&lt;&#x2F;span&gt;&lt;span&gt;    uses-peripheral pads_bank0
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;chip-kdl&quot;&gt;chip.kdl&lt;&#x2F;h4&gt;
+&lt;p&gt;In &lt;strong&gt;chip.kdl&lt;&#x2F;strong&gt;, we have to define memory properties such as RAM and flash sizes and also define certain memory regions like &lt;strong&gt;io&lt;&#x2F;strong&gt;, &lt;strong&gt;sio&lt;&#x2F;strong&gt;
+and &lt;strong&gt;pads&lt;&#x2F;strong&gt; regions which we would use for our tasks to explicitly specify that we are allowed to access these memory regions from our task.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;memory &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    region &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;vectors&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; {
+&lt;&#x2F;span&gt;&lt;span&gt;        base 0x1000_0000 &#x2F;&#x2F; XIP_BASE
+&lt;&#x2F;span&gt;&lt;span&gt;        size 0x180 &#x2F;&#x2F; enlarged to accommodate header + IMAGE_DEF
+&lt;&#x2F;span&gt;&lt;span&gt;        read
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;    region &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;flash&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; {
+&lt;&#x2F;span&gt;&lt;span&gt;        base 0x1000_0180 &#x2F;&#x2F; SRAM_BASE
+&lt;&#x2F;span&gt;&lt;span&gt;        size 0x003F_FE80 &#x2F;&#x2F; 4MB (0x0040_0000) (FLASH) - 0x180 (vectors) = 0x3FFE80
+&lt;&#x2F;span&gt;&lt;span&gt;        read
+&lt;&#x2F;span&gt;&lt;span&gt;        execute
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;    region &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;ram&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; {
+&lt;&#x2F;span&gt;&lt;span&gt;        base 0x2000_0000
+&lt;&#x2F;span&gt;&lt;span&gt;        size 0x0008_2000 &#x2F;&#x2F; Logically, there is a single 520KB contiguous memory
+&lt;&#x2F;span&gt;&lt;span&gt;        read
+&lt;&#x2F;span&gt;&lt;span&gt;        write
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;peripheral &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;sio&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; {
+&lt;&#x2F;span&gt;&lt;span&gt;    base 0xd000_0000
+&lt;&#x2F;span&gt;&lt;span&gt;    size 0x200        &#x2F;&#x2F; Rounded from 0x1E8 (488 bytes)
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;peripheral &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;io_bank0&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; {
+&lt;&#x2F;span&gt;&lt;span&gt;    base 0x4002_8000
+&lt;&#x2F;span&gt;&lt;span&gt;    size 0x400       &#x2F;&#x2F; Rounded from 0x320 (800 bytes) 
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;peripheral &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;pads_bank0&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; {
+&lt;&#x2F;span&gt;&lt;span&gt;    base 0x4003_8000
+&lt;&#x2F;span&gt;&lt;span&gt;    size 0x100       &#x2F;&#x2F; Rounded from 0xCC (204 bytes) 
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;peripheral &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;resets&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; {
+&lt;&#x2F;span&gt;&lt;span&gt;    base 0x4002_0000
+&lt;&#x2F;span&gt;&lt;span&gt;    size 0x20
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;You can see in the app.kdl file that we have used the &lt;strong&gt;resets&lt;&#x2F;strong&gt; peripheral in the kernel and also given access to &lt;strong&gt;io, pads and sio&lt;&#x2F;strong&gt; peripherals for the blinky task.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;building-and-flashing&quot;&gt;Building and Flashing&lt;&#x2F;h2&gt;
+&lt;p&gt;Now, I will talk about how we could compile and build the firmware and flash it onto the Pico 2W board.&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Build the application using hubake&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; hubake build app.kdl
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; hubake pack-hex .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\.&lt;&#x2F;span&gt;&lt;span&gt;work&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\c&lt;&#x2F;span&gt;&lt;span&gt;ortex-m33&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\f&lt;&#x2F;span&gt;&lt;span&gt;inal&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\ &lt;&#x2F;span&gt;&lt;span&gt;output.hex
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Flash using either humility or OpenOCD&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;humility&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; humility&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -a&lt;&#x2F;span&gt;&lt;span&gt; .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\c&lt;&#x2F;span&gt;&lt;span&gt;ortex-m33-build.zip flash
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;You need to run explicitly after flashing via humility, bootram boots into our kernel firmware automatically.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;OpenOCD&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; openocd&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -f&lt;&#x2F;span&gt;&lt;span&gt; openocd.cfg&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -c &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;program output.hex verify&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; arm-none-eabi-gdb.exe&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -x&lt;&#x2F;span&gt;&lt;span&gt; gdbconfig.cfg
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;You have to explicitly run GDB after flashing via OpenOCD, and enter &lt;strong&gt;continue&lt;&#x2F;strong&gt; to start the application.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h2 id=&quot;output&quot;&gt;Output&lt;&#x2F;h2&gt;
+&lt;p&gt;After flashing, you will see output like below –&amp;gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; humility&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -a&lt;&#x2F;span&gt;&lt;span&gt; .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\c&lt;&#x2F;span&gt;&lt;span&gt;ortex-m33-build.zip flash
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;humility:&lt;&#x2F;span&gt;&lt;span&gt; attaching with chip set to &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;RP235x&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;humility:&lt;&#x2F;span&gt;&lt;span&gt; attached via CMSIS-DAP
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;humility:&lt;&#x2F;span&gt;&lt;span&gt; flash&#x2F;archive mismatch; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;reflashing
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;humility:&lt;&#x2F;span&gt;&lt;span&gt; flashing done
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; humility&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -a&lt;&#x2F;span&gt;&lt;span&gt; .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\c&lt;&#x2F;span&gt;&lt;span&gt;ortex-m33-build.zip tasks
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;humility:&lt;&#x2F;span&gt;&lt;span&gt; attached via CMSIS-DAP
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;system&lt;&#x2F;span&gt;&lt;span&gt; time = 2491
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ID&lt;&#x2F;span&gt;&lt;span&gt; TASK                       GEN PRI STATE
+&lt;&#x2F;span&gt;&lt;span&gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt; super                        0   0 notif: bit0
+&lt;&#x2F;span&gt;&lt;span&gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt; blinky                       0   1 RUNNING
+&lt;&#x2F;span&gt;&lt;span&gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt; idle                         0   2 ready
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;div style=&quot;display: flex; justify-content: center;&quot;&gt;
+  &lt;video autoplay muted loop playsinline&gt;
+    &lt;source src=&quot;&#x2F;Hubris-on-Pico2W.mp4&quot; type=&quot;video&#x2F;mp4&quot;&gt;
+  &lt;&#x2F;video&gt;
+&lt;&#x2F;div&gt;
+&lt;h3 id=&quot;kernel-panic&quot;&gt;Kernel panic&lt;&#x2F;h3&gt;
+&lt;p&gt;I would like to talk about one instance where I flashed software and the kernel wasn’t booting into the application correctly.
+Error details are as follows:&lt;&#x2F;p&gt;
+&lt;p&gt;❯ &lt;strong&gt;humility -a .\cortex-m33-build.zip registers -s&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;humility:&lt;&#x2F;span&gt;&lt;span&gt; attached via CMSIS-DAP
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;R0&lt;&#x2F;span&gt;&lt;span&gt; = 0x20000358 &amp;lt;- kernel: KERNEL_HAS_FAILED+0x0
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;R1&lt;&#x2F;span&gt;&lt;span&gt; = 0x00000001
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;R2&lt;&#x2F;span&gt;&lt;span&gt; = 0x10000220 &amp;lt;- idle: 0x10000220+0x0
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;R3&lt;&#x2F;span&gt;&lt;span&gt; = 0x200002a0 &amp;lt;- idle: 0x200002a0+0x0
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;R4&lt;&#x2F;span&gt;&lt;span&gt; = 0x00000160
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;R5&lt;&#x2F;span&gt;&lt;span&gt; = 0x200004c0 &amp;lt;- kernel: HUBRIS_TASK_TABLE_SPACE+0x160
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;R6&lt;&#x2F;span&gt;&lt;span&gt; = 0x10002950 &amp;lt;- kernel: HUBRIS_TASK_DESCS+0x58
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;R7&lt;&#x2F;span&gt;&lt;span&gt; = 0x200001c8 &amp;lt;- kernel: 0x20000000+0x1c8
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;R8&lt;&#x2F;span&gt;&lt;span&gt; = 0x200004c0 &amp;lt;- kernel: HUBRIS_TASK_TABLE_SPACE+0x160
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;R9&lt;&#x2F;span&gt;&lt;span&gt; = 0x00000210
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;R10&lt;&#x2F;span&gt;&lt;span&gt; = 0x200002c0 &amp;lt;- super: 0x200002c0+0x0
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;R11&lt;&#x2F;span&gt;&lt;span&gt; = 0x20000258 &amp;lt;- blinky: 0x20000220+0x38
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;R12&lt;&#x2F;span&gt;&lt;span&gt; = 0x00000064
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;SP&lt;&#x2F;span&gt;&lt;span&gt; = 0x200001c8 &amp;lt;- kernel: 0x20000000+0x1c8
+&lt;&#x2F;span&gt;&lt;span&gt;        |
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;+---&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;x200001c8 0x100004f8 cortex_m::asm::inline::__nop
+&lt;&#x2F;span&gt;&lt;span&gt;               &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;0x200001c8&lt;&#x2F;span&gt;&lt;span&gt; 0x100004f8 cortex_m::asm::nop
+&lt;&#x2F;span&gt;&lt;span&gt;               &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;0x200001c8&lt;&#x2F;span&gt;&lt;span&gt; 0x100004f8 rust_begin_unwind
+&lt;&#x2F;span&gt;&lt;span&gt;               &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;0x200001c8&lt;&#x2F;span&gt;&lt;span&gt; 0x100004f8 core::panicking::panic_fmt
+&lt;&#x2F;span&gt;&lt;span&gt;               &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;0x200001c8&lt;&#x2F;span&gt;&lt;span&gt; 0x10000504 core::slice::&amp;lt;impl &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;]&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;::copy_from_slice::len_mismatch_fail
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;LR&lt;&#x2F;span&gt;&lt;span&gt; = 0x10000505 &amp;lt;- kernel: len_mismatch_fail+0x1
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PC&lt;&#x2F;span&gt;&lt;span&gt; = 0x100004f8 &amp;lt;- kernel: panic_fmt+0xc
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PSR&lt;&#x2F;span&gt;&lt;span&gt; = 0x09000000 &amp;lt;- 0000_1001_0000_0000_0000_0000_0000_0000
+&lt;&#x2F;span&gt;&lt;span&gt;                      |||| | ||         |       |           |
+&lt;&#x2F;span&gt;&lt;span&gt;                      |||| | ||         |       |           &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span&gt; Exception = 0x0
+&lt;&#x2F;span&gt;&lt;span&gt;                      |||| | ||         |       &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;+------------&lt;&#x2F;span&gt;&lt;span&gt; IC&#x2F;IT = 0x0
+&lt;&#x2F;span&gt;&lt;span&gt;                      |||| | ||         &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;+--------------------&lt;&#x2F;span&gt;&lt;span&gt; GE = 0x0
+&lt;&#x2F;span&gt;&lt;span&gt;                      |||| | |&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;+------------------------------&lt;&#x2F;span&gt;&lt;span&gt; T = 1
+&lt;&#x2F;span&gt;&lt;span&gt;                      |||| | &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;+-------------------------------&lt;&#x2F;span&gt;&lt;span&gt; IC&#x2F;IT = 0x0
+&lt;&#x2F;span&gt;&lt;span&gt;                      |||| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;+---------------------------------&lt;&#x2F;span&gt;&lt;span&gt; Q = 1
+&lt;&#x2F;span&gt;&lt;span&gt;                      |||&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;+-----------------------------------&lt;&#x2F;span&gt;&lt;span&gt; V = 0
+&lt;&#x2F;span&gt;&lt;span&gt;                      ||&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;+------------------------------------&lt;&#x2F;span&gt;&lt;span&gt; C = 0
+&lt;&#x2F;span&gt;&lt;span&gt;                      |&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;+-------------------------------------&lt;&#x2F;span&gt;&lt;span&gt; Z = 0
+&lt;&#x2F;span&gt;&lt;span&gt;                      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;+--------------------------------------&lt;&#x2F;span&gt;&lt;span&gt; N = 0
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;MSP&lt;&#x2F;span&gt;&lt;span&gt; = 0x200001c8 &amp;lt;- kernel: 0x20000000+0x1c8
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PSP&lt;&#x2F;span&gt;&lt;span&gt; = 0x00000000
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;SPR&lt;&#x2F;span&gt;&lt;span&gt; = 0x00000000 &amp;lt;- 0000_0000_0000_0000_0000_0000_0000_0000
+&lt;&#x2F;span&gt;&lt;span&gt;                            |||         |         |         |
+&lt;&#x2F;span&gt;&lt;span&gt;                            |||         |         |         &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span&gt; PRIMASK = 0
+&lt;&#x2F;span&gt;&lt;span&gt;                            |||         |         &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;+----------&lt;&#x2F;span&gt;&lt;span&gt; BASEPRI = 0x0
+&lt;&#x2F;span&gt;&lt;span&gt;                            |||         &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;+--------------------&lt;&#x2F;span&gt;&lt;span&gt; FAULTMASK = 0
+&lt;&#x2F;span&gt;&lt;span&gt;                            ||&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;+------------------------------&lt;&#x2F;span&gt;&lt;span&gt; CONTROL.nPRIV = 0
+&lt;&#x2F;span&gt;&lt;span&gt;                            |&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;+-------------------------------&lt;&#x2F;span&gt;&lt;span&gt; CONTROL.SPSEL = 0
+&lt;&#x2F;span&gt;&lt;span&gt;                            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;+--------------------------------&lt;&#x2F;span&gt;&lt;span&gt; CONTROL.FPCA = 0
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;FPSCR&lt;&#x2F;span&gt;&lt;span&gt; = 0x00000000
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Looking closely, we can see the error is from this code line:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span&gt;core::slice::&amp;lt;impl [T]&amp;gt;::copy_from_slice::len_mismatch_fail
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The flashed software which encountered this error had 544 bytes of stack size for the kernel.
+With many back-and-forth changes and talking to ChatGPT and Claude, I figured out that the issue was because of a &lt;code&gt;stack overflow&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;After changing the stack size for the kernel to 1024 bytes, there was no panic from the kernel.
+I don’t clearly understand yet how to identify this stack overflow corruption by looking at the above log, but according to the documentation,
+we may no longer need to worry about stack size for the kernel because it will be somehow deduced during compile time.
+I heard this is a feature that will be implemented in future versions of the Hubris kernel.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;notes&quot;&gt;Notes&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;If you’d like to see the Hubris variant of the same app (also working), I’ve published it here: &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;hubris-riscv-hazard3&#x2F;tree&#x2F;cortex-m33&quot;&gt;hubris-riscv-hazard3&#x2F;tree&#x2F;cortex-m33&lt;&#x2F;a&gt;. This is based on @thenewwazoo’s excellent work in &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;thenewwazoo&#x2F;hubris&#x2F;tree&#x2F;bmatt&#x2F;rp2350&quot;&gt;hubris&#x2F;tree&#x2F;bmatt&#x2F;rp2350&lt;&#x2F;a&gt;, with my blinky task added alongside his idle and jefe tasks.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;As mentioned, my &lt;strong&gt;final goal&lt;&#x2F;strong&gt; is to get this same demo running on the &lt;strong&gt;Hazard3 RISC-V core&lt;&#x2F;strong&gt;. I’ve been experimenting with both the Hubris and ExHubris repos for this porting effort—each has its pros and cons—but since I now have a working demo on both, I’m leaning towards &lt;strong&gt;ExHubris&lt;&#x2F;strong&gt; because of its simpler build system.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;For those curious, my current (non-working, hacky) RISC-V attempts are here:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;hubris-riscv-hazard3&#x2F;tree&#x2F;riscv&quot;&gt;hubris-riscv-hazard3&#x2F;tree&#x2F;riscv&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;exhubris-riscv-hazard3&#x2F;tree&#x2F;riscv&quot;&gt;exhubris-riscv-hazard3&#x2F;tree&#x2F;riscv&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;references&quot;&gt;References&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;datasheets.raspberrypi.org&#x2F;rp2350&#x2F;rp2350-datasheet.pdf&quot;&gt;RP2350 Datasheet&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;cliffle.com&#x2F;tags&#x2F;hubris&#x2F;&quot;&gt;Cliffle’s Hubris Blog posts&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;hubris.oxide.computer&#x2F;reference&#x2F;&quot;&gt;Hubris Reference&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;exhubris-demo-rp235x&quot;&gt;exhubris-demo-rp235x&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;hubris-riscv-hazard3&#x2F;tree&#x2F;riscv&quot;&gt;Hubris-fork&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;exhubris-riscv-hazard3&#x2F;tree&#x2F;riscv&quot;&gt;exhubris-fork&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Blink an LED using rp235x-pac crate</title>
+        <published>2025-08-13T00:00:00+00:00</published>
+        <updated>2025-08-13T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/blog/rp235x-blinky/"/>
+        <id>https://Karthik-d-k.github.io/blog/rp235x-blinky/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/blog/rp235x-blinky/">&lt;h2 id=&quot;motivation&quot;&gt;Motivation&lt;&#x2F;h2&gt;
+&lt;p&gt;I have been experimenting with &lt;code&gt;Hubris&lt;&#x2F;code&gt; OS to port to &lt;code&gt;riscv&lt;&#x2F;code&gt; ISA. I currently have access to &lt;code&gt;Pico 2 w&lt;&#x2F;code&gt; Board for development and testing.
+Hubris is a real time operating system designed for embedded devices and it has a very unique trait wherein that hardware that it runs on should have &lt;strong&gt;Physical memory protection unit&lt;&#x2F;strong&gt;,
+not necessarily &lt;strong&gt;Memory management unit&lt;&#x2F;strong&gt; and each and every task the OS spawns must be allocated its own memory region and memory protected. This trait helps in isolating tasks and preventing them from interfering with each other’s memory. So theoretically speaking, we could compile different tasks seperately and link them together to form a complete system image.
+This direction has already been prototyped by &lt;code&gt;exhubris&lt;&#x2F;code&gt;. I have successfully implemented &lt;code&gt;idle&lt;&#x2F;code&gt; and &lt;code&gt;supervisor&lt;&#x2F;code&gt; tasks which are absolutely necessary for an Hubris built application. But for me to actually get a visual feedback that this final image works, I need to implement a &lt;code&gt;blinky&lt;&#x2F;code&gt; task that will toggle the LED on and off.
+For more information checkout my ongoing prototype in forked repo’s &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;hubris-riscv-hazard3&#x2F;tree&#x2F;riscv&quot;&gt;&lt;strong&gt;Hubris&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; and &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;exhubris-riscv-hazard3&#x2F;tree&#x2F;riscv&quot;&gt;&lt;strong&gt;exhubris&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;There’s actually a blocker as to use &lt;code&gt;HAL&lt;&#x2F;code&gt; (Hardware Abstraction Layer) in this context. Since Hubris requires strict memory protection and isolation between tasks, using a traditional HAL could lead to potential violations of these principles. For this reason, Hubris pre-built application demos actually use &lt;code&gt;PAC&lt;&#x2F;code&gt; (Peripheral Access Crate) to interact with hardware in a way that is compatible with its memory protection model. You can checkout this &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;rust-embedded&#x2F;cortex-m&#x2F;issues&#x2F;239&quot;&gt;&lt;strong&gt;issue&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; for additional context.&lt;&#x2F;p&gt;
+&lt;p&gt;I have researched online about using &lt;code&gt;rp235x-pac&lt;&#x2F;code&gt; crate to control the GPIO pins on the Pico 2 W board and toggle the LED. But i didn’t find any examples or documentation specifically addressing this use case. And more importantly i could not use inbuilt LED to blink as is connected to wifi chip present in pico 2 w board, this is not the case in pico 2 board.
+Hence, I’m toggling an external LED connected to one of the GPIO pins.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;problem-statement&quot;&gt;Problem Statement&lt;&#x2F;h2&gt;
+&lt;p&gt;To blink an LED connected to one of the GPIO pins on Pico 2 (w) board. We are not allowed to use HAL crate, so we need to use PAC directly to manipulate the GPIO registers.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;implementation-details&quot;&gt;Implementation Details&lt;&#x2F;h2&gt;
+&lt;p&gt;I tried to use RP2350 Datasheet and rp235x-pac to implement on my own and found out that it’s pretty hard. Hence i went down the path of reverse engineering the HAL crate and how it interacts with the PAC to control the GPIO pins. This implementation is basically my reverse-engineered version of the HAL crate, tailored to work within the constraints of Hubris OS.
+From this point onward you could forget everything about Hubris OS and only concentrate on how to use &lt;code&gt;rp235x-pac&lt;&#x2F;code&gt; crate to control the GPIO pins. Because the underlying principles of using PAC for direct hardware access remain the same regardless of the OS constraints.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;image-metadata&quot;&gt;Image Metadata&lt;&#x2F;h3&gt;
+&lt;p&gt;As per &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;datasheets.raspberrypi.org&#x2F;rp2350&#x2F;rp2350-datasheet.pdf&quot;&gt;&lt;strong&gt;RP2350 Datasheet&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; &lt;em&gt;Section:5.9.5. Minimum Viable Image Metadata&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;A minimum amount of metadata (i.e. a valid `IMAGE_DEF` block) must be embedded in
+&lt;&#x2F;span&gt;&lt;span&gt;any binary for the bootrom to recognise it as a valid program image, as opposed to,
+&lt;&#x2F;span&gt;&lt;span&gt;for example, blank flash contents or a disconnected flash device. This must appear
+&lt;&#x2F;span&gt;&lt;span&gt;within the first 4 kB of a flash image, or anywhere in a RAM or OTP image.
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;As per the datasheet, we know we have to create the following Image Metadata for riscv cores –&amp;gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;&#x2F; A Block as understood by the Boot ROM.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;&#x2F;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;&#x2F; This is an Image Definition Block
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;&#x2F; It contains within the special start and end markers
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;&#x2F;  the Boot ROM is looking for.
+&lt;&#x2F;span&gt;&lt;span&gt;#[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;derive&lt;&#x2F;span&gt;&lt;span&gt;(Debug)]
+&lt;&#x2F;span&gt;&lt;span&gt;#[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;repr&lt;&#x2F;span&gt;&lt;span&gt;(C)]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;pub struct &lt;&#x2F;span&gt;&lt;span&gt;ImageDefBlock {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;marker_start&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u32&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;item&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u32&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;length&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u32&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;offset&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u32&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;marker_end&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u32&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;&#x2F; Tell the Boot ROM about our application
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;&#x2F; Refer RP2350 Datasheet, Section: 5.9.5.2. Minimum RISC-V IMAGE_DEF
+&lt;&#x2F;span&gt;&lt;span&gt;#[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;link_section &lt;&#x2F;span&gt;&lt;span&gt;= &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;.start_block&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;]
+&lt;&#x2F;span&gt;&lt;span&gt;#[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;used&lt;&#x2F;span&gt;&lt;span&gt;]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;pub static &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;IMAGE_DEF&lt;&#x2F;span&gt;&lt;span&gt;: ImageDefBlock = ImageDefBlock {
+&lt;&#x2F;span&gt;&lt;span&gt;    marker_start: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0xffffded3&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    item: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x11010142&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    length: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x000001ff&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    offset: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x00000000&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    marker_end: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0xab123579&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;};
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;link_section = “.start_block”&lt;&#x2F;strong&gt; is used to place the &lt;code&gt;IMAGE_DEF&lt;&#x2F;code&gt; block in a specific section of the binary, ensuring it is located within the first 4 kB of a flash image.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h3 id=&quot;gpio-setup&quot;&gt;GPIO Setup&lt;&#x2F;h3&gt;
+&lt;p&gt;To setup GPIO on rp235x, we need access to 3 peripherals: &lt;strong&gt;SIO&lt;&#x2F;strong&gt;, &lt;strong&gt;IO_BANK0&lt;&#x2F;strong&gt;, and &lt;strong&gt;PADS_BANK0&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;SIO&lt;&#x2F;strong&gt;: Single-cycle I&#x2F;O for fast GPIO operations&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;IO_BANK0&lt;&#x2F;strong&gt;: GPIO function selection and control&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;PADS_BANK0&lt;&#x2F;strong&gt;: Electrical characteristics and pad isolation&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Get an instance of this peripherals by using the &lt;code&gt;rp235x-pac&lt;&#x2F;code&gt; crate.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;use &lt;&#x2F;span&gt;&lt;span&gt;rp235x_pac::{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;IO_BANK0&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;PADS_BANK0&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;SIO&lt;&#x2F;span&gt;&lt;span&gt;};
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; sio: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;SIO &lt;&#x2F;span&gt;&lt;span&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;unsafe &lt;&#x2F;span&gt;&lt;span&gt;{ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;SIO&lt;&#x2F;span&gt;&lt;span&gt;::steal() };
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; io_bank0 = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;unsafe &lt;&#x2F;span&gt;&lt;span&gt;{ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;IO_BANK0&lt;&#x2F;span&gt;&lt;span&gt;::steal() };
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; pads_bank0 = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;unsafe &lt;&#x2F;span&gt;&lt;span&gt;{ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;PADS_BANK0&lt;&#x2F;span&gt;&lt;span&gt;::steal() };
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now for example we could consider any GPIO pin to connect external LED for testing, i used &lt;strong&gt;GPIO22&lt;&#x2F;strong&gt;.
+we need to setup this pin as &lt;strong&gt;OUTPUT&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;const &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;LED_PIN&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;usize &lt;&#x2F;span&gt;&lt;span&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; mask = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u32 &lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&amp;lt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;LED_PIN &lt;&#x2F;span&gt;&lt;span&gt;as &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u32&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Set GPIO as output
+&lt;&#x2F;span&gt;&lt;span&gt;sio.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;gpio_oe_set&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;write&lt;&#x2F;span&gt;&lt;span&gt;(|&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;w&lt;&#x2F;span&gt;&lt;span&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;unsafe &lt;&#x2F;span&gt;&lt;span&gt;{ w.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;bits&lt;&#x2F;span&gt;&lt;span&gt;(mask) });
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And then we need to configure the &lt;strong&gt;PADS&lt;&#x2F;strong&gt; such that input enable on, output disable is off and remove pad isolation to attach a function to this GPIO.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Configure pad settings
+&lt;&#x2F;span&gt;&lt;span&gt;pads_bank0.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;gpio&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;LED_PIN&lt;&#x2F;span&gt;&lt;span&gt;).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;modify&lt;&#x2F;span&gt;&lt;span&gt;(|_, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;w&lt;&#x2F;span&gt;&lt;span&gt;| {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Set input enable on, output disable off
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; RP2350: input enable defaults to off, so this is important!
+&lt;&#x2F;span&gt;&lt;span&gt;    w.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;ie&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;set_bit&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    w.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;od&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;clear_bit&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; RP2350: remove pad isolation now a function is wired up
+&lt;&#x2F;span&gt;&lt;span&gt;    w.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;iso&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;clear_bit&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    w
+&lt;&#x2F;span&gt;&lt;span&gt;});
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And then we set the GPIO function to &lt;strong&gt;SIO&lt;&#x2F;strong&gt; (Single-cycle IO subsystem) using which we write to the GPIO.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;use &lt;&#x2F;span&gt;&lt;span&gt;rp235x_pac::io_bank0::gpio::gpio_ctrl::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;FUNCSEL_A&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Zero all fields apart from fsel; we want this IO to do what the peripheral tells it.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; This doesn&amp;#39;t affect e.g. pullup&#x2F;pulldown, as these are in pad controls.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;unsafe &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    io_bank0
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;gpio&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;LED_PIN&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;gpio_ctrl&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;write_with_zero&lt;&#x2F;span&gt;&lt;span&gt;(|&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;w&lt;&#x2F;span&gt;&lt;span&gt;| w.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;funcsel&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;variant&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;FUNCSEL_A&lt;&#x2F;span&gt;&lt;span&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;SIO&lt;&#x2F;span&gt;&lt;span&gt;))
+&lt;&#x2F;span&gt;&lt;span&gt;};
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Finally we could use the SIO to toggle the LED state.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; To Turn on LED
+&lt;&#x2F;span&gt;&lt;span&gt;sio.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;gpio_out_set&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;write&lt;&#x2F;span&gt;&lt;span&gt;(|&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;w&lt;&#x2F;span&gt;&lt;span&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;unsafe &lt;&#x2F;span&gt;&lt;span&gt;{ w.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;bits&lt;&#x2F;span&gt;&lt;span&gt;(mask) });
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; To Turn off LED
+&lt;&#x2F;span&gt;&lt;span&gt;sio.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;gpio_out_clr&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;write&lt;&#x2F;span&gt;&lt;span&gt;(|&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;w&lt;&#x2F;span&gt;&lt;span&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;unsafe &lt;&#x2F;span&gt;&lt;span&gt;{ w.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;bits&lt;&#x2F;span&gt;&lt;span&gt;(mask) });
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This is the minimum code that is required to control GPIO by using the PAC instead of depending on the HAL.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;running-on-pico-2-w-board&quot;&gt;Running on Pico 2(w) board&lt;&#x2F;h3&gt;
+&lt;p&gt;To run the code, you could checkout my &lt;code&gt;rp-hal&lt;&#x2F;code&gt; crate and run the &lt;code&gt;blinky&lt;&#x2F;code&gt; example as follows –&amp;gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; clone https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;rp-hal.git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -b&lt;&#x2F;span&gt;&lt;span&gt; riscv
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;cd&lt;&#x2F;span&gt;&lt;span&gt; rp-hal&#x2F;rp235x-hal-examples
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cargo&lt;&#x2F;span&gt;&lt;span&gt; rrr-blinky
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;cargo rrr-blinky&lt;&#x2F;strong&gt; will compile and flash the code successfully and run the code using &lt;code&gt;picotool&lt;&#x2F;code&gt;. Be sure to checkout the &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;rp-hal&#x2F;blob&#x2F;riscv&#x2F;README.md&quot;&gt;documentation&lt;&#x2F;a&gt; on how to set-up the required tools to flash and run.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Full script is available on github &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;rp-hal&#x2F;blob&#x2F;main&#x2F;rp235x-hal-examples&#x2F;src&#x2F;bin&#x2F;blinky.rs&quot;&gt;&lt;strong&gt;rp-hal-blinky&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;If you are looking for hubris task which is almost similar to the rp-hal example, you could checkout the same in &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;exhubris-riscv-hazard3&#x2F;blob&#x2F;riscv&#x2F;task&#x2F;blinky&#x2F;src&#x2F;main.rs&quot;&gt;&lt;strong&gt;exhubris-blinky&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;If you are interested in exploring the exact differences as to which PAC code compares to HAL code, you could look into the
+&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;rp-rs&#x2F;rp-hal&#x2F;commit&#x2F;96988070c380f720672f6243f35bbc272a57fd17&quot;&gt;&lt;strong&gt;github-commit&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;references&quot;&gt;References&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;datasheets.raspberrypi.org&#x2F;rp2350&#x2F;rp2350-datasheet.pdf&quot;&gt;RP2350 Datasheet&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;cliffle.com&#x2F;tags&#x2F;hubris&#x2F;&quot;&gt;Cliffle’s Hubris Blog posts&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;hubris.oxide.computer&#x2F;reference&#x2F;&quot;&gt;Hubris Reference&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;hubris-riscv-hazard3&#x2F;tree&#x2F;riscv&quot;&gt;Hubris-fork&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;exhubris-riscv-hazard3&#x2F;tree&#x2F;riscv&quot;&gt;exhubris-fork&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+</feed>
