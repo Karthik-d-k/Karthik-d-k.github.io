@@ -31,7 +31,6 @@ int main1(void) {
 // ------------------------------------------------------------------------------------------
 // //
 
-#include <endian.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -39,7 +38,7 @@ int main2(void) {
   uint16_t u16 = 0x1122;
   uint8_t *u8p = (uint8_t *)&u16;
 
-  if ((*u8p) == (0x22)) {
+  if ((*u8p) == 0x22) {
     printf("LITTLE ENDIAN\n");
   } else {
     printf("BIG ENDIAN\n");

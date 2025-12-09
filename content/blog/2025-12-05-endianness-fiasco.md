@@ -14,16 +14,16 @@ Only if we know how the data is stored, we can correctly interpret and manipulat
 ## Endianness
 
 Endianness defines how `multi-byte data` will be `stored` in our `computer memory`.\
-**Big-endian** and **Little-endian** are the types widely used, other types may not be relavant to most of the users, 
+**Big-endian** and **Little-endian** are the types widely used; other types may not be relevant to most users.
 explore [wiki](https://en.wikipedia.org/wiki/Endianness) for this.
 
-> Smallest addressable unit of data in current computing systems is `byte (8-bits)`
+> Smallest addressable unit of data in current computing systems is `byte (8-bits)`.
 
-Endianness comes into picture when we try to *read/write multi-byte data*. Endian-ness does not matter if you have a *single byte*.
+Endianness comes into the picture when we try to *read/write multi-byte data*. Endianness does not matter if you have a *single byte*.
 
-1. **Big-endian**: When we store multi-byte data, most-significant-byte will be stored at the lowest addressed memory.
+1. **Big-endian**: When we store multi-byte data, the most-significant byte will be stored at the lowest addressed memory.
 
-2. **Little-endian**: When we store multi-byte data, least-significant-byte will be stored at the lowest addressed memory.
+2. **Little-endian**: When we store multi-byte data, the least-significant byte will be stored at the lowest addressed memory.
 
 We can visualize this difference by running the following **c code snippet**.
 
@@ -31,7 +31,7 @@ We can visualize this difference by running the following **c code snippet**.
 ```c
 #include <stdio.h>
 #include <stdint.h>
-#include <endian.h>
+#include <endian.h>  // GNU/Linux (glibc). Not portable to Windows/MSVC.
 
 int main(void) {          
     uint16_t data_u16 = 0x1122;
@@ -57,10 +57,9 @@ u8p_be[0] = 0x11
 u8p_le[0] = 0x22
 ```
 
-- Let's assume our 16-bit data is **0x1122** wherein **0x11** is most-significant-byte and **0x22** is least-significant-byte.
-- Here, I'm using `htobe16` and `htole16` standard functions from `endian.h` header to simulate the Big and Little endian machines.
-- By reading the first byte stored at the lowest address of our data, we get to know that, 
-  LE machine stores least-significant-byte and BE machine stores most-significant-byte.
+- Let's assume our 16-bit data is **0x1122** wherein **0x11** is the most-significant byte and **0x22** is the least-significant byte.
+- Here, I'm using `htobe16` and `htole16` functions from `endian.h` to simulate big- and little-endian representations. Note: `endian.h` is GNU-specific; on other platforms you may use `htons`/`ntohs` or manual byte operations.
+- By reading the first byte stored at the lowest address of our data, we get to know that a LE machine stores the least-significant byte and a BE machine stores the most-significant byte.
 
 Using the above example with slight modification, we could get to know our machine's endianness.
 
@@ -68,13 +67,12 @@ Using the above example with slight modification, we could get to know our machi
 ```c
 #include <stdio.h>
 #include <stdint.h>
-#include <endian.h>
 
 int main(void) {          
     uint16_t u16 = 0x1122;
     uint8_t* u8p = (uint8_t *)&u16; 
 
-    if ((*u8p) == (0x22)) {
+    if ((*u8p) == 0x22) {
         printf("LITTLE ENDIAN\n");
     } else {
         printf("BIG ENDIAN\n");
@@ -93,8 +91,8 @@ LITTLE ENDIAN
 ## Bit Twiddling
 
 I will explain how to set/clear the bits in a multi-byte data by taking endianness into account.
-Let's say we have a 32-bit data and we had to set 25th bit and clear 6th bit, the usual way is to 
-use bit-mask and do bit-wise operations as shown in the below snippet:
+Let's say we have a 32-bit data and we had to set the 25th bit and clear the 6th bit, the usual way is to
+use a bit-mask and do bit-wise operations as shown in the below snippet:
 
 **Snippet 3:**
 ```c
@@ -104,7 +102,7 @@ use bit-mask and do bit-wise operations as shown in the below snippet:
 int main(void) {          
     uint32_t u32_in = 0xDD223344;
     uint32_t u32_out = u32_in;
-    uint32_t set_mask = 0x2000000;     // 25th bit is 1, everything else is 0
+    uint32_t set_mask = 0x02000000;     // 25th bit is 1, everything else is 0
     uint32_t clear_mask = 0xFFFFFFBF;  // 6th  bit is 0, everything else is 1
 
     u32_out |= set_mask;    // set   25th bit
@@ -124,7 +122,7 @@ u32_in : 0b11011101001000100011001101000100
 u32_out: 0b11011111001000100011001100000100
 ```
 
-> From the above snippet, we can confirm that, endianness comes into picture only when we treat multibyte data as raw bytes, but doesn't matter when we operate using multi-byte operations directly.
+> From the above snippet, we can confirm that endianness comes into the picture only when we treat multibyte data as raw bytes, but doesn't matter when we operate using multi-byte operations directly.
 
 ## Real world scenarios
 
@@ -136,9 +134,9 @@ When we get memory dumps from GDB, QEMU, EEPROM and/or flash images, we should k
 ```bash
 Memory dump: 66 00 00 00
 LE → 0x00000066 (102 decimal)
-BE → 0x52000000 (1,711,276,032 decimal)
+BE → 0x66000000 (1,711,276,032 decimal)
 ```
-From the above snippet, we can confirm that if we had to read 32-bit data from the raw memrory dump, we could end up with different values if we don't know how it was stored in the first place.
+From the above snippet, we can confirm that if we had to read 32-bit data from the raw memory dump, we could end up with different values if we don't know how it was stored in the first place.
 
 ### ELF
 
@@ -149,7 +147,7 @@ The fifth byte of the ELF header (e_ident[EI_DATA]) determines how to interpret 
 
 ### Network protocols
 
-Most of the Networking protocols use `network byte order` which is `Big Endian`, but be carefull out there because some network protocols uses `Little Endian` too.
+Most networking protocols use `network byte order` which is `big-endian`, but be careful out there because some network protocols use `little-endian` too.
 
 ### Kerberos
 
@@ -158,8 +156,8 @@ Most of the Networking protocols use `network byte order` which is `Big Endian`,
 
 ### Binary file formats
 
-All the binary file formats in one or the other form encodes the endian type or it may be fixed endian type for that particular file format.
-So we had to consider this into account if we are dealing with raw binary formats in any form.
+Many binary file formats either encode the endian type or use a fixed endian type for that particular file format.
+So we have to consider this if we are dealing with raw binary formats in any form.
 
 ## Conclusion
 
