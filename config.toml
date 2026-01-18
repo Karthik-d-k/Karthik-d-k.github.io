@@ -72,6 +72,7 @@ author = "Karthik"
 #
 taxonomies = [
     {name = "tags", feed = true},
+]
 
 # Optional base path for all taxonomies. If set, all taxonomy paths will be relative to this path.
 # For example, if taxonomy_root is "blog" and taxonomy is "tags", the path will be /blog/tags/
