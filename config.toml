@@ -9,7 +9,7 @@ description = "Personal Commentary"
 default_language = "en"
 
 # The site theme to use.
-theme = "anemone"
+theme = "goyo"
 
 # For overriding the default output directory `public`, set it to another value (e.g.: "docs")
 output_dir = "public"
@@ -67,9 +67,7 @@ author = "Karthik"
 #       {name = "authors"}, # Basic definition: no feed or pagination
 #     ]
 #
-taxonomies = [
-    {name = "tags", feed = true},
-]
+taxonomies = [{ name = "tags", feed = true }]
 
 # When set to "true", a search index is built from the pages and section
 # content for `default_language`.
@@ -120,14 +118,10 @@ bottom_footnotes = false
 # Configuration of the link checker.
 [link_checker]
 # Skip link checking for external URLs that start with these prefixes
-skip_prefixes = [
-    "http://[2001:db8::]/",
-]
+skip_prefixes = ["http://[2001:db8::]/"]
 
 # Skip anchor checking for external URLs that start with these prefixes
-skip_anchor_prefixes = [
-    "https://caniuse.com/",
-]
+skip_anchor_prefixes = ["https://caniuse.com/"]
 
 # Treat internal link problems as either "error" or "warn", default is "error"
 internal_level = "error"
@@ -210,12 +204,103 @@ default_theme = "light"
 list_pages = false
 twitter_card = true
 
-header_nav = [
-  { url = "/", name_en = "/home" },
-  { url = "/blog", name_en = "/blog" },
-  { url = "/til", name_en = "/til" },
-  { url = "/projects", name_en = "/projects" },
-  { url = "/tags", name_en = "/tags" },
-  { url = "/bookmarks", name_en = "/bookmarks" },
-  { url = "/cv", name_en = "/cv" },
+# Navigation Configuration
+nav = [
+    { url = "/", name = "/home", type = "url" },
+    { url = "/blog", name = "/blog", type = "url" },
+    { url = "/til", name = "/til", type = "url" },
+    { url = "/projects", name = "/projects", type = "url" },
+    { url = "/tags", name = "/tags", type = "url" },
+    { url = "/bookmarks", name = "/bookmarks", type = "url" },
+    { url = "/cv", name = "/cv", type = "url" },
 ]
+
+# Footer Configuration
+footer_html = "Powered by <a href='https://www.getzola.org'>Zola</a> and <a href='https://github.com/hahwul/goyo'>Goyo</a>"  # Footer HTML content
+
+# Thumbnail Configuration
+default_thumbnail = "images/default_thumbnail.jpg"  # Default thumbnail image path
+
+# Google Tag Configuration
+gtag = ""  # Google Analytics tracking ID
+
+# Language Configuration
+[extra.lang]
+rtl = []  # List of RTL languages e.g. ["ar", "he"]
+aliases = { en = "English", ko = "한국어" }  # Language display names for the language selector
+
+# Edit URL Configuration
+edit_url = ""  # Base URL for editing pages (e.g., "https://github.com/user/repo/edit/main")
+
+# Logo Configuration (new structured format)
+# Supports theme-specific logos that change when toggling between dark/light themes
+[extra.logo]
+text = "Goyo"  # Text to display if no logo image
+image_path = "images/goyo.png"  # Default logo image path
+# image_padding = "5px"  # Padding for logo image (optional)
+# dark_image_path = "images/goyo-dark.png"  # Logo for dark theme (optional override)
+# light_image_path = "images/goyo-light.png"  # Logo for light theme (optional override)
+
+# Legacy logo configuration (still supported for backward compatibility)
+# logo_text = "Goyo"
+# logo_image_path = "images/goyo.png"
+# logo_image_padding = "5px"
+
+# Twitter Configuration (new structured format)
+[extra.twitter]
+site = "@hahwul"  # Site Twitter handle
+creator = "@hahwul"  # Creator Twitter handle
+
+# Legacy Twitter configuration (still supported for backward compatibility)
+# twitter_site = "@hahwul"
+# twitter_creator = "@hahwul"
+
+# Theme Configuration (new structured format)
+[extra.theme]
+colorset = "dark"           # Default color scheme (dark/light)
+brightness = "normal"       # Common brightness: "darker", "normal", "lighter"
+# dark_brightness = "darker"  # Override brightness for dark theme (optional)
+# light_brightness = "normal" # Override brightness for light theme (optional)
+disable_toggle = false      # Hide theme toggle button
+
+# Legacy theme configuration (still supported for backward compatibility)
+# default_colorset = "dark"
+# brightness = "normal"
+# disable_theme_toggle = false
+
+# Font Configuration (new structured format)
+[extra.font]
+enabled = false  # Set to true to use custom font
+name = ""        # Name of the custom font (e.g., "Roboto", "Noto Sans KR")
+path = ""        # Local path (e.g., "fonts/custom.woff") or remote URL
+
+# Legacy font configuration (still supported for backward compatibility)
+# custom_font_enabled = false
+# custom_font_name = ""
+# custom_font_path = ""
+
+# Sidebar Configuration (new structured format)
+[extra.sidebar]
+expand_depth = 1         # Sidebar expansion depth (max 5)
+disable_root_hide = false # Prevent hiding sidebar on root page
+
+# Legacy sidebar configuration (still supported for backward compatibility)
+# sidebar_expand_depth = 1
+# disable_root_sidebar_hide = false
+
+# Share Buttons Configuration (new structured format)
+[extra.share]
+copy_url = false  # Copy URL button
+x = false         # Share on X button
+
+# Legacy share configuration (still supported for backward compatibility)
+# enable_copy_url = false
+# enable_share_x = false
+
+[extra.comments]
+enabled = false  # Enable comments
+system = ""  # Comment system (e.g., "giscus")
+repo = ""  # Repository for comments (e.g., "hahwul/goyo")
+repo_id = ""  # Repository ID (e.g., "R_kgDOXXXXXXX")
+category = ""  # Comment category (e.g., "General")
+category_id = ""  # Category ID (e.g., "DIC_kwDOXXXXXXXXXX")
