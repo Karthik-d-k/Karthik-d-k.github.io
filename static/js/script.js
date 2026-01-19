@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     input.addEventListener('input', (e) => {
         const q = e.target.value.trim();
-        if (!index || q.length < 2) { clear(); return; }
+        if (!index || q.length < 1) { clear(); return; }
         const results = index.search(q, { expand: true });
         render(results);
     });
