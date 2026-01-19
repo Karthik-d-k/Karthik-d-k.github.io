@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Search</h1>
+
+<input id="search-input" type="search" placeholder="Type to search…" autofocus />
+<ul id="search-results" class="title-list"></ul>
+
+<!-- Elasticlunr and search script -->
+<script src="{{ get_url(path='elasticlunr.min.js', trailing_slash=false) }}"></script>
+<script>
+    window.SEARCH_INDEX_URL = "{{ get_url(path='search_index.' ~ config.default_language ~ '.json', trailing_slash=false) }}";
+</script>
+<script src="{{ get_url(path='js/search.js', trailing_slash=false) }}"></script>
+{% endblock content %}

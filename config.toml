@@ -145,11 +145,11 @@ paths_keep_dates = false
 # Whether to include the title of the page/section in the index
 include_title = true
 # Whether to include the description of the page/section in the index
-include_description = false
+include_description = true
 # Whether to include the RFC3339 datetime of the page in the search index
 include_date = false
 # Whether to include the path of the page/section in the index (the permalink is always included)
-include_path = false
+include_path = true
 # Whether to include the rendered content of the page/section in the index
 include_content = true
 # At which code point to truncate the content to. Useful if you have a lot of pages and the index would
@@ -213,4 +213,5 @@ header_nav = [
     { url = "/tags", name_en = "/tags" },
     { url = "/bookmarks", name_en = "/bookmarks" },
     { url = "/cv", name_en = "/cv" },
+    { url = "/search", name_en = " 🔎 " },
 ]
