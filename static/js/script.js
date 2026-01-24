@@ -36,8 +36,10 @@ toggleButton.addEventListener('change', toggleTheme);
 // Function to initialize the theme based on the stored preference
 const initializeTheme = () => {
     const storedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const isDarkMode = storedTheme === 'dark' || (!storedTheme && prefersDark);
+    const defaultTheme = window.DEFAULT_THEME || 'light';
+    const isDarkMode = storedTheme
+        ? storedTheme === 'dark'
+        : defaultTheme === 'dark';
     toggleButton.checked = isDarkMode;
     updateTheme(isDarkMode);
 };
