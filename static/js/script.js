@@ -116,7 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.setAttribute('aria-hidden', 'false');
         modal.classList.add('open');
         document.body.style.overflow = 'hidden';
-        // Focus immediately for mobile keyboard to appear
         modalInput.focus();
     };
 
@@ -177,12 +176,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Search trigger click
+    // Search trigger click - use touchend for mobile to trigger keyboard
     if (searchTrigger) {
-        searchTrigger.addEventListener('click', (e) => {
+        const handleSearchTrigger = (e) => {
             e.preventDefault();
-            openModal();
-        });
+            modal.setAttribute('aria-hidden', 'false');
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            // Focus directly in the event handler for mobile keyboard
+            modalInput.focus();
+            // Trigger click on input for iOS
+            modalInput.click();
+        };
+        searchTrigger.addEventListener('click', handleSearchTrigger);
     }
 
     // Close on backdrop click
