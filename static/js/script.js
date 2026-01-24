@@ -116,7 +116,8 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.setAttribute('aria-hidden', 'false');
         modal.classList.add('open');
         document.body.style.overflow = 'hidden';
-        setTimeout(() => modalInput.focus(), 50);
+        // Focus immediately for mobile keyboard to appear
+        modalInput.focus();
     };
 
     const closeModal = () => {
