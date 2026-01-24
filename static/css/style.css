@@ -162,3 +162,130 @@ main ol {
     background: var(--bg);
     color: var(--text);
 }
+
+/* Search Modal Styles */
+.search-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 15vh;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.search-modal.open {
+    visibility: visible;
+    opacity: 1;
+}
+
+.search-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.search-modal-container {
+    position: relative;
+    width: 90%;
+    max-width: 32rem;
+    max-height: 60vh;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateY(-10px);
+    transition: transform 0.2s ease;
+}
+
+.search-modal.open .search-modal-container {
+    transform: translateY(0);
+}
+
+.search-modal-header {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    gap: 0.5rem;
+}
+
+.search-modal-header input {
+    flex: 1;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    outline: none;
+}
+
+.search-modal-header input::placeholder {
+    color: var(--text);
+    opacity: 0.5;
+}
+
+.search-modal-kbd {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-family: inherit;
+    background: var(--bg-light);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    opacity: 0.7;
+}
+
+/* Hide keyboard hint on mobile/touch devices */
+@media (max-width: 768px), (hover: none) {
+    .search-modal-kbd {
+        display: none;
+    }
+}
+
+.search-modal-results {
+    list-style: none;
+    margin: 0;
+    padding: 0.5rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.search-modal-results li {
+    margin: 0;
+    padding: 0;
+}
+
+.search-modal-results li a {
+    display: block;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    color: var(--text);
+    text-decoration: none;
+    transition: background-color 0.1s ease;
+}
+
+.search-modal-results li a:hover,
+.search-modal-results li.selected a {
+    background: var(--bg-light);
+    color: var(--accent);
+}
+
+.search-modal-empty {
+    padding: 2rem 1rem;
+    text-align: center;
+    color: var(--text);
+    opacity: 0.6;
+}
+
+/* Search trigger button style */
+#search-trigger {
+    cursor: pointer;
+}

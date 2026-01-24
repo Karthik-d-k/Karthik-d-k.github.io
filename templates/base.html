@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="{% if page %}{{ page.lang }}{% else %}{{ config.default_language }}{% endif %}">
+<head>
+    {% include "head.html" %}
+</head>
+<body>
+      <header>
+          {% include "header.html" %}
+      </header>
+      <main>
+          {% block content %}
+          {% endblock content %}
+      </main>
+      <footer>
+          {% include "footer.html" %}
+      </footer>
+
+      <!-- Search Modal -->
+      <div id="search-modal" class="search-modal" aria-hidden="true">
+          <div class="search-modal-backdrop"></div>
+          <div class="search-modal-container">
+              <div class="search-modal-header">
+                  <input id="search-modal-input" type="search" placeholder="Search..." autofocus />
+                  <kbd class="search-modal-kbd">Ctrl+K</kbd>
+              </div>
+              <ul id="search-modal-results" class="search-modal-results"></ul>
+              <div id="search-modal-empty" class="search-modal-empty" style="display: none;">
+                  No results found
+              </div>
+          </div>
+      </div>
+
+      <!-- Elasticlunr for search -->
+      <script src="{{ get_url(path='elasticlunr.min.js', trailing_slash=false) }}"></script>
+      <script>
+          window.SEARCH_INDEX_URL = "{{ get_url(path='search_index.' ~ config.default_language ~ '.json', trailing_slash=false) }}";
+      </script>
+</body>
+</html>
