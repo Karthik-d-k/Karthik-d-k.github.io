@@ -168,18 +168,14 @@ main ol {
     position: fixed;
     inset: 0;
     z-index: 1000;
-    display: flex;
+    display: none;
     align-items: flex-start;
     justify-content: center;
     padding-top: 15vh;
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
 .search-modal.open {
-    visibility: visible;
-    opacity: 1;
+    display: flex;
 }
 
 .search-modal-backdrop {
