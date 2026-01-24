@@ -1,0 +1,102 @@
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta content="IE=edge" http-equiv=X-UA-Compatible><meta content="text/html; charset=UTF-8" http-equiv=content-type><meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport><meta content="index, follow" name=robots><title>Swapping addresses instead of values</title><meta content="Swapping addresses instead of values" name=title><meta content=Karthik name=author><meta content="Personal Commentary" name=description><meta content=website property=og:type><meta content=https://Karthik-d-k.github.io/blog/swap-numbers/ property=og:url><meta content=0x646b property=og:site_name><meta content="Swapping addresses instead of values" property=og:title><meta content="Personal Commentary" property=og:description><meta content=https://Karthik-d-k.github.io/favicon.ico property=og:image><meta content=summary_large_image property=twitter:card><meta content=https://Karthik-d-k.github.io/blog/swap-numbers/ property=twitter:url><meta content="Swapping addresses instead of values" property=twitter:title><meta content="Personal Commentary" property=twitter:description><meta content=https://Karthik-d-k.github.io/favicon.ico property=twitter:image><link href=https://Karthik-d-k.github.io/blog/swap-numbers/ rel=canonical><link rel="shortcut icon" href=https://Karthik-d-k.github.io/favicon.ico type=image/x-icon><link href=https://Karthik-d-k.github.io/atom.xml rel=alternate title=RSS type=application/atom+xml><link href=https://speyll.github.io/suCSS/reset-min.css rel=stylesheet><link href=https://speyll.github.io/suCSS/suCSS-min.css rel=stylesheet><link href=https://Karthik-d-k.github.io/css/style.css rel=stylesheet><script defer src=https://Karthik-d-k.github.io/js/script.js></script><body><header><nav id=nav-bar><a href=/> /home </a><a href=/blog> /blog </a><a href=/til> /til </a><a href=/projects> /projects </a><a href=/tags> /tags </a><a href=/bookmarks> /bookmarks </a><a href=/cv> /cv </a><a href=# id=search-trigger> 🔎 </a><div><input id=theme-toggle style=display:none type=checkbox><label for=theme-toggle id=theme-toggle-label><svg class=icons id=theme-icon><use href=https://Karthik-d-k.github.io/icons.svg#lightMode></use></svg></label><audio id=theme-sound><source src=https://Karthik-d-k.github.io/click.ogg type=audio/ogg></audio></div></nav></header><main><h1>Swapping addresses instead of values</h1><h2 id=motivation>Motivation</h2><p>I was thinking about famous <code>C interview question</code> wherein we will be asked to swap 2 variables. Generally, this could be solved using pointers with either using temporary variable or with xor method.<p>But now i want to tackle the same problem in a different perspective. Instead of changing the variable’s values, what if we were asked to swap its addresses instead of values ?<p>Solving this problem was not straight forward as i thought initially, it involves some fair bit of understanding pointers and pointer to pointer (int** for example) manipulations.<p>In this blog, i will try to explain how i got to the solution or in other words, how i would solve it.<h2 id=exploration>Exploration</h2><p>First, lets see how we would solve the problem of swapping 2 variables using function <code>swap</code>. We would write a function as follows, which uses temporary variable as a placeholder to exchange numbers.<p><strong>Snippet 1:</strong><pre class=language-c data-lang=c style=color:#c0c5ce;background-color:#2b303b><code class=language-c data-lang=c><span style=color:#b48ead>#include </span><span>&lt;</span><span style=color:#a3be8c>stdio.h</span><span>>
+</span><span>
+</span><span style=color:#b48ead>void </span><span style=color:#8fa1b3>swap</span><span>(</span><span style=color:#b48ead>int </span><span style=color:#bf616a>a</span><span>, </span><span style=color:#b48ead>int </span><span style=color:#bf616a>b</span><span>) {
+</span><span>    </span><span style=color:#b48ead>int</span><span> t;
+</span><span>
+</span><span>    t = a;
+</span><span>    a = b;
+</span><span>    b = t;
+</span><span>    </span><span style=color:#96b5b4>printf</span><span>("</span><span style=color:#a3be8c>FUNC  : a = </span><span style=color:#d08770>%d</span><span style=color:#a3be8c>, b = </span><span style=color:#d08770>%d</span><span style=color:#96b5b4>\n</span><span>", a, b);
+</span><span>}
+</span><span>
+</span><span style=color:#b48ead>int </span><span style=color:#8fa1b3>main</span><span>(</span><span style=color:#b48ead>void</span><span>) {
+</span><span>    </span><span style=color:#b48ead>int</span><span> a = </span><span style=color:#d08770>11</span><span>;
+</span><span>    </span><span style=color:#b48ead>int</span><span> b = </span><span style=color:#d08770>22</span><span>;
+</span><span>
+</span><span>    </span><span style=color:#96b5b4>printf</span><span>("</span><span style=color:#a3be8c>BEFORE: a = </span><span style=color:#d08770>%d</span><span style=color:#a3be8c>, b = </span><span style=color:#d08770>%d</span><span style=color:#96b5b4>\n</span><span>", a, b);
+</span><span>    </span><span style=color:#bf616a>swap</span><span>(a, b);
+</span><span>    </span><span style=color:#96b5b4>printf</span><span>("</span><span style=color:#a3be8c>AFTER : a = </span><span style=color:#d08770>%d</span><span style=color:#a3be8c>, b = </span><span style=color:#d08770>%d</span><span style=color:#96b5b4>\n</span><span>", a, b);
+</span><span>}
+</span></code></pre><p><strong>Snippet 1 stdout:</strong><pre style=color:#c0c5ce;background-color:#2b303b><code><span>BEFORE: a = 11, b = 22
+</span><span>FUNC  : a = 22, b = 11
+</span><span>AFTER : a = 11, b = 22
+</span></code></pre><p>Surprisingly, we would see the variables are swapped but it is not reflected back to the caller in the main function.<blockquote><p>In <strong>C</strong>, each and every function has its own stack which will be created at the time of function call and destroyed after function call exits. Another most important part is, function parameters and each variables created inside the function is stored in its own stack.</blockquote><p>Hence, even though swap() is changing a and b, it is changing only inside its own stack (look @FUNC output above) and these local variables will be destroyed once function call exits. Hence @AFTER output is unchanged.<blockquote><p>In <strong>C</strong>, to change values present in one function from another function, we have a classic tool for that which is <code>pointers</code>. You would have to share the address of variables <strong>(“value of interest”)</strong> to the function, to access and change the values present inside.</blockquote><p><strong>Snippet 2:</strong><pre class=language-c data-lang=c style=color:#c0c5ce;background-color:#2b303b><code class=language-c data-lang=c><span style=color:#b48ead>#include </span><span>&lt;</span><span style=color:#a3be8c>stdio.h</span><span>>
+</span><span>
+</span><span style=color:#b48ead>void </span><span style=color:#8fa1b3>swap</span><span>(</span><span style=color:#b48ead>int</span><span>* </span><span style=color:#bf616a>ap</span><span>, </span><span style=color:#b48ead>int</span><span>* </span><span style=color:#bf616a>bp</span><span>) {
+</span><span>    </span><span style=color:#b48ead>int</span><span> t;
+</span><span>
+</span><span>    t = *ap;
+</span><span>    *ap = *bp;
+</span><span>    *bp = t;
+</span><span>    </span><span style=color:#96b5b4>printf</span><span>("</span><span style=color:#a3be8c>FUNC  : a = </span><span style=color:#d08770>%d</span><span style=color:#a3be8c>, b = </span><span style=color:#d08770>%d</span><span style=color:#96b5b4>\n</span><span>", *ap, *bp);
+</span><span>}
+</span><span>
+</span><span style=color:#b48ead>int </span><span style=color:#8fa1b3>main</span><span>(</span><span style=color:#b48ead>void</span><span>) {
+</span><span>    </span><span style=color:#b48ead>int</span><span> a = </span><span style=color:#d08770>11</span><span>;
+</span><span>    </span><span style=color:#b48ead>int</span><span> b = </span><span style=color:#d08770>22</span><span>;
+</span><span>
+</span><span>    </span><span style=color:#96b5b4>printf</span><span>("</span><span style=color:#a3be8c>BEFORE: a = </span><span style=color:#d08770>%d</span><span style=color:#a3be8c>, b = </span><span style=color:#d08770>%d</span><span style=color:#96b5b4>\n</span><span>", a, b);
+</span><span>    </span><span style=color:#bf616a>swap</span><span>(&a, &b);
+</span><span>    </span><span style=color:#96b5b4>printf</span><span>("</span><span style=color:#a3be8c>AFTER : a = </span><span style=color:#d08770>%d</span><span style=color:#a3be8c>, b = </span><span style=color:#d08770>%d</span><span style=color:#96b5b4>\n</span><span>", a, b);
+</span><span>}
+</span></code></pre><p><strong>Snippet 2 stdout:</strong><pre style=color:#c0c5ce;background-color:#2b303b><code><span>BEFORE: a = 11, b = 22
+</span><span>FUNC  : a = 22, b = 11
+</span><span>AFTER : a = 22, b = 11
+</span></code></pre><p>We are sharing a and b by sending its addresses (<code>&a, &b</code>) to swap func. Inside swap func, we are dereferencing a and b (<code>*ap, *bp</code>) to get inside its values and swapping them, this way we are modifying the memory of a and b stored inside main func stack. Output reflects the same above. Here value of interest is a and b and we sent its addresses for modification. This is the most important part of pointers. PLease remember this, this will come back when we try to swap 2 pointers instead of values.<p>Now that we know how to swap 2 variables using pointers to the variables, let’s look at the problem of swapping pointers itself (i.e, addresses of variables).<p>First we will try the naive way as we did in snippet 1.<p><strong>Snippet 3:</strong><pre class=language-c data-lang=c style=color:#c0c5ce;background-color:#2b303b><code class=language-c data-lang=c><span style=color:#b48ead>#include </span><span>&lt;</span><span style=color:#a3be8c>stdio.h</span><span>>
+</span><span>
+</span><span style=color:#b48ead>void </span><span style=color:#8fa1b3>swap</span><span>(</span><span style=color:#b48ead>int</span><span>* </span><span style=color:#bf616a>ap</span><span>, </span><span style=color:#b48ead>int</span><span>* </span><span style=color:#bf616a>bp</span><span>) {
+</span><span>    </span><span style=color:#b48ead>int</span><span>* t;
+</span><span>
+</span><span>    t = ap;
+</span><span>    ap = bp;
+</span><span>    bp = t;
+</span><span>    </span><span style=color:#96b5b4>printf</span><span>("</span><span style=color:#a3be8c>FUNC  : a = [</span><span style=color:#d08770>%X</span><span style=color:#a3be8c>]: </span><span style=color:#d08770>%d</span><span style=color:#a3be8c>, b = [</span><span style=color:#d08770>%X</span><span style=color:#a3be8c>]: </span><span style=color:#d08770>%d</span><span style=color:#96b5b4>\n</span><span>", ap, *ap, bp, *bp);
+</span><span>}
+</span><span>
+</span><span style=color:#b48ead>int </span><span style=color:#8fa1b3>main</span><span>(</span><span style=color:#b48ead>void</span><span>) {
+</span><span>    </span><span style=color:#b48ead>int</span><span> a = </span><span style=color:#d08770>11</span><span>;
+</span><span>    </span><span style=color:#b48ead>int</span><span> b = </span><span style=color:#d08770>22</span><span>;
+</span><span>    </span><span style=color:#b48ead>int</span><span>* ap = &a;
+</span><span>    </span><span style=color:#b48ead>int</span><span>* bp = &b;
+</span><span>
+</span><span>    </span><span style=color:#96b5b4>printf</span><span>("</span><span style=color:#a3be8c>BEFORE: a = [</span><span style=color:#d08770>%X</span><span style=color:#a3be8c>]: </span><span style=color:#d08770>%d</span><span style=color:#a3be8c>, b = [</span><span style=color:#d08770>%X</span><span style=color:#a3be8c>]: </span><span style=color:#d08770>%d</span><span style=color:#96b5b4>\n</span><span>", ap, a, bp, b);
+</span><span>    </span><span style=color:#bf616a>swap</span><span>(ap, bp);
+</span><span>    </span><span style=color:#96b5b4>printf</span><span>("</span><span style=color:#a3be8c>AFTER : a = [</span><span style=color:#d08770>%X</span><span style=color:#a3be8c>]: </span><span style=color:#d08770>%d</span><span style=color:#a3be8c>, b = [</span><span style=color:#d08770>%X</span><span style=color:#a3be8c>]: </span><span style=color:#d08770>%d</span><span style=color:#96b5b4>\n</span><span>", ap, a, bp, b);
+</span><span>
+</span><span>    </span><span style=color:#96b5b4>printf</span><span>("</span><span style=color:#96b5b4>\n</span><span style=color:#a3be8c>legend --> [ADDRESS]: VALUE</span><span style=color:#96b5b4>\n</span><span>");
+</span><span>}
+</span></code></pre><p><strong>Snippet 3 stdout:</strong><pre style=color:#c0c5ce;background-color:#2b303b><code><span>BEFORE: a = [DBF232EC]: 11, b = [DBF232E8]: 22
+</span><span>FUNC  : a = [DBF232E8]: 22, b = [DBF232EC]: 11
+</span><span>AFTER : a = [DBF232EC]: 11, b = [DBF232E8]: 22
+</span><span>
+</span><span>legend --> [ADDRESS]: VALUE
+</span></code></pre><blockquote><p><strong>NOTE:</strong> Output addresses printed in the stdout changes with every fresh run of the program and concentrate only on the addresses for now.</blockquote><p>Same fate as <strong>Snippet 1 output</strong>, we were able to change the addresses but it only reflects inside swap func not in main func. The problem again is, we are changing the addresses local to swap function. To change the addresses present in main function, we have to send pointers to these addresses, because now our value of interest is (<code>&a, &b</code>).<p>Let’s try sending the pointers to addresses of a and b –><p><strong>Snippet 4:</strong><pre class=language-c data-lang=c style=color:#c0c5ce;background-color:#2b303b><code class=language-c data-lang=c><span style=color:#b48ead>#include </span><span>&lt;</span><span style=color:#a3be8c>stdio.h</span><span>>
+</span><span>
+</span><span style=color:#b48ead>void </span><span style=color:#8fa1b3>swap</span><span>(</span><span style=color:#b48ead>int</span><span>** </span><span style=color:#bf616a>app</span><span>, </span><span style=color:#b48ead>int</span><span>** </span><span style=color:#bf616a>bpp</span><span>) {
+</span><span>    </span><span style=color:#b48ead>int</span><span>* t;
+</span><span>
+</span><span>    t = *app;
+</span><span>    *app = *bpp;
+</span><span>    *bpp = t;
+</span><span>    </span><span style=color:#96b5b4>printf</span><span>("</span><span style=color:#a3be8c>FUNC  : a = [</span><span style=color:#d08770>%X</span><span style=color:#a3be8c>]: </span><span style=color:#d08770>%d</span><span style=color:#a3be8c>, b = [</span><span style=color:#d08770>%X</span><span style=color:#a3be8c>]: </span><span style=color:#d08770>%d</span><span style=color:#96b5b4>\n</span><span>", *app, **app, *bpp, **bpp);
+</span><span>}
+</span><span>
+</span><span style=color:#b48ead>int </span><span style=color:#8fa1b3>main</span><span>(</span><span style=color:#b48ead>void</span><span>) {
+</span><span>    </span><span style=color:#b48ead>int</span><span> a = </span><span style=color:#d08770>11</span><span>;
+</span><span>    </span><span style=color:#b48ead>int</span><span> b = </span><span style=color:#d08770>22</span><span>;
+</span><span>    </span><span style=color:#b48ead>int</span><span>* ap = &a;
+</span><span>    </span><span style=color:#b48ead>int</span><span>* bp = &b;
+</span><span>
+</span><span>    </span><span style=color:#96b5b4>printf</span><span>("</span><span style=color:#a3be8c>BEFORE: a = [</span><span style=color:#d08770>%X</span><span style=color:#a3be8c>]: </span><span style=color:#d08770>%d</span><span style=color:#a3be8c>, b = [</span><span style=color:#d08770>%X</span><span style=color:#a3be8c>]: </span><span style=color:#d08770>%d</span><span style=color:#96b5b4>\n</span><span>", ap, a, bp, b);
+</span><span>    </span><span style=color:#bf616a>swap</span><span>(&ap, &bp);
+</span><span>    </span><span style=color:#96b5b4>printf</span><span>("</span><span style=color:#a3be8c>AFTER : a = [</span><span style=color:#d08770>%X</span><span style=color:#a3be8c>]: </span><span style=color:#d08770>%d</span><span style=color:#a3be8c>, b = [</span><span style=color:#d08770>%X</span><span style=color:#a3be8c>]: </span><span style=color:#d08770>%d</span><span style=color:#96b5b4>\n</span><span>", ap, a, bp, b);
+</span><span>
+</span><span>    </span><span style=color:#96b5b4>printf</span><span>("</span><span style=color:#96b5b4>\n</span><span style=color:#a3be8c>legend --> [ADDRESS]: VALUE</span><span style=color:#96b5b4>\n</span><span>");
+</span><span>}
+</span></code></pre><p><strong>Snippet 4 stdout:</strong><pre style=color:#c0c5ce;background-color:#2b303b><code><span>BEFORE: a = [DBF232EC]: 11, b = [DBF232E8]: 22
+</span><span>FUNC  : a = [DBF232E8]: 22, b = [DBF232EC]: 11
+</span><span>AFTER : a = [DBF232E8]: 11, b = [DBF232EC]: 22
+</span><span>
+</span><span>legend --> [ADDRESS]: VALUE
+</span></code></pre><p>We passed pointers to value of interest and dereferenced inside the calling function to change the values inside it directly so that it reflects back in the caller site.<p>Astute reader may have noticed,<br> <code>we were able to swap the addresses but not the values of a and b</code>.<br> Can you decode why ???<blockquote><p>This question is left as an exercise for the reader and modify the snippet so that we were able to change both addresses and values of variables a and b.</blockquote><h2 id=conclusion>Conclusion</h2><ul><li><p>There is one most important takeaway from this post which i would like to highlight. If you want to modify values (<strong>“value of interest”</strong>) present in one function from another function, you should share pointers to those <strong>“value of interest”</strong>.</p><li><p>Full script is available on github <a href=https://github.com/Karthik-d-k/Karthik-d-k.github.io/blob/main/content/scripts/swap_numbers.c rel=noopener target=_blank><strong>swap_numbers.c</strong></a></p><li><p><code>Reference</code>: <a href=http://cslibrary.stanford.edu/102/ rel=noopener target=_blank>cslibrary.stanford.edu/102</a></p></ul><p class=tags-data><a href=/tags/c>/c/</a></main><footer><hr><footer id=footer><div id=contact-icons><a rel="noopener noreferrer" title="Subscribe via RSS for updates." class=no-style href=atom.xml target=_blank> <span class=iconify data-icon=solar:atom-bold></span> </a><a class=no-style href=mailto:karthikdk1998@gmail.com target=_blank title=Email> <span class=iconify data-icon=mdi:email></span> </a><a rel="noopener noreferrer" class=no-style href=https://github.com/Karthik-d-k target=_blank title=GitHub> <span class=iconify data-icon=mdi:github></span> </a><a rel="noopener noreferrer" class=no-style href=https://x.com/Karthik_d_k target=_blank title=Twitter> <span class=iconify data-icon=mdi:twitter></span> </a><a rel="noopener noreferrer" class=no-style href=https://www.linkedin.com/in/karthik-d-k-319853166 target=_blank title=LinkedIn> <span class=iconify data-icon=mdi:linkedin></span> </a></div><script src=https://code.iconify.design/2/2.2.1/iconify.min.js></script></footer></footer><div aria-hidden=true class=search-modal id=search-modal><div class=search-modal-backdrop></div><div class=search-modal-container><div class=search-modal-header><input enterkeyhint=search id=search-modal-input inputmode=search placeholder=Search... type=search><kbd class=search-modal-kbd>Ctrl+K</kbd></div><ul class=search-modal-results id=search-modal-results></ul><div class=search-modal-empty id=search-modal-empty style=display:none>No results found</div></div></div><script src=https://Karthik-d-k.github.io/elasticlunr.min.js></script><script>window.SEARCH_INDEX_URL = "https://Karthik-d-k.github.io/search_index.en.json";
+          window.DEFAULT_THEME = "dark";</script>

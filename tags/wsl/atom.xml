@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>0x646b - wsl</title>
+    <subtitle>Personal Commentary</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://Karthik-d-k.github.io/tags/wsl/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-10-23T00:00:00+00:00</updated>
+    <id>https://Karthik-d-k.github.io/tags/wsl/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Running asciinema from windows</title>
+        <published>2025-10-23T00:00:00+00:00</published>
+        <updated>2025-10-23T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/til/asciinema-windows/"/>
+        <id>https://Karthik-d-k.github.io/til/asciinema-windows/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/til/asciinema-windows/">&lt;p&gt;As described in the &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;asciinema&#x2F;asciinema&quot;&gt;asciinema README&lt;&#x2F;a&gt;, &lt;strong&gt;asciinema&lt;&#x2F;strong&gt; (aka asciinema CLI or asciinema recorder) is a command-line tool
+for recording and live streaming terminal sessions.&lt;&#x2F;p&gt;
+&lt;p&gt;Unlike typical &lt;em&gt;screen&lt;&#x2F;em&gt; recording software, which records visual output of a
+screen into heavyweight video files (&lt;code&gt;.mp4&lt;&#x2F;code&gt;, &lt;code&gt;.mov&lt;&#x2F;code&gt;), asciinema CLI runs
+&lt;em&gt;inside a terminal&lt;&#x2F;em&gt;, capturing terminal session output into lightweight
+recording files in the &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;docs.asciinema.org&#x2F;manual&#x2F;asciicast&#x2F;v3&#x2F;&quot;&gt;asciicast&lt;&#x2F;a&gt; format (&lt;code&gt;.cast&lt;&#x2F;code&gt;),
+or streaming it live to viewers in real-time.&lt;&#x2F;p&gt;
+&lt;p&gt;For now, it only supports GNU&#x2F;Linux, macOS and FreeBSD.
+Windows is currently not supported. See discussion &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;orgs&#x2F;asciinema&#x2F;discussions&#x2F;278&quot;&gt;#278&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;As I have &lt;code&gt;WSL&lt;&#x2F;code&gt; installed on my Windows machine, I can run asciinema from the WSL terminal.
+To make it run from PowerShell, I modified my PowerShell profile to add functions that call into the WSL asciinema binary.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;powershell&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-powershell &quot;&gt;&lt;code class=&quot;language-powershell&quot; data-lang=&quot;powershell&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Asciinema aliases using WSL
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;asciinema &lt;&#x2F;span&gt;&lt;span&gt;{ wsl ~&#x2F;.cargo&#x2F;bin&#x2F;asciinema @&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;args &lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;record &lt;&#x2F;span&gt;&lt;span&gt;{ wsl -d Ubuntu-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22.04&lt;&#x2F;span&gt;&lt;span&gt; ~&#x2F;.cargo&#x2F;bin&#x2F;asciinema rec @&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;args &lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;play   &lt;&#x2F;span&gt;&lt;span&gt;{ wsl -d Ubuntu-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22.04&lt;&#x2F;span&gt;&lt;span&gt; ~&#x2F;.cargo&#x2F;bin&#x2F;asciinema play @&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;args &lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;stream &lt;&#x2F;span&gt;&lt;span&gt;{ wsl -d Ubuntu-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22.04&lt;&#x2F;span&gt;&lt;span&gt; ~&#x2F;.cargo&#x2F;bin&#x2F;asciinema stream @&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;args &lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This is the simplest way that I found to record PowerShell terminal sessions using asciinema.
+I have no idea as of now if this is the best way to do it, but it works for me.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>

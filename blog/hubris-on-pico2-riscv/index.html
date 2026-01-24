@@ -1,0 +1,256 @@
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta content="IE=edge" http-equiv=X-UA-Compatible><meta content="text/html; charset=UTF-8" http-equiv=content-type><meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport><meta content="index, follow" name=robots><title>Hubris OS on RP Pico 2(W) board (Hazard3 RISC-V core)</title><meta content="Hubris OS on RP Pico 2(W) board (Hazard3 RISC-V core)" name=title><meta content=Karthik name=author><meta content="Personal Commentary" name=description><meta content=website property=og:type><meta content=https://Karthik-d-k.github.io/blog/hubris-on-pico2-riscv/ property=og:url><meta content=0x646b property=og:site_name><meta content="Hubris OS on RP Pico 2(W) board (Hazard3 RISC-V core)" property=og:title><meta content="Personal Commentary" property=og:description><meta content=https://Karthik-d-k.github.io/favicon.ico property=og:image><meta content=summary_large_image property=twitter:card><meta content=https://Karthik-d-k.github.io/blog/hubris-on-pico2-riscv/ property=twitter:url><meta content="Hubris OS on RP Pico 2(W) board (Hazard3 RISC-V core)" property=twitter:title><meta content="Personal Commentary" property=twitter:description><meta content=https://Karthik-d-k.github.io/favicon.ico property=twitter:image><link href=https://Karthik-d-k.github.io/blog/hubris-on-pico2-riscv/ rel=canonical><link rel="shortcut icon" href=https://Karthik-d-k.github.io/favicon.ico type=image/x-icon><link href=https://Karthik-d-k.github.io/atom.xml rel=alternate title=RSS type=application/atom+xml><link href=https://speyll.github.io/suCSS/reset-min.css rel=stylesheet><link href=https://speyll.github.io/suCSS/suCSS-min.css rel=stylesheet><link href=https://Karthik-d-k.github.io/css/style.css rel=stylesheet><script defer src=https://Karthik-d-k.github.io/js/script.js></script><body><header><nav id=nav-bar><a href=/> /home </a><a href=/blog> /blog </a><a href=/til> /til </a><a href=/projects> /projects </a><a href=/tags> /tags </a><a href=/bookmarks> /bookmarks </a><a href=/cv> /cv </a><a href=# id=search-trigger> 🔎 </a><div><input id=theme-toggle style=display:none type=checkbox><label for=theme-toggle id=theme-toggle-label><svg class=icons id=theme-icon><use href=https://Karthik-d-k.github.io/icons.svg#lightMode></use></svg></label><audio id=theme-sound><source src=https://Karthik-d-k.github.io/click.ogg type=audio/ogg></audio></div></nav></header><main><h1>Hubris OS on RP Pico 2(W) board (Hazard3 RISC-V core)</h1><h2 id=overview>Overview</h2><p>If you haven’t checked it out already, go through my <a href=https://karthik-d-k.github.io/blog/hubris-on-pico2/ rel=noopener target=_blank>hubris-on-pico2 blog post</a> where I explained how to get the Hubris OS running on the RP Pico 2W board’s Cortex-M33 core. I have also explained the technical details of the tools that I used for development. In this blog post, I will explain how I got the same Hubris OS running on the RP Pico 2W board’s Hazard3 RISC-V core.<p>If you want to follow along, please refer to the <a href=https://github.com/Karthik-d-k/exhubris-riscv-hazard3/tree/72518ad1fe574e27057a5933d1363e59f32f77f5 rel=noopener target=_blank>exhubris-riscv-hazard3</a> repo for the working code.<h3 id=risc-v-kernel>RISC-V kernel</h3><p>Building tasks is the same as what I have done on the ARM core, but for the kernel, I have used my RISC-V port present in the <a href=https://github.com/oxidecomputer/hubris/commit/a55363a57a29d97b94b587c7c2deb4021f50377d rel=noopener target=_blank>hubris-riscv-hazard3</a> repo.<p>For technical details about the RISC-V port, please refer to <a href=https://github.com/oxidecomputer/hubris/discussions/365 rel=noopener target=_blank>this discussion</a>. I have made changes based on <code>jperkin's</code> implementation and updated/changed code to support the latest Hubris version. I have added some logs on top of it and did a few Pico 2 board specific changes.<h2 id=building-and-flashing>Building and Flashing</h2><p>Now, I will talk about how we could compile and build the firmware and flash it onto the Pico 2W board. I’m using <a href=https://github.com/casey/just rel=noopener target=_blank>just</a> to simplify the build process. Follow the repo for installing the tool.<ol><li><p><strong>Building and flashing the application</strong></p> <p>In the first terminal:</p> <pre class=language-sh data-lang=sh style=color:#c0c5ce;background-color:#2b303b><code class=language-sh data-lang=sh><span style=color:#bf616a>$</span><span> just build reboot flash
+</span></code></pre> <p>Output:</p> <pre class=language-sh data-lang=sh style=color:#c0c5ce;background-color:#2b303b><code class=language-sh data-lang=sh><span style=color:#bf616a>hubake</span><span> build .</span><span style=color:#96b5b4>\a</span><span>pp</span><span style=color:#96b5b4>\r</span><span>p235x-hazard3</span><span style=color:#96b5b4>\a</span><span>pp.kdl
+</span><span>
+</span><span style=color:#bf616a>╭───────────────────┬───────────────────────────────────────────────────────╮
+</span><span style=color:#bf616a>│</span><span> App name          │ hazard3                                               │
+</span><span style=color:#bf616a>├───────────────────┼───────────────────────────────────────────────────────┤
+</span><span style=color:#bf616a>│</span><span> Config path       │ .</span><span style=color:#96b5b4>\a</span><span>pp</span><span style=color:#96b5b4>\r</span><span>p235x-hazard3</span><span style=color:#96b5b4>\a</span><span>pp.kdl                          │
+</span><span style=color:#bf616a>├───────────────────┼───────────────────────────────────────────────────────┤
+</span><span style=color:#bf616a>│</span><span> Workspace root    │ </span><span style=color:#96b5b4>\\</span><span>?</span><span style=color:#96b5b4>\C</span><span>:</span><span style=color:#96b5b4>\U</span><span>sers</span><span style=color:#96b5b4>\&lt;</span><span>USER></span><span style=color:#96b5b4>\w</span><span>ws</span><span style=color:#96b5b4>\r</span><span>iscv</span><span style=color:#96b5b4>\e</span><span>xhubris-riscv-hazard3 │
+</span><span style=color:#bf616a>├───────────────────┼───────────────────────────────────────────────────────┤
+</span><span style=color:#bf616a>│</span><span> Host platform     │ x86_64-pc-windows-msvc                                │
+</span><span style=color:#bf616a>├───────────────────┼───────────────────────────────────────────────────────┤
+</span><span style=color:#bf616a>│</span><span> Default toolchain │ 1.88.0                                                │
+</span><span style=color:#bf616a>╰───────────────────┴───────────────────────────────────────────────────────╯
+</span><span>
+</span><span style=color:#bf616a>╭───────────────────────────╮
+</span><span style=color:#bf616a>│</span><span> building component: super │
+</span><span style=color:#bf616a>╰───────────────────────────╯
+</span><span>
+</span><span>    </span><span style=color:#bf616a>Finished </span><span>`</span><span style=color:#bf616a>release</span><span>` profile </span><span style=color:#b48ead>[</span><span>optimized + debuginfo</span><span style=color:#b48ead>]</span><span> target(s) </span><span style=color:#bf616a>in</span><span> 0.60s
+</span><span>
+</span><span style=color:#bf616a>╭────────────────────────────╮
+</span><span style=color:#bf616a>│</span><span> building component: blinky │
+</span><span style=color:#bf616a>╰────────────────────────────╯
+</span><span>
+</span><span>    </span><span style=color:#bf616a>Finished </span><span>`</span><span style=color:#bf616a>release</span><span>` profile </span><span style=color:#b48ead>[</span><span>optimized + debuginfo</span><span style=color:#b48ead>]</span><span> target(s) </span><span style=color:#bf616a>in</span><span> 0.51s
+</span><span>
+</span><span style=color:#bf616a>╭──────────────────────────╮
+</span><span style=color:#bf616a>│</span><span> building component: idle │
+</span><span style=color:#bf616a>╰──────────────────────────╯
+</span><span>
+</span><span>    </span><span style=color:#bf616a>Finished </span><span>`</span><span style=color:#bf616a>release</span><span>` profile </span><span style=color:#b48ead>[</span><span>optimized + debuginfo</span><span style=color:#b48ead>]</span><span> target(s) </span><span style=color:#bf616a>in</span><span> 0.52s
+</span><span>
+</span><span style=color:#bf616a>╭─────────────────────────────────────────────╮
+</span><span style=color:#bf616a>│</span><span> Task build complete, prelinking for size... │
+</span><span style=color:#bf616a>╰─────────────────────────────────────────────╯
+</span><span>
+</span><span style=color:#bf616a>warning:</span><span> adjusted region ram base up to 0x20000800 from 0x20000000
+</span><span>
+</span><span style=color:#bf616a>╭────────────────────────────╮
+</span><span style=color:#bf616a>│</span><span> building component: kernel │
+</span><span style=color:#bf616a>╰────────────────────────────╯
+</span><span>
+</span><span>    </span><span style=color:#bf616a>Finished </span><span>`</span><span style=color:#bf616a>release</span><span>` profile </span><span style=color:#b48ead>[</span><span>optimized + debuginfo</span><span style=color:#b48ead>]</span><span> target(s) </span><span style=color:#bf616a>in</span><span> 0.62s
+</span><span>
+</span><span style=color:#bf616a>Allocations</span><span> (2.3811ms)</span><span style=color:#96b5b4>:
+</span><span style=color:#bf616a>MEMORY</span><span>   OWNER         START         END       SIZE     WASTE
+</span><span style=color:#bf616a>vectors</span><span>  kernel   0x10000000  0x10000063  100 bytes   0 bytes
+</span><span style=color:#bf616a>vectors</span><span>  (total)                          </span><span style=color:#bf616a>100</span><span> bytes   0 bytes
+</span><span style=color:#bf616a>flash</span><span>    idle     0x10000180  0x100001df   96 bytes  12 bytes
+</span><span style=color:#bf616a>flash    -pad-</span><span>    0x100001e0  0x100001ff   32 bytes  32 bytes
+</span><span style=color:#bf616a>flash</span><span>    super    0x10000200  0x100002ff  256 bytes   0 bytes
+</span><span style=color:#bf616a>flash</span><span>    blinky   0x10000300  0x1000037f  128 bytes  12 bytes
+</span><span style=color:#bf616a>flash</span><span>    kernel   0x10000380  0x10009d80   38.5 KiB   0 bytes
+</span><span style=color:#bf616a>flash</span><span>    (total)                           </span><span style=color:#bf616a>39.0</span><span> KiB  56 bytes
+</span><span style=color:#bf616a>ram</span><span>      kernel   0x20000000  0x200007ff   2.00 KiB   0 bytes
+</span><span style=color:#bf616a>ram</span><span>      super    0x20000800  0x2000097f  384 bytes   0 bytes
+</span><span style=color:#bf616a>ram</span><span>      idle     0x20000980  0x20000a7f  256 bytes   0 bytes
+</span><span style=color:#bf616a>ram</span><span>      blinky   0x20000a80  0x20000b7f  256 bytes   0 bytes
+</span><span style=color:#bf616a>ram</span><span>      kernel   0x20000b80  0x20000b80     1 byte   0 bytes
+</span><span style=color:#bf616a>ram</span><span>      kernel   0x20000ba0  0x20000e7f  736 bytes   0 bytes
+</span><span style=color:#bf616a>ram</span><span>      (total)                           </span><span style=color:#bf616a>3.59</span><span> KiB   0 bytes
+</span><span>
+</span><span style=color:#bf616a>╭─────────────────────────────────────────────────────────────────────────╮
+</span><span style=color:#bf616a>│</span><span> Build complete! Archive:                                                │
+</span><span style=color:#bf616a>│ </span><span style=color:#96b5b4>\\</span><span>?</span><span style=color:#96b5b4>\C</span><span>:</span><span style=color:#96b5b4>\U</span><span>sers</span><span style=color:#96b5b4>\&lt;</span><span>USER></span><span style=color:#96b5b4>\w</span><span>ws</span><span style=color:#96b5b4>\r</span><span>iscv</span><span style=color:#96b5b4>\e</span><span>xhubris-riscv-hazard3</span><span style=color:#96b5b4>\h</span><span>azard3-build.zip │
+</span><span style=color:#bf616a>╰─────────────────────────────────────────────────────────────────────────╯
+</span><span>
+</span><span style=color:#bf616a>hubake</span><span> pack-hex .</span><span style=color:#96b5b4>\.</span><span>work</span><span style=color:#96b5b4>\h</span><span>azard3</span><span style=color:#96b5b4>\f</span><span>inal</span><span style=color:#96b5b4>\ </span><span>output.hex
+</span><span>    </span><span style=color:#bf616a>START</span><span>    END (ex)  </span><span style=color:#bf616a>OWNER
+</span><span style=color:#bf616a>0x10000000</span><span>  0x10000064  kernel
+</span><span style=color:#bf616a>0x10000064</span><span>  0x10000180  - unused -
+</span><span style=color:#bf616a>0x10000180</span><span>  0x100001e0  idle
+</span><span style=color:#bf616a>0x100001e0</span><span>  0x10000200  - unused -
+</span><span style=color:#bf616a>0x10000200</span><span>  0x10000300  super
+</span><span style=color:#bf616a>0x10000300</span><span>  0x10000380  blinky
+</span><span style=color:#bf616a>0x10000380</span><span>  0x10009d80  kernel
+</span><span style=color:#bf616a>0x10009d80</span><span>  0x20000000  - unused -
+</span><span style=color:#bf616a>0x20000000</span><span>  0x20000800  kernel
+</span><span style=color:#bf616a>0x20000800</span><span>  0x20000980  super
+</span><span style=color:#bf616a>0x20000980</span><span>  0x20000a80  idle
+</span><span style=color:#bf616a>0x20000a80</span><span>  0x20000b80  blinky
+</span><span style=color:#bf616a>0x20000b80</span><span>  0x20000b81  kernel
+</span><span style=color:#bf616a>0x20000b81</span><span>  0x20000ba0  - unused -
+</span><span style=color:#bf616a>0x20000ba0</span><span>  0x20000e80  kernel
+</span><span style=color:#bf616a>picotool</span><span> reboot</span><span style=color:#bf616a> -u -c</span><span> riscv
+</span><span style=color:#bf616a>openocd -f</span><span> .</span><span style=color:#96b5b4>\a</span><span>pp</span><span style=color:#96b5b4>\r</span><span>p235x-hazard3</span><span style=color:#96b5b4>\o</span><span>penocd.cfg</span><span style=color:#bf616a> -c </span><span>"</span><span style=color:#a3be8c>program output.hex verify reset</span><span>"
+</span><span style=color:#bf616a>Open</span><span> On-Chip Debugger 0.12.0+dev (2025-08-08-14:31)
+</span><span style=color:#bf616a>Licensed</span><span> under GNU GPL v2
+</span><span style=color:#bf616a>For</span><span> bug reports, read
+</span><span>        </span><span style=color:#bf616a>http://openocd.org/doc/doxygen/bugs.html
+</span><span style=color:#bf616a>ocd_process_reset_inner
+</span><span style=color:#bf616a>**</span><span> Programming Started **
+</span><span style=color:#bf616a>**</span><span> Programming Finished **
+</span><span style=color:#bf616a>**</span><span> Verify Started **
+</span><span style=color:#bf616a>**</span><span> Verified OK **
+</span><span style=color:#bf616a>**</span><span> Resetting Target **
+</span></code></pre> <blockquote><p>This will build the kernel and application using <code>hubake</code> and flash using <code>openocd</code> and wait for GDB to connect and run the app.</blockquote><li><p><strong>Running using GDB</strong></p> <p>In the second terminal:</p> <pre class=language-sh data-lang=sh style=color:#c0c5ce;background-color:#2b303b><code class=language-sh data-lang=sh><span style=color:#bf616a>$</span><span> just entry-point gdb
+</span></code></pre> <p>Output:</p> <pre class=language-sh data-lang=sh style=color:#c0c5ce;background-color:#2b303b><code class=language-sh data-lang=sh><span style=color:#bf616a>KERNEL</span><span> Entry Point: 0x10000400
+</span><span style=color:#bf616a>IDLE</span><span>   Entry Point: 0x10000180
+</span><span style=color:#bf616a>SUPER</span><span>  Entry Point: 0x10000300
+</span><span style=color:#bf616a>BLINKY</span><span> Entry Point: 0x10000280
+</span><span style=color:#bf616a>riscv32-unknown-elf-gdb.exe -q -x</span><span> app/rp235x-hazard3/gdbconfig.cfg
+</span><span style=color:#bf616a>warning:</span><span> multi-threaded target stopped without sending a thread-id, using first non-exited thread
+</span><span style=color:#bf616a>0x00007640</span><span> in ?? ()
+</span><span style=color:#bf616a>add</span><span> symbol table from file "</span><span style=color:#a3be8c>.work/hazard3/final/idle</span><span>"
+</span><span style=color:#bf616a>add</span><span> symbol table from file "</span><span style=color:#a3be8c>.work/hazard3/final/super</span><span>"
+</span><span style=color:#bf616a>add</span><span> symbol table from file "</span><span style=color:#a3be8c>.work/hazard3/final/blinky</span><span>"
+</span><span style=color:#bf616a>semihosting</span><span> is enabled
+</span><span>(</span><span style=color:#bf616a>gdb</span><span>)
+</span></code></pre> <blockquote><p>This will load the kernel and application ELF files and wait for us to start the kernel.</blockquote><li><p><strong>Running the kernel</strong></p> <p>In GDB, you can start the kernel by setting the <code>PC</code> register to the kernel’s entry point and running <code>continue</code>:</p> <p><strong>2nd terminal:</strong></p> <pre class=language-sh data-lang=sh style=color:#c0c5ce;background-color:#2b303b><code class=language-sh data-lang=sh><span>(</span><span style=color:#bf616a>gdb</span><span>) set $</span><span style=color:#bf616a>pc</span><span>=0x10000380
+</span><span>(</span><span style=color:#bf616a>gdb</span><span>) continue
+</span><span style=color:#bf616a>Continuing.
+</span></code></pre> <p><strong>1st terminal:</strong></p> <pre class=language-sh data-lang=sh style=color:#c0c5ce;background-color:#2b303b><code class=language-sh data-lang=sh><span style=color:#bf616a>rp2350.rv0</span><span> halted due to debug-request.
+</span><span style=color:#bf616a>rp2350.rv1</span><span> halted due to debug-request.
+</span><span style=color:#bf616a>[KERN]: </span><span style=color:#65737e>###### starting: kernel ######
+</span><span style=color:#bf616a>[KERN]:</span><span> ----- apply_memory_protection() </span><span style=color:#b48ead>for</span><span> TASK </span><span style=color:#b48ead>[</span><span>0</span><span style=color:#b48ead>]</span><span> -----
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 0: Preparing pmpaddr=0x00000003, pmpcfg=0x18
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 0 programmed -> base=0x00000000, size=32
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 1: Preparing pmpaddr=0x0400009f, pmpcfg=0x1d
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 1 programmed -> base=0x10000200, size=256
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 2: Preparing pmpaddr=0x08000207, pmpcfg=0x1e
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 2 programmed -> base=0x20000800, size=64
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 3: Preparing pmpaddr=0x08000217, pmpcfg=0x1e
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 3 programmed -> base=0x20000840, size=64
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 4: Preparing pmpaddr=0x08000227, pmpcfg=0x1e
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 4 programmed -> base=0x20000880, size=64
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 5: Preparing pmpaddr=0x08000237, pmpcfg=0x1e
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 5 programmed -> base=0x200008c0, size=64
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 6: Preparing pmpaddr=0x08000247, pmpcfg=0x1e
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 6 programmed -> base=0x20000900, size=64
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 7: Preparing pmpaddr=0x08000257, pmpcfg=0x1e
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 7 programmed -> base=0x20000940, size=64
+</span><span style=color:#bf616a>[KERN]:</span><span> ----- apply_memory_protection() </span><span style=color:#bf616a>DONE</span><span> -----
+</span><span style=color:#bf616a>[KERN]:</span><span> ++++++ PMP Register Status ++++++
+</span><span style=color:#bf616a>[KERN]:</span><span> pmpcfg0: 0x1e1e1d18, pmpcfg1: 0x1e1e1e1e, pmpcfg2: 0x001f1f1f
+</span><span style=color:#bf616a>[KERN]:</span><span> pmpaddr0: 0x00000000, pmpaddr1: 0x0400009c
+</span><span style=color:#bf616a>[KERN]:</span><span> pmpaddr2: 0x08000204, pmpaddr3: 0x08000214
+</span><span style=color:#bf616a>[KERN]:</span><span> pmpaddr4: 0x08000224, pmpaddr5: 0x08000234
+</span><span style=color:#bf616a>[KERN]:</span><span> pmpaddr6: 0x08000244, pmpaddr7: 0x08000254
+</span><span style=color:#bf616a>[KERN]:</span><span> pmpaddr8: 0x01ffffff, pmpaddr9: 0x13ffffff, pmpaddr10: 0x35ffffff
+</span><span style=color:#bf616a>[KERN]:</span><span> ++++++ End PMP Register Status ++++++
+</span><span style=color:#bf616a>[KERN]: </span><span style=color:#65737e>###### starting: hubris with task id: 0 and priority: 0 ######
+</span><span style=color:#bf616a>[KERN]:</span><span> Starting first task
+</span><span style=color:#bf616a>[KERN]: </span><span>****** trap_handler() </span><span style=color:#bf616a>MCAUSE: </span><span style=color:#b48ead>[</span><span>0x00000008</span><span style=color:#b48ead>] </span><span>******
+</span><span style=color:#bf616a>[KERN]:</span><span> Trap::Exception(UserEnvCall) </span><span style=color:#bf616a>from</span><span> TASK </span><span style=color:#b48ead>[</span><span>0</span><span style=color:#b48ead>]
+</span><span style=color:#bf616a>[KERN]</span><span> ====== SYSCALL-1-ENTERED:for task 0 ======
+</span><span style=color:#bf616a>[KERN]</span><span> NextTask::Other selected for syscall 1
+</span><span style=color:#bf616a>[KERN]:</span><span> ----- apply_memory_protection() </span><span style=color:#b48ead>for</span><span> TASK </span><span style=color:#b48ead>[</span><span>1</span><span style=color:#b48ead>]</span><span> -----
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 0: Preparing pmpaddr=0x00000003, pmpcfg=0x18
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 0 programmed -> base=0x00000000, size=32
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 1: Preparing pmpaddr=0x040000cf, pmpcfg=0x1d
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 1 programmed -> base=0x10000300, size=128
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 2: Preparing pmpaddr=0x080002a7, pmpcfg=0x1e
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 2 programmed -> base=0x20000a80, size=64
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 3: Preparing pmpaddr=0x080002b7, pmpcfg=0x1e
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 3 programmed -> base=0x20000ac0, size=64
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 4: Preparing pmpaddr=0x080002c7, pmpcfg=0x1e
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 4 programmed -> base=0x20000b00, size=64
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 5: Preparing pmpaddr=0x080002d3, pmpcfg=0x1e
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 5 programmed -> base=0x20000b40, size=32
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 6: Preparing pmpaddr=0x080002db, pmpcfg=0x1e
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 6 programmed -> base=0x20000b60, size=32
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 7: Preparing pmpaddr=0x3400003f, pmpcfg=0x1e
+</span><span style=color:#bf616a>[KERN]:</span><span> Region 7 programmed -> base=0xd0000000, size=512
+</span><span style=color:#bf616a>[KERN]:</span><span> ----- apply_memory_protection() </span><span style=color:#bf616a>DONE</span><span> -----
+</span><span style=color:#bf616a>[KERN]:</span><span> ++++++ PMP Register Status ++++++
+</span><span style=color:#bf616a>[KERN]:</span><span> pmpcfg0: 0x1e1e1d18, pmpcfg1: 0x1e1e1e1e, pmpcfg2: 0x001f1f1f
+</span><span style=color:#bf616a>[KERN]:</span><span> pmpaddr0: 0x00000000, pmpaddr1: 0x040000cc
+</span><span style=color:#bf616a>[KERN]:</span><span> pmpaddr2: 0x080002a4, pmpaddr3: 0x080002b4
+</span><span style=color:#bf616a>[KERN]:</span><span> pmpaddr4: 0x080002c4, pmpaddr5: 0x080002d0
+</span><span style=color:#bf616a>[KERN]:</span><span> pmpaddr6: 0x080002d8, pmpaddr7: 0x3400003c
+</span><span style=color:#bf616a>[KERN]:</span><span> pmpaddr8: 0x01ffffff, pmpaddr9: 0x13ffffff, pmpaddr10: 0x35ffffff
+</span><span style=color:#bf616a>[KERN]:</span><span> ++++++ End PMP Register Status ++++++
+</span><span style=color:#bf616a>[KERN]</span><span> ====== SYSCALL-1-EXITED:for task 0 ======
+</span><span style=color:#bf616a>[KERN]: </span><span>****** trap_handler() </span><span style=color:#bf616a>DONE </span><span>******
+</span></code></pre> <blockquote><p>As you can see, the kernel launches successfully and schedules the 1st task <code>supervisor</code> which in turn schedules the next priority task <code>blinky</code>, which blinks an external LED. Refer to the <a href=https://github.com/oxidecomputer/hubris/commit/a55363a57a29d97b94b587c7c2deb4021f50377d rel=noopener target=_blank>hubris-riscv-hazard3</a> repo for complete details about the logs.</blockquote></ol><h2 id=output>Output</h2><div style=justify-content:center;display:flex><video autoplay loop muted playsinline><source src=/Hubris-on-Pico2W.mp4 type=video/mp4></video></div><h2 id=issues>Issues</h2><h3 id=syscall-issue>SysCall issue</h3><p>In the <code>supervisor</code> task, I’m actually calling the <strong>sys_recv_notification</strong> syscall. This syscall takes a <em>notification mask</em> as an input and listens <em>only</em> for notifications, leaving messages queued. We use value <code>1</code> as our notification mask; this is a fixed detail of the kernel-supervisor interface: the kernel pokes <em>bit 0</em> on fault.<p>I forgot to implement this syscall initially for RISC-V and I faced the below issue:<ul><li>OpenOCD output:</ul><pre class=language-sh data-lang=sh style=color:#c0c5ce;background-color:#2b303b><code class=language-sh data-lang=sh><span style=color:#bf616a>Info</span><span> : </span><span style=color:#b48ead>[</span><span>rp2350.rv0</span><span style=color:#b48ead>]</span><span> Hart unexpectedly reset!
+</span></code></pre><blockquote><p>Just after flashing the kernel and trying to run it, OpenOCD reported a hart reset. There wasn’t any additional info as to what could be the reason for this because the kernel hadn’t even started to run to get the logs. After many trial and errors and studying the ARM userlib source code, I got to know I’m depending on this syscall. After implementing the syscall, the issue was resolved.</blockquote><h3 id=pico-hardware-issue>Pico hardware issue</h3><p>This issue caused me sleepless nights and it took me around 2 weeks to work around this issue 😢.<p>After the kernel launches successfully and starts the supervisor task, this task then schedules the next priority task which is <em>blinky</em> in this case. During the execution of this task, I was facing the <strong>LoadFault Exception</strong> whenever the task tried to access <strong>PADS_BANK0 registers</strong>.<p>See below:<pre class=language-sh data-lang=sh style=color:#c0c5ce;background-color:#2b303b><code class=language-sh data-lang=sh><span style=color:#bf616a>[KERN]: </span><span style=color:#65737e>###### starting: kernel ######
+</span><span style=color:#bf616a>[KERN]:</span><span> ----- apply_memory_protection() </span><span style=color:#b48ead>for</span><span> TASK </span><span style=color:#b48ead>[</span><span>0</span><span style=color:#b48ead>]</span><span> -----
+</span><span style=color:#bf616a>[KERN]: </span><span style=color:#65737e>###### starting: hubris with task id: 0 and priority: 0 ######
+</span><span style=color:#bf616a>[KERN]:</span><span> Starting first task
+</span><span style=color:#bf616a>[KERN]: </span><span>****** trap_handler() </span><span style=color:#bf616a>MCAUSE: </span><span style=color:#b48ead>[</span><span>0x00000008</span><span style=color:#b48ead>] </span><span>******
+</span><span style=color:#bf616a>[KERN]:</span><span> Trap::Exception(UserEnvCall) </span><span style=color:#bf616a>from</span><span> TASK </span><span style=color:#b48ead>[</span><span>0</span><span style=color:#b48ead>]
+</span><span style=color:#bf616a>[KERN]</span><span> ====== SYSCALL-1-ENTERED:for task 0 ======
+</span><span style=color:#bf616a>[KERN]</span><span> NextTask::Other selected for syscall 1
+</span><span style=color:#bf616a>[KERN]:</span><span> ----- apply_memory_protection() </span><span style=color:#b48ead>for</span><span> TASK </span><span style=color:#b48ead>[</span><span>1</span><span style=color:#b48ead>]</span><span> -----
+</span><span style=color:#bf616a>[KERN]</span><span> ====== SYSCALL-1-EXITED:for task 0 ======
+</span><span style=color:#bf616a>[KERN]: </span><span>****** trap_handler() </span><span style=color:#bf616a>DONE </span><span>******
+</span><span style=color:#bf616a>[KERN]: </span><span>****** trap_handler() </span><span style=color:#bf616a>MCAUSE: </span><span style=color:#b48ead>[</span><span>0x00000005</span><span style=color:#b48ead>] </span><span>******
+</span><span style=color:#bf616a>[KERN]:</span><span> Trap::Exception(LoadFault)
+</span><span style=color:#bf616a>[KERN]:</span><span> ----- apply_memory_protection() </span><span style=color:#b48ead>for</span><span> TASK </span><span style=color:#b48ead>[</span><span>0</span><span style=color:#b48ead>]</span><span> -----
+</span><span style=color:#bf616a>[KERN]:</span><span> Handled fault MemoryAccess which had program_counter: 0x1000035e
+</span><span style=color:#bf616a>[KERN]: </span><span>****** trap_handler() </span><span style=color:#bf616a>DONE </span><span>******
+</span></code></pre><blockquote><p>As you can see above, we hit <strong>UserEnvCall Exception</strong> which is a result of the supervisor task calling a syscall from userspace, and then when we switch to our next task blinky, we hit <strong>LoadFault Exception</strong> (MCAUSE: [0x00000005]), with PC pointing to 0x1000035e.</blockquote><p>I checked the disassembly and it was indeed a load instruction accessing the <strong>PADS_BANK0</strong> memory region.<p>Creating disassembly:<pre class=language-sh data-lang=sh style=color:#c0c5ce;background-color:#2b303b><code class=language-sh data-lang=sh><span style=color:#bf616a>$</span><span> just dump
+</span></code></pre><p>Blinky task disassembly:<pre class=language-asm data-lang=asm style=color:#c0c5ce;background-color:#2b303b><code class=language-asm data-lang=asm><span style=color:#d08770>10000350 </span><span style=color:#8fa1b3>&lt;main>:
+</span><span style=color:#d08770>10000350</span><span style=color:#8fa1b3>:	d0000537          	lui	a0</span><span>,</span><span style=color:#d08770>0xd0000
+</span><span style=color:#d08770>10000354</span><span style=color:#8fa1b3>:	004005b7          	lui	a1</span><span>,</span><span style=color:#d08770>0x400
+</span><span style=color:#d08770>10000358</span><span style=color:#8fa1b3>:	dd0c               	sw	a1</span><span>,</span><span style=color:#d08770>56</span><span style=color:#8fa1b3>(a0)
+</span><span style=color:#8fa1b3>1000035a:	</span><span style=color:#d08770>40038537          	</span><span style=color:#8fa1b3>lui	a0</span><span>,</span><span style=color:#d08770>0x40038
+</span><span style=color:#8fa1b3>1000035e:	4d6c                lw	a1</span><span>,</span><span style=color:#d08770>92</span><span style=color:#8fa1b3>(a0)
+</span><span style=color:#d08770>10000360</span><span style=color:#8fa1b3>:	e3f5f593          	</span><span style=color:#b48ead>and	</span><span style=color:#8fa1b3>a1</span><span>,</span><span style=color:#8fa1b3>a1</span><span>,-</span><span style=color:#d08770>449
+</span><span style=color:#d08770>10000364</span><span style=color:#8fa1b3>:	</span><span style=color:#d08770>04058593          	</span><span style=color:#b48ead>add	</span><span style=color:#8fa1b3>a1</span><span>,</span><span style=color:#8fa1b3>a1</span><span>,</span><span style=color:#d08770>64 </span><span style=color:#8fa1b3># </span><span style=color:#d08770>400040
+</span><span style=color:#d08770>10000368</span><span style=color:#8fa1b3>:	cd6c               	sw	a1</span><span>,</span><span style=color:#d08770>92</span><span style=color:#8fa1b3>(a0)
+</span><span style=color:#8fa1b3>1000036a:	</span><span style=color:#d08770>40028537          	</span><span style=color:#8fa1b3>lui	a0</span><span>,</span><span style=color:#d08770>0x40028
+</span><span style=color:#8fa1b3>1000036e:	</span><span style=color:#d08770>4595                </span><span style=color:#8fa1b3>li	a1</span><span>,</span><span style=color:#d08770>5
+</span><span style=color:#d08770>10000370</span><span style=color:#8fa1b3>:	0ab52a23          	sw	a1</span><span>,</span><span style=color:#d08770>180</span><span style=color:#8fa1b3>(a0) # 400280b4
+</span><span style=color:#d08770>10000374</span><span style=color:#8fa1b3>:	a001                j	</span><span style=color:#d08770>10000374 </span><span style=color:#8fa1b3>&lt;main</span><span>+</span><span style=color:#d08770>0x24</span><span style=color:#8fa1b3>>
+</span></code></pre><blockquote><p>Referring to the above assembly code, we are trying to access GPIO22 of the PADS_BANK0 register.</blockquote><pre class=language-asm data-lang=asm style=color:#c0c5ce;background-color:#2b303b><code class=language-asm data-lang=asm><span style=color:#8fa1b3>> a0 &lt;= PADS_BANK0_BASE = 0x4003_8000
+</span><span style=color:#8fa1b3>`1000035a:	</span><span style=color:#d08770>40038537          	</span><span style=color:#8fa1b3>lui	a0</span><span>,</span><span style=color:#d08770>0x40038</span><span style=color:#8fa1b3>`
+</span><span>
+</span><span style=color:#8fa1b3>> a1 &lt;= </span><span style=color:#d08770>92</span><span style=color:#8fa1b3>(a0) = 5C(a0) = PADS_BANK0</span><span>-</span><span style=color:#8fa1b3>>GPIO22
+</span><span style=color:#8fa1b3>`1000035e:	4d6c                lw	a1</span><span>,</span><span style=color:#d08770>92</span><span style=color:#8fa1b3>(a0)`
+</span></code></pre><p>After knowing what the issue was, I tried the following solutions:<ol><li><p>I first suspected this could be due to wrong PMP implementation, but after reviewing the PMP configuration, it seemed to be correct. I even changed the PMP implementation to match the <code>tock-os</code> implementation to make sure this was not the issue.</p><li><p>I also checked the memory region permissions and ensured that the PADS_BANK0 region was correctly marked as accessible for the blinky task.</p> <pre class=language-sh data-lang=sh style=color:#c0c5ce;background-color:#2b303b><code class=language-sh data-lang=sh><span style=color:#bf616a>peripheral </span><span>"</span><span style=color:#a3be8c>sio</span><span>" {
+</span><span>    base 0xd000_0000
+</span><span>    size 0x200        // Rounded from 0x1E8 (488 bytes)
+</span><span>}
+</span><span>
+</span><span style=color:#bf616a>peripheral </span><span>"</span><span style=color:#a3be8c>io_bank0</span><span>" {
+</span><span>    base 0x4002_8000
+</span><span>    size 0x400       // Rounded from 0x320 (800 bytes) 
+</span><span>}
+</span><span>
+</span><span style=color:#bf616a>peripheral </span><span>"</span><span style=color:#a3be8c>pads_bank0</span><span>" {
+</span><span>    base 0x4003_8000
+</span><span>    size 0x100       // Rounded from 0xCC (204 bytes) 
+</span><span>}
+</span><span>
+</span><span style=color:#bf616a>peripheral </span><span>"</span><span style=color:#a3be8c>peripherals</span><span>" {
+</span><span>    base 0x4000_0000
+</span><span>    size 0x2000_0000    // Hardwired PMP Region (PMPADDR9)
+</span><span>}
+</span><span>
+</span><span style=color:#bf616a>//</span><span> blinky task. Blinks an external led
+</span><span style=color:#bf616a>task</span><span> blinky {
+</span><span>    workspace-crate blinky
+</span><span>    stack-size 256
+</span><span>    priority 1
+</span><span>    uses-peripheral sio
+</span><span>    uses-peripheral io_bank0
+</span><span>    uses-peripheral pads_bank0
+</span><span>    uses-peripheral peripherals
+</span><span>}
+</span></code></pre><li><p>I even tried to give full peripheral permissions to the blinky task as follows:</p> <pre class=language-sh data-lang=sh style=color:#c0c5ce;background-color:#2b303b><code class=language-sh data-lang=sh><span style=color:#bf616a>peripheral </span><span>"</span><span style=color:#a3be8c>peripherals</span><span>" {
+</span><span>    base 0x4000_0000
+</span><span>    size 0x2000_0000    // Hardwired PMP Region (PMPADDR9)
+</span><span>}
+</span><span>
+</span><span style=color:#bf616a>//</span><span> blinky task. Blinks an external led
+</span><span style=color:#bf616a>task</span><span> blinky {
+</span><span>    workspace-crate blinky
+</span><span>    stack-size 256
+</span><span>    priority 1
+</span><span>    uses-peripheral peripherals
+</span><span>}
+</span></code></pre><li><p>I even tried not setting any explicit peripheral permissions for the blinky task, relying on the default permissions instead. Default permissions are set by Hardwired PMP Regions as follows:</p> <ul><li>ROM: 0x00000000 through 0x0fffffff<li>Peripherals: 0x40000000 through 0x5fffffff<li>SIO: 0xd0000000 through 0xdfffffff</ul></ol><blockquote><p>All the above 4 solutions didn’t solve the issue, but in reality every one of these should have solved the problem.</blockquote><p>After many trial and errors, I gave up for a few days and started fresh and looked into the datasheet pretty closely. Then I found the important errata which is relevant to me.<p><strong>RP2350 Datasheet:</strong> <img alt=RP2350-E3 src=/RP2350-E3.png><blockquote><p>According to the above errata, the issue seems to be only on QFN-60 package which is our Pico 2(W) boards. And also only PADS_BANK0 is affected, not Bank1.</blockquote><p>As per the workaround, we have to implement a syscall to set the PADS register in kernel mode and then other things in user mode as earlier.<ol start=5><li>I was not confident and comfortable enough to implement the syscall and check if this solves the issue. So I decided to set the registers before starting the Hubris kernel itself, which runs in <strong>M-mode</strong>, and once Hubris starts and schedules tasks, it automatically switches to <strong>U-mode</strong> wherein I toggle the GPIO which doesn’t involve touching the PADS registers.</ol><blockquote><p>This solved the issue and the blinky application works fine on RISC-V too 🥳.</blockquote><h2 id=references>References</h2><ul><li><a href=https://datasheets.raspberrypi.org/rp2350/rp2350-datasheet.pdf rel=noopener target=_blank>RP2350 Datasheet</a><li><a href=https://cliffle.com/tags/hubris/ rel=noopener target=_blank>Cliffle’s Hubris Blog posts</a><li><a href=https://hubris.oxide.computer/reference/ rel=noopener target=_blank>Hubris Reference</a><li><a href=https://github.com/Karthik-d-k/exhubris-demo-rp235x rel=noopener target=_blank>exhubris-demo-rp235x</a><li><a href=https://github.com/Karthik-d-k/hubris-riscv-hazard3/tree/hazard3 rel=noopener target=_blank>Hubris-fork</a><li><a href=https://github.com/Karthik-d-k/exhubris-riscv-hazard3/tree/rp235x-hazard3 rel=noopener target=_blank>exhubris-fork</a></ul><p class=tags-data><a href=/tags/rp235x>/rp235x/</a> <a href=/tags/rust>/rust/</a> <a href=/tags/hubris>/hubris/</a> <a href=/tags/os>/os/</a> <a href=/tags/riscv>/riscv/</a></main><footer><hr><footer id=footer><div id=contact-icons><a rel="noopener noreferrer" title="Subscribe via RSS for updates." class=no-style href=atom.xml target=_blank> <span class=iconify data-icon=solar:atom-bold></span> </a><a class=no-style href=mailto:karthikdk1998@gmail.com target=_blank title=Email> <span class=iconify data-icon=mdi:email></span> </a><a rel="noopener noreferrer" class=no-style href=https://github.com/Karthik-d-k target=_blank title=GitHub> <span class=iconify data-icon=mdi:github></span> </a><a rel="noopener noreferrer" class=no-style href=https://x.com/Karthik_d_k target=_blank title=Twitter> <span class=iconify data-icon=mdi:twitter></span> </a><a rel="noopener noreferrer" class=no-style href=https://www.linkedin.com/in/karthik-d-k-319853166 target=_blank title=LinkedIn> <span class=iconify data-icon=mdi:linkedin></span> </a></div><script src=https://code.iconify.design/2/2.2.1/iconify.min.js></script></footer></footer><div aria-hidden=true class=search-modal id=search-modal><div class=search-modal-backdrop></div><div class=search-modal-container><div class=search-modal-header><input enterkeyhint=search id=search-modal-input inputmode=search placeholder=Search... type=search><kbd class=search-modal-kbd>Ctrl+K</kbd></div><ul class=search-modal-results id=search-modal-results></ul><div class=search-modal-empty id=search-modal-empty style=display:none>No results found</div></div></div><script src=https://Karthik-d-k.github.io/elasticlunr.min.js></script><script>window.SEARCH_INDEX_URL = "https://Karthik-d-k.github.io/search_index.en.json";
+          window.DEFAULT_THEME = "dark";</script>

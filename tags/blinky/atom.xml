@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>0x646b - blinky</title>
+    <subtitle>Personal Commentary</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://Karthik-d-k.github.io/tags/blinky/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-08-13T00:00:00+00:00</updated>
+    <id>https://Karthik-d-k.github.io/tags/blinky/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Blink an LED using rp235x-pac crate</title>
+        <published>2025-08-13T00:00:00+00:00</published>
+        <updated>2025-08-13T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/blog/rp235x-blinky/"/>
+        <id>https://Karthik-d-k.github.io/blog/rp235x-blinky/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/blog/rp235x-blinky/">&lt;h2 id=&quot;motivation&quot;&gt;Motivation&lt;&#x2F;h2&gt;
+&lt;p&gt;I have been experimenting with &lt;code&gt;Hubris&lt;&#x2F;code&gt; OS to port to &lt;code&gt;riscv&lt;&#x2F;code&gt; ISA. I currently have access to &lt;code&gt;Pico 2 w&lt;&#x2F;code&gt; Board for development and testing.
+Hubris is a real time operating system designed for embedded devices and it has a very unique trait wherein that hardware that it runs on should have &lt;strong&gt;Physical memory protection unit&lt;&#x2F;strong&gt;,
+not necessarily &lt;strong&gt;Memory management unit&lt;&#x2F;strong&gt; and each and every task the OS spawns must be allocated its own memory region and memory protected. This trait helps in isolating tasks and preventing them from interfering with each other’s memory. So theoretically speaking, we could compile different tasks seperately and link them together to form a complete system image.
+This direction has already been prototyped by &lt;code&gt;exhubris&lt;&#x2F;code&gt;. I have successfully implemented &lt;code&gt;idle&lt;&#x2F;code&gt; and &lt;code&gt;supervisor&lt;&#x2F;code&gt; tasks which are absolutely necessary for an Hubris built application. But for me to actually get a visual feedback that this final image works, I need to implement a &lt;code&gt;blinky&lt;&#x2F;code&gt; task that will toggle the LED on and off.
+For more information checkout my ongoing prototype in forked repo’s &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;hubris-riscv-hazard3&#x2F;tree&#x2F;riscv&quot;&gt;&lt;strong&gt;Hubris&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; and &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;exhubris-riscv-hazard3&#x2F;tree&#x2F;riscv&quot;&gt;&lt;strong&gt;exhubris&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;There’s actually a blocker as to use &lt;code&gt;HAL&lt;&#x2F;code&gt; (Hardware Abstraction Layer) in this context. Since Hubris requires strict memory protection and isolation between tasks, using a traditional HAL could lead to potential violations of these principles. For this reason, Hubris pre-built application demos actually use &lt;code&gt;PAC&lt;&#x2F;code&gt; (Peripheral Access Crate) to interact with hardware in a way that is compatible with its memory protection model. You can checkout this &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;rust-embedded&#x2F;cortex-m&#x2F;issues&#x2F;239&quot;&gt;&lt;strong&gt;issue&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; for additional context.&lt;&#x2F;p&gt;
+&lt;p&gt;I have researched online about using &lt;code&gt;rp235x-pac&lt;&#x2F;code&gt; crate to control the GPIO pins on the Pico 2 W board and toggle the LED. But i didn’t find any examples or documentation specifically addressing this use case. And more importantly i could not use inbuilt LED to blink as is connected to wifi chip present in pico 2 w board, this is not the case in pico 2 board.
+Hence, I’m toggling an external LED connected to one of the GPIO pins.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;problem-statement&quot;&gt;Problem Statement&lt;&#x2F;h2&gt;
+&lt;p&gt;To blink an LED connected to one of the GPIO pins on Pico 2 (w) board. We are not allowed to use HAL crate, so we need to use PAC directly to manipulate the GPIO registers.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;implementation-details&quot;&gt;Implementation Details&lt;&#x2F;h2&gt;
+&lt;p&gt;I tried to use RP2350 Datasheet and rp235x-pac to implement on my own and found out that it’s pretty hard. Hence i went down the path of reverse engineering the HAL crate and how it interacts with the PAC to control the GPIO pins. This implementation is basically my reverse-engineered version of the HAL crate, tailored to work within the constraints of Hubris OS.
+From this point onward you could forget everything about Hubris OS and only concentrate on how to use &lt;code&gt;rp235x-pac&lt;&#x2F;code&gt; crate to control the GPIO pins. Because the underlying principles of using PAC for direct hardware access remain the same regardless of the OS constraints.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;image-metadata&quot;&gt;Image Metadata&lt;&#x2F;h3&gt;
+&lt;p&gt;As per &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;datasheets.raspberrypi.org&#x2F;rp2350&#x2F;rp2350-datasheet.pdf&quot;&gt;&lt;strong&gt;RP2350 Datasheet&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; &lt;em&gt;Section:5.9.5. Minimum Viable Image Metadata&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;A minimum amount of metadata (i.e. a valid `IMAGE_DEF` block) must be embedded in
+&lt;&#x2F;span&gt;&lt;span&gt;any binary for the bootrom to recognise it as a valid program image, as opposed to,
+&lt;&#x2F;span&gt;&lt;span&gt;for example, blank flash contents or a disconnected flash device. This must appear
+&lt;&#x2F;span&gt;&lt;span&gt;within the first 4 kB of a flash image, or anywhere in a RAM or OTP image.
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;As per the datasheet, we know we have to create the following Image Metadata for riscv cores –&amp;gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;&#x2F; A Block as understood by the Boot ROM.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;&#x2F;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;&#x2F; This is an Image Definition Block
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;&#x2F; It contains within the special start and end markers
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;&#x2F;  the Boot ROM is looking for.
+&lt;&#x2F;span&gt;&lt;span&gt;#[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;derive&lt;&#x2F;span&gt;&lt;span&gt;(Debug)]
+&lt;&#x2F;span&gt;&lt;span&gt;#[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;repr&lt;&#x2F;span&gt;&lt;span&gt;(C)]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;pub struct &lt;&#x2F;span&gt;&lt;span&gt;ImageDefBlock {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;marker_start&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u32&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;item&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u32&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;length&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u32&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;offset&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u32&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;marker_end&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u32&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;&#x2F; Tell the Boot ROM about our application
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F;&#x2F; Refer RP2350 Datasheet, Section: 5.9.5.2. Minimum RISC-V IMAGE_DEF
+&lt;&#x2F;span&gt;&lt;span&gt;#[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;link_section &lt;&#x2F;span&gt;&lt;span&gt;= &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;.start_block&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;]
+&lt;&#x2F;span&gt;&lt;span&gt;#[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;used&lt;&#x2F;span&gt;&lt;span&gt;]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;pub static &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;IMAGE_DEF&lt;&#x2F;span&gt;&lt;span&gt;: ImageDefBlock = ImageDefBlock {
+&lt;&#x2F;span&gt;&lt;span&gt;    marker_start: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0xffffded3&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    item: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x11010142&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    length: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x000001ff&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    offset: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x00000000&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    marker_end: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0xab123579&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;};
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;link_section = “.start_block”&lt;&#x2F;strong&gt; is used to place the &lt;code&gt;IMAGE_DEF&lt;&#x2F;code&gt; block in a specific section of the binary, ensuring it is located within the first 4 kB of a flash image.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h3 id=&quot;gpio-setup&quot;&gt;GPIO Setup&lt;&#x2F;h3&gt;
+&lt;p&gt;To setup GPIO on rp235x, we need access to 3 peripherals: &lt;strong&gt;SIO&lt;&#x2F;strong&gt;, &lt;strong&gt;IO_BANK0&lt;&#x2F;strong&gt;, and &lt;strong&gt;PADS_BANK0&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;SIO&lt;&#x2F;strong&gt;: Single-cycle I&#x2F;O for fast GPIO operations&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;IO_BANK0&lt;&#x2F;strong&gt;: GPIO function selection and control&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;PADS_BANK0&lt;&#x2F;strong&gt;: Electrical characteristics and pad isolation&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Get an instance of this peripherals by using the &lt;code&gt;rp235x-pac&lt;&#x2F;code&gt; crate.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;use &lt;&#x2F;span&gt;&lt;span&gt;rp235x_pac::{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;IO_BANK0&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;PADS_BANK0&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;SIO&lt;&#x2F;span&gt;&lt;span&gt;};
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; sio: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;SIO &lt;&#x2F;span&gt;&lt;span&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;unsafe &lt;&#x2F;span&gt;&lt;span&gt;{ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;SIO&lt;&#x2F;span&gt;&lt;span&gt;::steal() };
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; io_bank0 = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;unsafe &lt;&#x2F;span&gt;&lt;span&gt;{ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;IO_BANK0&lt;&#x2F;span&gt;&lt;span&gt;::steal() };
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; pads_bank0 = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;unsafe &lt;&#x2F;span&gt;&lt;span&gt;{ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;PADS_BANK0&lt;&#x2F;span&gt;&lt;span&gt;::steal() };
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now for example we could consider any GPIO pin to connect external LED for testing, i used &lt;strong&gt;GPIO22&lt;&#x2F;strong&gt;.
+we need to setup this pin as &lt;strong&gt;OUTPUT&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;const &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;LED_PIN&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;usize &lt;&#x2F;span&gt;&lt;span&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; mask = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u32 &lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&amp;lt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;LED_PIN &lt;&#x2F;span&gt;&lt;span&gt;as &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u32&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Set GPIO as output
+&lt;&#x2F;span&gt;&lt;span&gt;sio.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;gpio_oe_set&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;write&lt;&#x2F;span&gt;&lt;span&gt;(|&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;w&lt;&#x2F;span&gt;&lt;span&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;unsafe &lt;&#x2F;span&gt;&lt;span&gt;{ w.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;bits&lt;&#x2F;span&gt;&lt;span&gt;(mask) });
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And then we need to configure the &lt;strong&gt;PADS&lt;&#x2F;strong&gt; such that input enable on, output disable is off and remove pad isolation to attach a function to this GPIO.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Configure pad settings
+&lt;&#x2F;span&gt;&lt;span&gt;pads_bank0.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;gpio&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;LED_PIN&lt;&#x2F;span&gt;&lt;span&gt;).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;modify&lt;&#x2F;span&gt;&lt;span&gt;(|_, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;w&lt;&#x2F;span&gt;&lt;span&gt;| {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Set input enable on, output disable off
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; RP2350: input enable defaults to off, so this is important!
+&lt;&#x2F;span&gt;&lt;span&gt;    w.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;ie&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;set_bit&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    w.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;od&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;clear_bit&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; RP2350: remove pad isolation now a function is wired up
+&lt;&#x2F;span&gt;&lt;span&gt;    w.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;iso&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;clear_bit&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    w
+&lt;&#x2F;span&gt;&lt;span&gt;});
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And then we set the GPIO function to &lt;strong&gt;SIO&lt;&#x2F;strong&gt; (Single-cycle IO subsystem) using which we write to the GPIO.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;use &lt;&#x2F;span&gt;&lt;span&gt;rp235x_pac::io_bank0::gpio::gpio_ctrl::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;FUNCSEL_A&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Zero all fields apart from fsel; we want this IO to do what the peripheral tells it.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; This doesn&amp;#39;t affect e.g. pullup&#x2F;pulldown, as these are in pad controls.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;unsafe &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    io_bank0
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;gpio&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;LED_PIN&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;gpio_ctrl&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;write_with_zero&lt;&#x2F;span&gt;&lt;span&gt;(|&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;w&lt;&#x2F;span&gt;&lt;span&gt;| w.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;funcsel&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;variant&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;FUNCSEL_A&lt;&#x2F;span&gt;&lt;span&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;SIO&lt;&#x2F;span&gt;&lt;span&gt;))
+&lt;&#x2F;span&gt;&lt;span&gt;};
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Finally we could use the SIO to toggle the LED state.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rs&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rs &quot;&gt;&lt;code class=&quot;language-rs&quot; data-lang=&quot;rs&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; To Turn on LED
+&lt;&#x2F;span&gt;&lt;span&gt;sio.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;gpio_out_set&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;write&lt;&#x2F;span&gt;&lt;span&gt;(|&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;w&lt;&#x2F;span&gt;&lt;span&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;unsafe &lt;&#x2F;span&gt;&lt;span&gt;{ w.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;bits&lt;&#x2F;span&gt;&lt;span&gt;(mask) });
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; To Turn off LED
+&lt;&#x2F;span&gt;&lt;span&gt;sio.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;gpio_out_clr&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;write&lt;&#x2F;span&gt;&lt;span&gt;(|&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;w&lt;&#x2F;span&gt;&lt;span&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;unsafe &lt;&#x2F;span&gt;&lt;span&gt;{ w.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;bits&lt;&#x2F;span&gt;&lt;span&gt;(mask) });
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This is the minimum code that is required to control GPIO by using the PAC instead of depending on the HAL.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;running-on-pico-2-w-board&quot;&gt;Running on Pico 2(w) board&lt;&#x2F;h3&gt;
+&lt;p&gt;To run the code, you could checkout my &lt;code&gt;rp-hal&lt;&#x2F;code&gt; crate and run the &lt;code&gt;blinky&lt;&#x2F;code&gt; example as follows –&amp;gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; clone https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;rp-hal.git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -b&lt;&#x2F;span&gt;&lt;span&gt; riscv
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;cd&lt;&#x2F;span&gt;&lt;span&gt; rp-hal&#x2F;rp235x-hal-examples
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cargo&lt;&#x2F;span&gt;&lt;span&gt; rrr-blinky
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;cargo rrr-blinky&lt;&#x2F;strong&gt; will compile and flash the code successfully and run the code using &lt;code&gt;picotool&lt;&#x2F;code&gt;. Be sure to checkout the &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;rp-hal&#x2F;blob&#x2F;riscv&#x2F;README.md&quot;&gt;documentation&lt;&#x2F;a&gt; on how to set-up the required tools to flash and run.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Full script is available on github &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;rp-hal&#x2F;blob&#x2F;main&#x2F;rp235x-hal-examples&#x2F;src&#x2F;bin&#x2F;blinky.rs&quot;&gt;&lt;strong&gt;rp-hal-blinky&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;If you are looking for hubris task which is almost similar to the rp-hal example, you could checkout the same in &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;exhubris-riscv-hazard3&#x2F;blob&#x2F;riscv&#x2F;task&#x2F;blinky&#x2F;src&#x2F;main.rs&quot;&gt;&lt;strong&gt;exhubris-blinky&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;If you are interested in exploring the exact differences as to which PAC code compares to HAL code, you could look into the
+&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;rp-rs&#x2F;rp-hal&#x2F;commit&#x2F;96988070c380f720672f6243f35bbc272a57fd17&quot;&gt;&lt;strong&gt;github-commit&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;references&quot;&gt;References&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;datasheets.raspberrypi.org&#x2F;rp2350&#x2F;rp2350-datasheet.pdf&quot;&gt;RP2350 Datasheet&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;cliffle.com&#x2F;tags&#x2F;hubris&#x2F;&quot;&gt;Cliffle’s Hubris Blog posts&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;hubris.oxide.computer&#x2F;reference&#x2F;&quot;&gt;Hubris Reference&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;hubris-riscv-hazard3&#x2F;tree&#x2F;riscv&quot;&gt;Hubris-fork&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Karthik-d-k&#x2F;exhubris-riscv-hazard3&#x2F;tree&#x2F;riscv&quot;&gt;exhubris-fork&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+</feed>

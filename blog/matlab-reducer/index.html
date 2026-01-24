@@ -1,0 +1,82 @@
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta content="IE=edge" http-equiv=X-UA-Compatible><meta content="text/html; charset=UTF-8" http-equiv=content-type><meta content="width=device-width,initial-scale=1,user-scalable=no" name=viewport><meta content="index, follow" name=robots><title>Matlab/Simulink Model Reducer</title><meta content="Matlab/Simulink Model Reducer" name=title><meta content=Karthik name=author><meta content="Personal Commentary" name=description><meta content=website property=og:type><meta content=https://Karthik-d-k.github.io/blog/matlab-reducer/ property=og:url><meta content=0x646b property=og:site_name><meta content="Matlab/Simulink Model Reducer" property=og:title><meta content="Personal Commentary" property=og:description><meta content=https://Karthik-d-k.github.io/favicon.ico property=og:image><meta content=summary_large_image property=twitter:card><meta content=https://Karthik-d-k.github.io/blog/matlab-reducer/ property=twitter:url><meta content="Matlab/Simulink Model Reducer" property=twitter:title><meta content="Personal Commentary" property=twitter:description><meta content=https://Karthik-d-k.github.io/favicon.ico property=twitter:image><link href=https://Karthik-d-k.github.io/blog/matlab-reducer/ rel=canonical><link rel="shortcut icon" href=https://Karthik-d-k.github.io/favicon.ico type=image/x-icon><link href=https://Karthik-d-k.github.io/atom.xml rel=alternate title=RSS type=application/atom+xml><link href=https://speyll.github.io/suCSS/reset-min.css rel=stylesheet><link href=https://speyll.github.io/suCSS/suCSS-min.css rel=stylesheet><link href=https://Karthik-d-k.github.io/css/style.css rel=stylesheet><script defer src=https://Karthik-d-k.github.io/js/script.js></script><body><header><nav id=nav-bar><a href=/> /home </a><a href=/blog> /blog </a><a href=/til> /til </a><a href=/projects> /projects </a><a href=/tags> /tags </a><a href=/bookmarks> /bookmarks </a><a href=/cv> /cv </a><a href=# id=search-trigger> 🔎 </a><div><input id=theme-toggle style=display:none type=checkbox><label for=theme-toggle id=theme-toggle-label><svg class=icons id=theme-icon><use href=https://Karthik-d-k.github.io/icons.svg#lightMode></use></svg></label><audio id=theme-sound><source src=https://Karthik-d-k.github.io/click.ogg type=audio/ogg></audio></div></nav></header><main><h1>Matlab/Simulink Model Reducer</h1><h2 id=context>Context</h2><p>In automotive engine control unit (ECU) software, we use global constants called <strong>variant coding</strong> constants to enable or disable specific features. These constants are part of every functional unit within the entire ECU software. Most software development for ECUs is done using tools like <strong>ASCET</strong> and sometimes <strong>Matlab/Simulink</strong>, depending on the team and the specific functional unit.<p>Both ASCET and Matlab/Simulink are model-based code generators. Instead of writing code manually, developers create flow diagrams by dragging and dropping basic and user-defined classes/blocks. These diagrams represent the required functionality of an ECU sub-system, and the tools generate the corresponding C code.<p>Each sub-system (functional unit) has its own set of variant coding constants, which enable or disable features based on the customer’s requirements. ASCET has a built-in tool called <strong>model_reducer</strong>. This tool uses a global CSV file (<strong>variant_coding.csv</strong>) containing all the variant coding constants for the entire ECU software. By referencing this CSV file, ASCET can generate a reduced version of the model to enable or disable specific feature blocks.<h2 id=problem>Problem</h2><p>In <strong>Matlab/Simulink</strong>, we need to manually update each <strong>variant coding</strong> value within the <strong>Simulink data dictionary (sldd)</strong> file based on the global CSV file. This manual process is error-prone and time-consuming for developers. To address this, we can automate the task using a script.<h2 id=solution>Solution</h2><p>Our script should take two input files: the <strong>variant_coding.csv</strong> file and the <strong>model.sldd</strong> file. It should then output a modified <strong>model_modified.sldd</strong> file and an updated <strong>variant_coding_modified.csv</strong> file.<p>Here’s a high-level overview of how to write this script in Matlab. This function takes the input CSV and sldd files and generates the required modified files.<pre class=language-matlab data-lang=matlab style=color:#c0c5ce;background-color:#2b303b><code class=language-matlab data-lang=matlab><span style=color:#b48ead>function </span><span style=color:#8fa1b3>matlab_reducer</span><span>(</span><span style=color:#bf616a>variant_coding_csv</span><span>, </span><span style=color:#bf616a>model_sldd</span><span>)
+</span><span>    variant_coding_values = csv2dict(variant_coding_csv);
+</span><span>    variant_coding_modified_values = modify_sldd(model_sldd, variant_coding_values);
+</span><span>    write_csv(variant_coding_modified_values);
+</span><span style=color:#b48ead>end
+</span></code></pre><p>In the following sections, I will explain the individual components needed to achieve this outcome.<p><strong>csv2dict</strong> will read the csv file and stores the values along with names in a dictionary.<pre class=language-matlab data-lang=matlab style=color:#c0c5ce;background-color:#2b303b><code class=language-matlab data-lang=matlab><span style=color:#b48ead>function </span><span style=color:#bf616a>variant_coding_values </span><span>= </span><span style=color:#8fa1b3>csv2dict</span><span>(</span><span style=color:#bf616a>filename</span><span>)
+</span><span>    </span><span style=color:#65737e>% Read the CSV file
+</span><span>    data = readtable(filename, '</span><span style=color:#a3be8c>Format</span><span>', '</span><span style=color:#96b5b4>%s%f</span><span>');
+</span><span>
+</span><span>    </span><span style=color:#65737e>% Extract the first and second columns
+</span><span>    keys = data.Var1;
+</span><span>    values = data.Var2;
+</span><span>
+</span><span>    </span><span style=color:#65737e>% Create a dictionary
+</span><span>    variant_coding_values = containers.Map(keys, values);
+</span><span style=color:#b48ead>end
+</span></code></pre><p><strong>modify_sldd</strong> function will modify the values present in the sldd file with values we read from csv file. We read the <strong>Design Data</strong> section from sldd file and then we export the values to a .mat file which is necessary to modify the values. we just search all the VCs in dictionary and grad the values and rewrite with updated values and save to a new .mat file. THis file is then used to update and save the modified sldd file.<pre class=language-matlab data-lang=matlab style=color:#c0c5ce;background-color:#2b303b><code class=language-matlab data-lang=matlab><span style=color:#b48ead>function </span><span style=color:#bf616a>modified_vc_data </span><span>= </span><span style=color:#8fa1b3>modify_sldd</span><span>(</span><span style=color:#bf616a>model_sldd</span><span>, </span><span style=color:#bf616a>variant_coding_values</span><span>)
+</span><span>    </span><span style=color:#65737e>% Read the sldd file
+</span><span>    sldd_dict = Simulink.data.dictionary.open(model_sldd);
+</span><span>    sldd_data = getSection(sldd_dict, '</span><span style=color:#a3be8c>Design Data</span><span>');
+</span><span>    
+</span><span>    </span><span style=color:#65737e>% Save sldd data into a .mat file
+</span><span>    exportToFile(sldd_data, '</span><span style=color:#a3be8c>sldd_data.mat</span><span>');
+</span><span>    
+</span><span>    </span><span style=color:#65737e>% Load VC/Vars/.. mat file
+</span><span>    vc_data = </span><span style=color:#b48ead>load</span><span>('</span><span style=color:#a3be8c>sldd_data.mat</span><span>');
+</span><span>    vc_names = </span><span style=color:#b48ead>fieldnames</span><span>(vc_data);
+</span><span>    vc_data_new = </span><span style=color:#b48ead>struct</span><span>();
+</span><span>
+</span><span>    </span><span style=color:#65737e>% Create a cell array to store the output
+</span><span>    modified_vc_data = </span><span style=color:#b48ead>cell</span><span>(</span><span style=color:#d08770>0</span><span>, </span><span style=color:#d08770>3</span><span>);
+</span><span>
+</span><span>    </span><span style=color:#b48ead>for </span><span style=color:#d08770>i</span><span> = </span><span style=color:#d08770>1</span><span>:</span><span style=color:#b48ead>numel</span><span>(vc_names)
+</span><span>        vc_name = vc_names{</span><span style=color:#d08770>i</span><span>};
+</span><span>        vc_value = vc_data.(vc_name);
+</span><span>
+</span><span>        </span><span style=color:#65737e>% Check if the field value is of the type 'VC.Const'
+</span><span>        </span><span style=color:#b48ead>if </span><span>isa(vc_value, '</span><span style=color:#a3be8c>VC.Const</span><span>')
+</span><span>            </span><span style=color:#65737e>% Check if the VC exists in variant_coding_values
+</span><span>            </span><span style=color:#b48ead>if </span><span>isKey(variant_coding_values, vc_name)
+</span><span>                old_value = vc_data.(vc_name).</span><span style=color:#96b5b4>Value</span><span>;
+</span><span>
+</span><span>                vc_value_from_csv = variant_coding_values(vc_name);
+</span><span>                </span><span style=color:#65737e>% Change VC value as per variant_coding_values file
+</span><span>                </span><span style=color:#b48ead>if strcmp</span><span>(vc_data.(vc_name).DataType, '</span><span style=color:#a3be8c>boolean</span><span>')
+</span><span>                    vc_data.(vc_name).</span><span style=color:#96b5b4>Value</span><span> = </span><span style=color:#b48ead>logical</span><span>(vc_value_from_csv);
+</span><span>                </span><span style=color:#b48ead>else
+</span><span>                    vc_data.(vc_name).</span><span style=color:#96b5b4>Value</span><span> = vc_value_from_csv;
+</span><span>                </span><span style=color:#b48ead>end
+</span><span>                vc_data_new.(vc_name) = vc_data.(vc_name);
+</span><span>
+</span><span>                new_value = vc_data.(vc_name).</span><span style=color:#96b5b4>Value</span><span>;
+</span><span>
+</span><span>                </span><span style=color:#65737e>% Add the data to the modified_vc_data cell array
+</span><span>                modified_vc_data = [modified_vc_data; {vc_name, old_value, new_value}];
+</span><span>            </span><span style=color:#b48ead>end
+</span><span>        </span><span style=color:#b48ead>end
+</span><span>    </span><span style=color:#b48ead>end
+</span><span>    
+</span><span>    </span><span style=color:#65737e>% Modify sldd file w/ modified VC values
+</span><span>    </span><span style=color:#b48ead>save</span><span>('</span><span style=color:#a3be8c>vc_data_new.mat</span><span>', '</span><span style=color:#a3be8c>-struct</span><span>', '</span><span style=color:#a3be8c>vc_data_new</span><span>')
+</span><span>    importFromFile(sldd_data, '</span><span style=color:#a3be8c>vc_data_new.mat</span><span>', '</span><span style=color:#a3be8c>existingVarsAction</span><span>', '</span><span style=color:#a3be8c>overwrite</span><span>');
+</span><span>    sldd_dict.saveChanges();
+</span><span>
+</span><span>    </span><span style=color:#65737e>% Close all connections to all open data dictionaries
+</span><span>    Simulink.data.dictionary.closeAll();
+</span><span style=color:#b48ead>end
+</span></code></pre><p><strong>write_csv</strong> function will just create a new csv with old and new values for all variant coding constants present in the model.<pre class=language-matlab data-lang=matlab style=color:#c0c5ce;background-color:#2b303b><code class=language-matlab data-lang=matlab><span style=color:#b48ead>function </span><span style=color:#8fa1b3>write_csv</span><span>(</span><span style=color:#bf616a>variant_coding_modified_values</span><span>)
+</span><span>    </span><span style=color:#65737e>% Create a new CSV file with the output data
+</span><span>    output_filename = '</span><span style=color:#a3be8c>variant_coding_modified.csv</span><span>';
+</span><span>    fid = </span><span style=color:#b48ead>fopen</span><span>(output_filename, '</span><span style=color:#a3be8c>w</span><span>');
+</span><span>    </span><span style=color:#b48ead>fprintf</span><span>(fid, '</span><span style=color:#a3be8c>variant coding Name,Old Value,New Value</span><span style=color:#96b5b4>\n</span><span>'); </span><span style=color:#65737e>% Write header
+</span><span>
+</span><span>    </span><span style=color:#65737e>% Write data to the CSV file
+</span><span>    </span><span style=color:#b48ead>for </span><span style=color:#d08770>i</span><span> = </span><span style=color:#d08770>1</span><span>:</span><span style=color:#b48ead>size</span><span>(variant_coding_modified_values, </span><span style=color:#d08770>1</span><span>)
+</span><span>        </span><span style=color:#b48ead>fprintf</span><span>(fid, '</span><span style=color:#96b5b4>%s</span><span style=color:#a3be8c>,</span><span style=color:#96b5b4>%d</span><span style=color:#a3be8c>,</span><span style=color:#96b5b4>%d\n</span><span>', variant_coding_modified_values{</span><span style=color:#d08770>i</span><span>,:});
+</span><span>    </span><span style=color:#b48ead>end
+</span><span>
+</span><span>    </span><span style=color:#96b5b4>fclose</span><span>(fid);
+</span><span style=color:#b48ead>end
+</span></code></pre><h2 id=conclusion>Conclusion</h2><ul><li><p>Full script is available on github <a href=https://github.com/Karthik-d-k/Karthik-d-k.github.io/blob/main/content/scripts/matlab_reducer.m rel=noopener target=_blank><strong>matlab_reducer.m</strong></a></p><li><p>Thanks to my friend <a href=https://github.com/Vijeth400 rel=noopener target=_blank><strong>Vijeth Angadi</strong></a> for reviewing the draft version of this blog.</p></ul><p class=tags-data><a href=/tags/matlab>/matlab/</a> <a href=/tags/script>/script/</a></main><footer><hr><footer id=footer><div id=contact-icons><a rel="noopener noreferrer" title="Subscribe via RSS for updates." class=no-style href=atom.xml target=_blank> <span class=iconify data-icon=solar:atom-bold></span> </a><a class=no-style href=mailto:karthikdk1998@gmail.com target=_blank title=Email> <span class=iconify data-icon=mdi:email></span> </a><a rel="noopener noreferrer" class=no-style href=https://github.com/Karthik-d-k target=_blank title=GitHub> <span class=iconify data-icon=mdi:github></span> </a><a rel="noopener noreferrer" class=no-style href=https://x.com/Karthik_d_k target=_blank title=Twitter> <span class=iconify data-icon=mdi:twitter></span> </a><a rel="noopener noreferrer" class=no-style href=https://www.linkedin.com/in/karthik-d-k-319853166 target=_blank title=LinkedIn> <span class=iconify data-icon=mdi:linkedin></span> </a></div><script src=https://code.iconify.design/2/2.2.1/iconify.min.js></script></footer></footer><div aria-hidden=true class=search-modal id=search-modal><div class=search-modal-backdrop></div><div class=search-modal-container><div class=search-modal-header><input enterkeyhint=search id=search-modal-input inputmode=search placeholder=Search... type=search><kbd class=search-modal-kbd>Ctrl+K</kbd></div><ul class=search-modal-results id=search-modal-results></ul><div class=search-modal-empty id=search-modal-empty style=display:none>No results found</div></div></div><script src=https://Karthik-d-k.github.io/elasticlunr.min.js></script><script>window.SEARCH_INDEX_URL = "https://Karthik-d-k.github.io/search_index.en.json";
+          window.DEFAULT_THEME = "dark";</script>
