@@ -50,7 +50,7 @@ title = "Bookmarks"
 
 ----------------
 
-### 💻 Linux/OS
+### 💻 OS
 - [Norman Matloff's Unix and Linux Tutorial Center](http://heather.cs.ucdavis.edu/matloff/public_html/unix.html)
 - [Operating Systems: Three Easy Pieces](https://pages.cs.wisc.edu/~remzi/OSTEP/)
 - [The Linux Documentation Project](https://tldp.org/index.html)
@@ -64,6 +64,10 @@ title = "Bookmarks"
 - [bootlin Linux Training Docs](https://bootlin.com/docs/)
 
 ----------------
+
+### 👾 Embedded
+- [i2c.info](https://i2c.info/)
+
 
 ### 📀 CS
 - [Crafting Interpreters](https://craftinginterpreters.com/contents.html)
