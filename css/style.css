@@ -1,0 +1,287 @@
+#nav-bar {
+    padding: .625rem 0 0 0;
+    display: flex;
+    flex-direction: row;
+    /* Increased gap for better spacing */
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    align-content: flex-end
+}
+
+#footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.accent-data {
+    color: var(--accent);
+}
+
+.theme-transition {
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.tags-data {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: flex-start;
+    align-content: flex-end
+}
+
+.title-list li {
+    margin-bottom: .375rem;
+}
+
+/* icons settings */
+.icons {
+    width: 1.3rem;
+    height: 1.3rem;
+    aspect-ratio: 1/1;
+    display: inline-block;
+    vertical-align: middle;
+    color: var(--text);
+    fill: var(--text);
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.icons:hover {
+    background-color: transparent;
+    color: var(--accent);
+}
+
+/* footnotes */
+.footnote-definition {
+    margin: 0 0 0 .125rem;
+}
+
+.footnote-definition-label {
+    color: var(--accent);
+}
+
+.footnote-definition p {
+    display: inline;
+    margin: .625rem 0 0 .625rem;
+}
+
+/* general classes */
+.no-style {
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-radius: 0
+}
+
+.no-style:hover {
+    background-color: transparent;
+    color: var(--accent);
+}
+
+.center {
+    text-align: center;
+}
+
+.center img {
+    display: block;
+    margin: 1rem auto;
+}
+
+.float-right {
+    float: right
+}
+
+.float-left {
+    float: left
+}
+
+/* shortcodes css */
+.webring {
+    margin: .375rem;
+}
+
+/* Ensure code blocks have horizontal scrolling if content overflows */
+code {
+    overflow-x: auto;
+    white-space: pre;
+    /* Keep lines intact without wrapping */
+    scrollbar-color: var(--accent) var(--bg-light);
+    scrollbar-width: thin;
+}
+
+/* Beautify footer elements */
+#footer {
+    background-color: var(--accent) var(--bg-light);
+    /* Dark background */
+    padding: 20px 0;
+    text-align: center;
+}
+
+#contact-icons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+#contact-icons a {
+    color: var(--accent);
+    /* White icons */
+    font-size: 2em;
+    /* Adjust size as needed */
+    transition: transform 0.3s, color 0.3s;
+}
+
+#contact-icons a:hover {
+    color: var(--accent);
+    /* Highlight color on hover */
+    transform: scale(1.2);
+    /* Slight enlargement on hover */
+}
+
+/* align text in paragraphs */
+main p {
+    text-align: justify;
+}
+
+main ul,
+main ol {
+    text-align: justify;
+}
+
+#search-input {
+    width: 100%;
+    max-width: 32rem;
+    padding: .5rem;
+    margin: .5rem 0 1rem;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* Search Modal Styles */
+.search-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 15vh;
+}
+
+.search-modal.open {
+    display: flex;
+}
+
+.search-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.search-modal-container {
+    position: relative;
+    width: 90%;
+    max-width: 32rem;
+    max-height: 60vh;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateY(-10px);
+    transition: transform 0.2s ease;
+}
+
+.search-modal.open .search-modal-container {
+    transform: translateY(0);
+}
+
+.search-modal-header {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    gap: 0.5rem;
+}
+
+.search-modal-header input {
+    flex: 1;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    outline: none;
+}
+
+.search-modal-header input::placeholder {
+    color: var(--text);
+    opacity: 0.5;
+}
+
+.search-modal-kbd {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-family: inherit;
+    background: var(--bg-light);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    opacity: 0.7;
+}
+
+/* Hide keyboard hint on mobile/touch devices */
+@media (max-width: 768px), (hover: none) {
+    .search-modal-kbd {
+        display: none;
+    }
+}
+
+.search-modal-results {
+    list-style: none;
+    margin: 0;
+    padding: 0.5rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.search-modal-results li {
+    margin: 0;
+    padding: 0;
+}
+
+.search-modal-results li a {
+    display: block;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    color: var(--text);
+    text-decoration: none;
+    transition: background-color 0.1s ease;
+}
+
+.search-modal-results li a:hover,
+.search-modal-results li.selected a {
+    background: var(--bg-light);
+    color: var(--accent);
+}
+
+.search-modal-empty {
+    padding: 2rem 1rem;
+    text-align: center;
+    color: var(--text);
+    opacity: 0.6;
+}
+
+/* Search trigger button style */
+#search-trigger {
+    cursor: pointer;
+}

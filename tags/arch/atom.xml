@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>0x646b - arch</title>
+    <subtitle>Personal Commentary</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://Karthik-d-k.github.io/tags/arch/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-01-07T00:00:00+00:00</updated>
+    <id>https://Karthik-d-k.github.io/tags/arch/atom.xml</id>
+    <entry xml:lang="en">
+        <title>x64 vs amd64</title>
+        <published>2025-01-07T00:00:00+00:00</published>
+        <updated>2025-01-07T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/til/x64-vs-amd64/"/>
+        <id>https://Karthik-d-k.github.io/til/x64-vs-amd64/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/til/x64-vs-amd64/">&lt;ul&gt;
+&lt;li&gt;On GitHub, when I download binaries for my WSL (Windows Subsystem for Linux), I found that people use x86_64 and amd64 interchangeably to refer to the same thing, which is a processor that implements the 64-bit version of the x86 (32-bit ISA).&lt;&#x2F;li&gt;
+&lt;li&gt;There are many 32-bit and 64-bit Instruction Set Architectures (ISA) available, which are implemented by processors.&lt;&#x2F;li&gt;
+&lt;li&gt;x86 is the 32-bit ISA, whereas x86_64 is the general name used by most people to refer to the 64-bit version of x86.&lt;&#x2F;li&gt;
+&lt;li&gt;However, AMD was the company that released the 64-bit version of x86, and they named it amd64.&lt;&#x2F;li&gt;
+&lt;li&gt;There are many historical reasons for using two different names, &lt;strong&gt;x86_64&lt;&#x2F;strong&gt; and &lt;strong&gt;amd64&lt;&#x2F;strong&gt;, to refer to the same 64-bit ISA of x86 (32-bit ISA), but the important thing to remember is that &lt;strong&gt;both refers to same thing&lt;&#x2F;strong&gt;.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;references&quot;&gt;References&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;askubuntu.com&#x2F;questions&#x2F;601553&#x2F;what-is-the-difference-between-x86-64-amd64-and-64-bit&quot;&gt;Stack Overflow: x86_64 vs amd64&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+</feed>

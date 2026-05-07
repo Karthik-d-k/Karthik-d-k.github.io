@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+Allow: /
+Sitemap: https://Karthik-d-k.github.io/sitemap.xml

@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>0x646b - windows</title>
+    <subtitle>Personal Commentary</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://Karthik-d-k.github.io/tags/windows/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2026-05-07T00:00:00+00:00</updated>
+    <id>https://Karthik-d-k.github.io/tags/windows/atom.xml</id>
+    <entry xml:lang="en">
+        <title>RISC-V Toolchain</title>
+        <published>2026-05-07T00:00:00+00:00</published>
+        <updated>2026-05-07T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/blog/riscv-toolchain/"/>
+        <id>https://Karthik-d-k.github.io/blog/riscv-toolchain/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/blog/riscv-toolchain/">&lt;h2 id=&quot;motivation&quot;&gt;Motivation&lt;&#x2F;h2&gt;
+&lt;p&gt;The reason for writing this post is to capture my understanding of how embedded toolchains work.
+I primarily work on embedded RISC-V cores, so I will explain how to get the correct &lt;code&gt;RISC-V toolchain&lt;&#x2F;code&gt; on both Windows and WSL,
+because these are my primary development environments.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;toolchain&quot;&gt;Toolchain&lt;&#x2F;h3&gt;
+&lt;p&gt;A toolchain basically contains all the required tools and libraries to compile, link, and manipulate object files and binaries.
+It is the basic first step when starting to work with embedded systems, or with native development in general.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;installation&quot;&gt;Installation&lt;&#x2F;h2&gt;
+&lt;p&gt;Here, I will list a few possible sources you can use to get or download the correct toolchain for your needs.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;riscv-gnu-toolchain&quot;&gt;riscv-gnu-toolchain&lt;&#x2F;h3&gt;
+&lt;h5 id=&quot;windows&quot;&gt;Windows&lt;&#x2F;h5&gt;
+&lt;p&gt;Compiling the whole toolchain from source is not well documented on Windows because it requires many dependencies, including GNU&#x2F;LLVM tools, which are not straightforward to set up unless you already have MinGW&#x2F;MSYS2 installed on your system.
+Even the official &lt;strong&gt;riscv-gnu-toolchain&lt;&#x2F;strong&gt; &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;riscv-collab&#x2F;riscv-gnu-toolchain&#x2F;blob&#x2F;master&#x2F;README.md&quot;&gt;README.md&lt;&#x2F;a&gt; does not explain how to build or obtain a native Windows toolchain.
+In theory, you could cross-compile a Windows toolchain from another environment such as WSL, but I would recommend using one of the other sources mentioned below.&lt;&#x2F;p&gt;
+&lt;h5 id=&quot;wsl&quot;&gt;WSL&lt;&#x2F;h5&gt;
+&lt;ul&gt;
+&lt;li&gt;Just follow the &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;riscv-collab&#x2F;riscv-gnu-toolchain&#x2F;blob&#x2F;master&#x2F;README.md&quot;&gt;README.md&lt;&#x2F;a&gt; page which explains how to compile and install.&lt;&#x2F;li&gt;
+&lt;li&gt;You can also get precompiled versions from their &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;riscv-collab&#x2F;riscv-gnu-toolchain&#x2F;releases&quot;&gt;GitHub Releases&lt;&#x2F;a&gt; page.&lt;&#x2F;li&gt;
+&lt;li&gt;Download the correct archive for your machine:
+&lt;ul&gt;
+&lt;li&gt;RISC-V 32-bit: &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;riscv-collab&#x2F;riscv-gnu-toolchain&#x2F;releases&#x2F;download&#x2F;2026.05.06&#x2F;riscv32-elf-ubuntu-22.04-gcc.tar.xz&quot;&gt;riscv32-elf-ubuntu-22.04-gcc.tar.xz&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;RISC-V 64-bit: &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;riscv-collab&#x2F;riscv-gnu-toolchain&#x2F;releases&#x2F;download&#x2F;2026.05.06&#x2F;riscv64-elf-ubuntu-22.04-gcc.tar.xz&quot;&gt;riscv64-elf-ubuntu-22.04-gcc.tar.xz&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;xpack&quot;&gt;xPack&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;strong&gt;xPack Binary Development Tools&lt;&#x2F;strong&gt; is a cross-platform binary tools for software development, intended for reproducible builds, with an emphasis on C&#x2F;C++ and embedded projects.&lt;&#x2F;p&gt;
+&lt;p&gt;xPack supports many packages, but here we are interested in embedded RISC-V, so we will focus on &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;xpack-dev-tools&#x2F;riscv-none-elf-gcc-xpack&quot;&gt;riscv-none-elf-gcc-xpack&lt;&#x2F;a&gt;, which is a binary distribution of the GNU RISC-V Embedded GCC toolchain.
+Documentation is available &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;xpack-dev-tools.github.io&#x2F;riscv-none-elf-gcc-xpack&#x2F;&quot;&gt;here&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;There are two ways to install these xPack toolchains:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;xpack.github.io&#x2F;xpm&#x2F;&quot;&gt;xpm&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;ul&gt;
+&lt;li&gt;A tool to automate builds, tests, and manage C&#x2F;C++ dependencies, inspired by npm. For example:&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; xpm install @xpack-dev-tools&#x2F;riscv-none-elf-gcc@14.2.0-3&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --verbose
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;ol start=&quot;2&quot;&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;xpack-dev-tools&#x2F;riscv-none-elf-gcc-xpack&#x2F;releases&quot;&gt;GitHub Releases&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Download the correct archive for your machine. For example:
+&lt;ul&gt;
+&lt;li&gt;Windows: &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;xpack-dev-tools&#x2F;riscv-none-elf-gcc-xpack&#x2F;releases&#x2F;download&#x2F;v14.2.0-3&#x2F;xpack-riscv-none-elf-gcc-14.2.0-3-win32-x64.zip&quot;&gt;xpack-riscv-none-elf-gcc-14.2.0-3-win32-x64.zip&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;Linux (WSL): &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;xpack-dev-tools&#x2F;riscv-none-elf-gcc-xpack&#x2F;releases&#x2F;download&#x2F;v14.2.0-3&#x2F;xpack-riscv-none-elf-gcc-14.2.0-3-linux-x64.tar.gz&quot;&gt;xpack-riscv-none-elf-gcc-14.2.0-3-linux-x64.tar.gz&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;embecosm&quot;&gt;Embecosm&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;embecosm.com&#x2F;&quot;&gt;Embecosm&lt;&#x2F;a&gt; provides free GNU and Clang&#x2F;LLVM compiler tool chain packages for the convenience of the open source software community.&lt;&#x2F;p&gt;
+&lt;p&gt;There are a few different packages listed on their &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;embecosm.com&#x2F;downloads&#x2F;tool-chain-downloads&#x2F;&quot;&gt;tool-chain-downloads&lt;&#x2F;a&gt; page.
+For this use case, we want the embedded RISC-V toolchains, which means choosing either &lt;strong&gt;RISC-V Embedded stable release compilers&lt;&#x2F;strong&gt; or &lt;strong&gt;RISC-V Embedded top-of-tree compilers&lt;&#x2F;strong&gt;.
+I generally use the stable releases (GCC&#x2F;LLVM), but you are free to choose based on your development needs.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Download the correct archive for your machine:
+&lt;ul&gt;
+&lt;li&gt;Windows: &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;buildbot.embecosm.com&#x2F;job&#x2F;riscv32-gcc-win64-release&#x2F;24&#x2F;artifact&#x2F;riscv32-embecosm-win64-gcc13.2.0.zip&quot;&gt;riscv32-embecosm-win64-gcc13.2.0.zip&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;Linux (WSL): &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;buildbot.embecosm.com&#x2F;job&#x2F;riscv32-gcc-ubuntu2204-release&#x2F;10&#x2F;artifact&#x2F;riscv32-embecosm-ubuntu2204-gcc13.2.0.tar.gz&quot;&gt;riscv32-embecosm-ubuntu2204-gcc13.2.0.tar.gz&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;multilib-support&quot;&gt;Multilib Support&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;You may have noticed by now that I have listed two separate prebuilt versions of &lt;code&gt;riscv-gnu-toolchain&lt;&#x2F;code&gt;: one for 32-bit and one for 64-bit.
+These precompiled versions do not support multilib, meaning each version only compiles for one ISA width. However, when building from source, we can enable multilib support using the &lt;code&gt;--enable-multilib&lt;&#x2F;code&gt; option.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;xPack&lt;&#x2F;code&gt; and &lt;code&gt;Embecosm&lt;&#x2F;code&gt; support multilib, meaning you get a single binary that can be used to compile for both 32-bit and 64-bit ISAs.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;You could check which all variants a particular compiler supports by passing &lt;code&gt;--print-multi-lib&lt;&#x2F;code&gt; to &lt;code&gt;gcc&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; riscv32-elf-ubuntu-22.04-gcc&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --print-multi-lib
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; riscv64-elf-ubuntu-22.04-gcc&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --print-multi-lib
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; riscv32-embecosm-win64-gcc13.2.0.exe&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --print-multi-lib
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32e&#x2F;ilp32e&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32e@mabi=ilp32e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32ea&#x2F;ilp32e&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32ea@mabi=ilp32e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32em&#x2F;ilp32e&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32em@mabi=ilp32e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32eac&#x2F;ilp32e&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32eac@mabi=ilp32e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32emac&#x2F;ilp32e&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32emac@mabi=ilp32e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32i&#x2F;ilp32&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32i@mabi=ilp32
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32ia&#x2F;ilp32&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32ia@mabi=ilp32
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32im&#x2F;ilp32&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32im@mabi=ilp32
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32if_zicsr&#x2F;ilp32f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32if_zicsr@mabi=ilp32f
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32ifd_zicsr&#x2F;ilp32d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32ifd_zicsr@mabi=ilp32d
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32iaf_zicsr&#x2F;ilp32f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32iaf_zicsr@mabi=ilp32f
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32iafd_zicsr&#x2F;ilp32d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32iafd_zicsr@mabi=ilp32d
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32imf_zicsr&#x2F;ilp32f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32imf_zicsr@mabi=ilp32f
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32imfd_zicsr&#x2F;ilp32d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32imfd_zicsr@mabi=ilp32d
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32iac&#x2F;ilp32&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32iac@mabi=ilp32
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32imafc_zicsr&#x2F;ilp32f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32imafc_zicsr@mabi=ilp32f
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32imafdc_zicsr&#x2F;ilp32d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32imafdc_zicsr@mabi=ilp32d
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64i&#x2F;lp64&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64i@mabi=lp64
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64ia&#x2F;lp64&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64ia@mabi=lp64
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64im&#x2F;lp64&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64im@mabi=lp64
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64if_zicsr&#x2F;lp64f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64if_zicsr@mabi=lp64f
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64ifd_zicsr&#x2F;lp64d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64ifd_zicsr@mabi=lp64d
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64iaf_zicsr&#x2F;lp64f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64iaf_zicsr@mabi=lp64f
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64iafd_zicsr&#x2F;lp64d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64iafd_zicsr@mabi=lp64d
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64imf_zicsr&#x2F;lp64f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64imf_zicsr@mabi=lp64f
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64iac&#x2F;lp64&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64iac@mabi=lp64
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64imac&#x2F;lp64&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64imac@mabi=lp64
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64imafc_zicsr&#x2F;lp64f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64imafc_zicsr@mabi=lp64f
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64imafdc_zicsr&#x2F;lp64d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64imafdc_zicsr@mabi=lp64d
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; xpack-riscv-none-elf-gcc-14.2.0-3-win32-x64.exe&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --print-multi-lib
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32e&#x2F;ilp32e&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32e@mabi=ilp32e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32ec&#x2F;ilp32e&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32ec@mabi=ilp32e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32ea&#x2F;ilp32e&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32ea@mabi=ilp32e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32em&#x2F;ilp32e&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32em@mabi=ilp32e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32eac&#x2F;ilp32e&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32eac@mabi=ilp32e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32emac&#x2F;ilp32e&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32emac@mabi=ilp32e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32i&#x2F;ilp32&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32i@mabi=ilp32
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32ia&#x2F;ilp32&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32ia@mabi=ilp32
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32im&#x2F;ilp32&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32im@mabi=ilp32
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32imc&#x2F;ilp32&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32imc@mabi=ilp32
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32if_zicsr&#x2F;ilp32f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32if_zicsr@mabi=ilp32f
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32ifd_zicsr&#x2F;ilp32d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32ifd_zicsr@mabi=ilp32d
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32iaf_zicsr&#x2F;ilp32f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32iaf_zicsr@mabi=ilp32f
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32iafd_zicsr&#x2F;ilp32d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32iafd_zicsr@mabi=ilp32d
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32imf_zicsr&#x2F;ilp32f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32imf_zicsr@mabi=ilp32f
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32imfd_zicsr&#x2F;ilp32d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32imfd_zicsr@mabi=ilp32d
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32iac&#x2F;ilp32&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32iac@mabi=ilp32
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32imafc_zicsr&#x2F;ilp32f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32imafc_zicsr@mabi=ilp32f
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv32imafdc_zicsr&#x2F;ilp32d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv32imafdc_zicsr@mabi=ilp32d
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64i&#x2F;lp64&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64i@mabi=lp64
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64ia&#x2F;lp64&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64ia@mabi=lp64
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64im&#x2F;lp64&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64im@mabi=lp64
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64if_zicsr&#x2F;lp64f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64if_zicsr@mabi=lp64f
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64ifd_zicsr&#x2F;lp64d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64ifd_zicsr@mabi=lp64d
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64iaf_zicsr&#x2F;lp64f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64iaf_zicsr@mabi=lp64f
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64iafd_zicsr&#x2F;lp64d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64iafd_zicsr@mabi=lp64d
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64imf_zicsr&#x2F;lp64f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64imf_zicsr@mabi=lp64f
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64iac&#x2F;lp64&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64iac@mabi=lp64
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64imac&#x2F;lp64&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64imac@mabi=lp64
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64imafc_zicsr&#x2F;lp64f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64imafc_zicsr@mabi=lp64f
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rv64imafdc_zicsr&#x2F;lp64d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;;@march=rv64imafdc_zicsr@mabi=lp64d
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The xPack package supports two extra variants compared to Embecosm:
+rv32ec&#x2F;ilp32e;@march=rv32ec@mabi=ilp32e
+rv32imc&#x2F;ilp32;@march=rv32imc@mabi=ilp32&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h4 id=&quot;note&quot;&gt;Note&lt;&#x2F;h4&gt;
+&lt;p&gt;Compiling for the correct variant, depending on which RISC-V core you use, can be done by using the &lt;code&gt;march&lt;&#x2F;code&gt; and &lt;code&gt;mabi&lt;&#x2F;code&gt; compiler flags:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; riscv32-unknown-elf-gcc&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -march&lt;&#x2F;span&gt;&lt;span&gt;=rv32imac&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -mabi&lt;&#x2F;span&gt;&lt;span&gt;=ilp32 main.c
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;example&quot;&gt;Example&lt;&#x2F;h2&gt;
+&lt;p&gt;I have a practical real-world example that shows why choosing the right prebuilt toolchain matters.
+I happened to come across &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;mit-pdos&#x2F;xv6-riscv&quot;&gt;xv6-riscv&lt;&#x2F;a&gt; on the same day that I wrote this blog post, so I used it as a test case.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Excerpt from xv6-riscv README file:&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;pre data-lang=&quot;md&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-md &quot;&gt;&lt;code class=&quot;language-md&quot; data-lang=&quot;md&quot;&gt;&lt;span&gt;BUILDING AND RUNNING XV6
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;You will need a RISC-V &amp;quot;newlib&amp;quot; tool chain from
+&lt;&#x2F;span&gt;&lt;span&gt;https:&#x2F;&#x2F;github.com&#x2F;riscv&#x2F;riscv-gnu-toolchain, and qemu compiled for
+&lt;&#x2F;span&gt;&lt;span&gt;riscv64-softmmu.  Once they are installed, and in your shell
+&lt;&#x2F;span&gt;&lt;span&gt;search path, you can run &amp;quot;make qemu&amp;quot;.
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;If we use the prebuilt &lt;code&gt;riscv-gnu-toolchain&lt;&#x2F;code&gt; nightly archive linked earlier, &lt;code&gt;make qemu&lt;&#x2F;code&gt; does not work for this xv6 snapshot because the linker reports the missing &lt;strong&gt;zifencei&lt;&#x2F;strong&gt; extension:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; make qemu
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;...
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;riscv64-unknown-elf-ld: -march&lt;&#x2F;span&gt;&lt;span&gt;=rv64i2p1_m2p0_a2p1_f2p2_d2p2_c2p0_zicsr2p0_zifencei2p0_zmmul1p0_zaamo1p0_zalrsc1p0_zca1p0_zcd1p0: Invalid or unknown z ISA extension: &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;zifencei&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;In my case, the xPack toolchain worked for this xv6 snapshot, so instead of compiling &lt;code&gt;riscv-gnu-toolchain&lt;&#x2F;code&gt; from source, which takes a long time, I used xPack.
+Download and extract the archive into some folder:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; wget https:&#x2F;&#x2F;github.com&#x2F;xpack-dev-tools&#x2F;riscv-none-elf-gcc-xpack&#x2F;releases&#x2F;download&#x2F;v15.2.0-1&#x2F;xpack-riscv-none-elf-gcc-15.2.0-1-linux-x64.tar.gz
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; tar&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -xzf&lt;&#x2F;span&gt;&lt;span&gt; xpack-riscv-none-elf-gcc-15.2.0-1-linux-x64.tar.gz
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;After that, we need to make a few changes to the &lt;code&gt;Makefile&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;set the toolchain prefix to the path of the extracted xPack toolchain,&lt;&#x2F;li&gt;
+&lt;li&gt;add the appropriate &lt;code&gt;-mabi&lt;&#x2F;code&gt; compiler flag, and&lt;&#x2F;li&gt;
+&lt;li&gt;set the correct linker flags so that the toolchain knows it is compiling 64-bit RISC-V code.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;I made the relevant changes in my fork; you can see the diff on &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;mit-pdos&#x2F;xv6-riscv&#x2F;compare&#x2F;riscv...Karthik-d-k:xv6-riscv:xpack&quot;&gt;GitHub&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;I have also included a screenshot below for quick reference:
+&lt;img src=&quot;&#x2F;xv6-riscv-xpack.png&quot; alt=&quot;xv6-riscv&#x2F;compare&#x2F;riscv…Karthik-d-k:xv6-riscv:xpack&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;After these changes, xv6 compiles and runs successfully on qemu:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; make qemu
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;qemu-system-riscv64 -machine&lt;&#x2F;span&gt;&lt;span&gt; virt&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -bios&lt;&#x2F;span&gt;&lt;span&gt; none&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -kernel&lt;&#x2F;span&gt;&lt;span&gt; kernel&#x2F;kernel&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -m&lt;&#x2F;span&gt;&lt;span&gt; 128M&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -smp&lt;&#x2F;span&gt;&lt;span&gt; 3&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -nographic -global&lt;&#x2F;span&gt;&lt;span&gt; virtio-mmio.force-legacy=false&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -drive&lt;&#x2F;span&gt;&lt;span&gt; file=fs.img,if=none,format=raw,id=x0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -device&lt;&#x2F;span&gt;&lt;span&gt; virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;xv6&lt;&#x2F;span&gt;&lt;span&gt; kernel is booting
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;hart&lt;&#x2F;span&gt;&lt;span&gt; 1 starting
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;hart&lt;&#x2F;span&gt;&lt;span&gt; 2 starting
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;init:&lt;&#x2F;span&gt;&lt;span&gt; starting sh
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; ls
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;              1 1 1024
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;..&lt;&#x2F;span&gt;&lt;span&gt;             1 1 1024
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;README&lt;&#x2F;span&gt;&lt;span&gt;         2 2 2425
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cat&lt;&#x2F;span&gt;&lt;span&gt;            2 3 38168
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;echo&lt;&#x2F;span&gt;&lt;span&gt;           2 4 36952
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;forktest&lt;&#x2F;span&gt;&lt;span&gt;       2 5 18224
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;grep&lt;&#x2F;span&gt;&lt;span&gt;           2 6 41736
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;init&lt;&#x2F;span&gt;&lt;span&gt;           2 7 37336
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;kill&lt;&#x2F;span&gt;&lt;span&gt;           2 8 36880
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ln&lt;&#x2F;span&gt;&lt;span&gt;             2 9 36672
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ls&lt;&#x2F;span&gt;&lt;span&gt;             2 10 40296
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;mkdir&lt;&#x2F;span&gt;&lt;span&gt;          2 11 36944
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rm&lt;&#x2F;span&gt;&lt;span&gt;             2 12 36928
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sh&lt;&#x2F;span&gt;&lt;span&gt;             2 13 60888
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;stressfs&lt;&#x2F;span&gt;&lt;span&gt;       2 14 37800
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;usertests&lt;&#x2F;span&gt;&lt;span&gt;      2 15 194808
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;grind&lt;&#x2F;span&gt;&lt;span&gt;          2 16 53448
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;wc&lt;&#x2F;span&gt;&lt;span&gt;             2 17 39200
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;zombie&lt;&#x2F;span&gt;&lt;span&gt;         2 18 36208
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;logstress&lt;&#x2F;span&gt;&lt;span&gt;      2 19 38960
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;forphan&lt;&#x2F;span&gt;&lt;span&gt;        2 20 37704
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;dorphan&lt;&#x2F;span&gt;&lt;span&gt;        2 21 37144
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;console&lt;&#x2F;span&gt;&lt;span&gt;        3 22 0
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;references&quot;&gt;References&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;riscv-collab&#x2F;riscv-gnu-toolchain&quot;&gt;riscv-gnu-toolchain&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;xpack-dev-tools.github.io&#x2F;&quot;&gt;xpack-dev-tools&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;embecosm.com&#x2F;&quot;&gt;embecosm.com&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Running asciinema from windows</title>
+        <published>2025-10-23T00:00:00+00:00</published>
+        <updated>2025-10-23T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/til/asciinema-windows/"/>
+        <id>https://Karthik-d-k.github.io/til/asciinema-windows/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/til/asciinema-windows/">&lt;p&gt;As described in the &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;asciinema&#x2F;asciinema&quot;&gt;asciinema README&lt;&#x2F;a&gt;, &lt;strong&gt;asciinema&lt;&#x2F;strong&gt; (aka asciinema CLI or asciinema recorder) is a command-line tool
+for recording and live streaming terminal sessions.&lt;&#x2F;p&gt;
+&lt;p&gt;Unlike typical &lt;em&gt;screen&lt;&#x2F;em&gt; recording software, which records visual output of a
+screen into heavyweight video files (&lt;code&gt;.mp4&lt;&#x2F;code&gt;, &lt;code&gt;.mov&lt;&#x2F;code&gt;), asciinema CLI runs
+&lt;em&gt;inside a terminal&lt;&#x2F;em&gt;, capturing terminal session output into lightweight
+recording files in the &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;docs.asciinema.org&#x2F;manual&#x2F;asciicast&#x2F;v3&#x2F;&quot;&gt;asciicast&lt;&#x2F;a&gt; format (&lt;code&gt;.cast&lt;&#x2F;code&gt;),
+or streaming it live to viewers in real-time.&lt;&#x2F;p&gt;
+&lt;p&gt;For now, it only supports GNU&#x2F;Linux, macOS and FreeBSD.
+Windows is currently not supported. See discussion &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;orgs&#x2F;asciinema&#x2F;discussions&#x2F;278&quot;&gt;#278&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;As I have &lt;code&gt;WSL&lt;&#x2F;code&gt; installed on my Windows machine, I can run asciinema from the WSL terminal.
+To make it run from PowerShell, I modified my PowerShell profile to add functions that call into the WSL asciinema binary.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;powershell&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-powershell &quot;&gt;&lt;code class=&quot;language-powershell&quot; data-lang=&quot;powershell&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Asciinema aliases using WSL
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;asciinema &lt;&#x2F;span&gt;&lt;span&gt;{ wsl ~&#x2F;.cargo&#x2F;bin&#x2F;asciinema @&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;args &lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;record &lt;&#x2F;span&gt;&lt;span&gt;{ wsl -d Ubuntu-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22.04&lt;&#x2F;span&gt;&lt;span&gt; ~&#x2F;.cargo&#x2F;bin&#x2F;asciinema rec @&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;args &lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;play   &lt;&#x2F;span&gt;&lt;span&gt;{ wsl -d Ubuntu-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22.04&lt;&#x2F;span&gt;&lt;span&gt; ~&#x2F;.cargo&#x2F;bin&#x2F;asciinema play @&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;args &lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;stream &lt;&#x2F;span&gt;&lt;span&gt;{ wsl -d Ubuntu-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;22.04&lt;&#x2F;span&gt;&lt;span&gt; ~&#x2F;.cargo&#x2F;bin&#x2F;asciinema stream @&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;args &lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This is the simplest way that I found to record PowerShell terminal sessions using asciinema.
+I have no idea as of now if this is the best way to do it, but it works for me.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Case-sensitive Settings on Windows</title>
+        <published>2025-01-06T00:00:00+00:00</published>
+        <updated>2025-01-06T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Karthik
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://Karthik-d-k.github.io/til/case-sensitive-windows/"/>
+        <id>https://Karthik-d-k.github.io/til/case-sensitive-windows/</id>
+        
+        <content type="html" xml:base="https://Karthik-d-k.github.io/til/case-sensitive-windows/">&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;I was trying to clone the &lt;strong&gt;Linux&lt;&#x2F;strong&gt; git stable repository on my Windows 10 machine using the following command:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; clone https:&#x2F;&#x2F;git.kernel.org&#x2F;pub&#x2F;scm&#x2F;linux&#x2F;kernel&#x2F;git&#x2F;stable&#x2F;linux.git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --depth&lt;&#x2F;span&gt;&lt;span&gt; 1
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Unfortunately, this failed with the following warning because the Linux tree contains files with the same name but with different case sensitivity:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;warning:&lt;&#x2F;span&gt;&lt;span&gt; the following paths have collided (e.g. case-sensitive paths
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;on&lt;&#x2F;span&gt;&lt;span&gt; a case-insensitive filesystem) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;and&lt;&#x2F;span&gt;&lt;span&gt; only one from the same
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;colliding&lt;&#x2F;span&gt;&lt;span&gt; group is in the working tree:
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;The Windows 10 file system by default is &lt;strong&gt;case-insensitive&lt;&#x2F;strong&gt;, meaning it treats both &lt;strong&gt;ip6t_hl.h&lt;&#x2F;strong&gt; and &lt;strong&gt;ip6t_HL.h&lt;&#x2F;strong&gt; as the same file. This is not true for Linux file systems, as they treat these as different files because the file system is case-sensitive.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;This problem can be solved in two ways:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;We can use &lt;strong&gt;WSL (Windows Subsystem for Linux)&lt;&#x2F;strong&gt; on our Windows machine.&lt;&#x2F;li&gt;
+&lt;li&gt;We can enable case sensitivity for a folder using the &lt;strong&gt;fsutil&lt;&#x2F;strong&gt; command:&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fsutil&lt;&#x2F;span&gt;&lt;span&gt; file setCaseSensitiveInfo &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&amp;lt;path-to-directory&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; enable
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;ul&gt;
+&lt;li&gt;You can verify if this worked using the following command:&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fsutil.exe&lt;&#x2F;span&gt;&lt;span&gt; file queryCaseSensitiveInfo &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&amp;lt;path-to-directory&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;references&quot;&gt;References&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;stackoverflow.com&#x2F;a&#x2F;64466310&quot;&gt;Stack Overflow: Case-sensitive path collisions&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+</feed>
