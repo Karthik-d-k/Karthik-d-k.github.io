@@ -174,6 +174,88 @@ Compiling for the correct variant, depending on which RISC-V core you use, can b
 $ riscv32-unknown-elf-gcc -march=rv32imac -mabi=ilp32 main.c
 ```
 
+## Example
+
+I have a practical real-world example that shows why choosing the right prebuilt toolchain matters.
+I happened to come across [xv6-riscv](https://github.com/mit-pdos/xv6-riscv) on the same day that I wrote this blog post, so I used it as a test case.
+
+> Excerpt from xv6-riscv README file:
+```md
+BUILDING AND RUNNING XV6
+
+You will need a RISC-V "newlib" tool chain from
+https://github.com/riscv/riscv-gnu-toolchain, and qemu compiled for
+riscv64-softmmu.  Once they are installed, and in your shell
+search path, you can run "make qemu".
+```
+
+If we use the prebuilt `riscv-gnu-toolchain` nightly archive linked earlier, `make qemu` does not work for this xv6 snapshot because the linker reports the missing **zifencei** extension:
+
+```sh
+$ make qemu
+...
+riscv64-unknown-elf-ld: -march=rv64i2p1_m2p0_a2p1_f2p2_d2p2_c2p0_zicsr2p0_zifencei2p0_zmmul1p0_zaamo1p0_zalrsc1p0_zca1p0_zcd1p0: Invalid or unknown z ISA extension: 'zifencei'
+...
+```
+
+In my case, the xPack toolchain worked for this xv6 snapshot, so instead of compiling `riscv-gnu-toolchain` from source, which takes a long time, I used xPack.
+Download and extract the archive into some folder:
+
+```sh
+$ wget https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/download/v15.2.0-1/xpack-riscv-none-elf-gcc-15.2.0-1-linux-x64.tar.gz
+
+$ tar -xzf xpack-riscv-none-elf-gcc-15.2.0-1-linux-x64.tar.gz
+```
+
+After that, we need to make a few changes to the `Makefile`:
+
+- set the toolchain prefix to the path of the extracted xPack toolchain,
+- add the appropriate `-mabi` compiler flag, and
+- set the correct linker flags so that the toolchain knows it is compiling 64-bit RISC-V code.
+
+I made the relevant changes in my fork; you can see the diff on [GitHub](https://github.com/mit-pdos/xv6-riscv/compare/riscv...Karthik-d-k:xv6-riscv:xpack).
+
+I have also included a screenshot below for quick reference:
+![**xv6-riscv/compare/riscv...Karthik-d-k:xv6-riscv:xpack**](/xv6-riscv-xpack.png)
+
+After these changes, xv6 compiles and runs successfully on qemu:
+
+```sh
+$ make qemu
+qemu-system-riscv64 -machine virt -bios none -kernel kernel/kernel -m 128M -smp 3 -nographic -global virtio-mmio.force-legacy=false -drive file=fs.img,if=none,format=raw,id=x0 -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0
+
+xv6 kernel is booting
+
+hart 1 starting
+hart 2 starting
+init: starting sh
+$ ls
+.              1 1 1024
+..             1 1 1024
+README         2 2 2425
+cat            2 3 38168
+echo           2 4 36952
+forktest       2 5 18224
+grep           2 6 41736
+init           2 7 37336
+kill           2 8 36880
+ln             2 9 36672
+ls             2 10 40296
+mkdir          2 11 36944
+rm             2 12 36928
+sh             2 13 60888
+stressfs       2 14 37800
+usertests      2 15 194808
+grind          2 16 53448
+wc             2 17 39200
+zombie         2 18 36208
+logstress      2 19 38960
+forphan        2 20 37704
+dorphan        2 21 37144
+console        3 22 0
+$
+```
+
 ## References
 
 - [riscv-gnu-toolchain](https://github.com/riscv-collab/riscv-gnu-toolchain)
