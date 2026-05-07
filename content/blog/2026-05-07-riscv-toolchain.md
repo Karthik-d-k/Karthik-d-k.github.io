@@ -166,13 +166,13 @@ These precompiled versions do not support multilib, meaning each version only co
     rv32imc/ilp32;@march=rv32imc@mabi=ilp32
 
 
-#### Note: 
+#### Note
 
 Compiling for the correct variant, depending on which RISC-V core you use, can be done by using the `march` and `mabi` compiler flags:
 
-    ```sh
-    $ riscv32-unknown-elf-gcc -march=rv32imac -mabi=ilp32 main.c
-    ```
+```sh
+$ riscv32-unknown-elf-gcc -march=rv32imac -mabi=ilp32 main.c
+```
 
 ## References
 
