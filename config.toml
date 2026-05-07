@@ -210,6 +210,7 @@ header_nav = [
     { url = "/blog", name_en = "/blog" },
     { url = "/til", name_en = "/til" },
     { url = "/projects", name_en = "/projects" },
+    { url = "/motorcycle", name_en = "/motorcycle" },
     { url = "/tags", name_en = "/tags" },
     { url = "/bookmarks", name_en = "/bookmarks" },
     { url = "/cv", name_en = "/cv" },
